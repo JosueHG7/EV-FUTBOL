@@ -249,6 +249,67 @@ def _stat_averages(stats_df, matches_df: pd.DataFrame, team: str,
     return out
 
 
+def _team_corner_samples(stats_df, matches_df: pd.DataFrame, team: str,
+                         before: pd.Timestamp, n: int) -> tuple[list, list, list]:
+    """Per-match corners (for, against, total) over the team's last n matches."""
+    sub = matches_df[
+        ((matches_df["home_team"] == team) | (matches_df["away_team"] == team)) &
+        (matches_df["match_date"] < before)
+    ].sort_values("match_date", ascending=False).head(n)
+    if sub.empty or stats_df is None or getattr(stats_df, "empty", True):
+        return [], [], []
+    recs = [
+        (m["match_id"], m["home_team_id"], m["away_team_id"]) if m["home_team"] == team
+        else (m["match_id"], m["away_team_id"], m["home_team_id"])
+        for _, m in sub.iterrows()
+    ]
+    lut = _stats_lut(stats_df, [r[0] for r in recs])
+    fors, againsts, totals = [], [], []
+    for mid, tid, oid in recs:
+        cf = lut.get((mid, tid, "Corner Kicks"))
+        ca = lut.get((mid, oid, "Corner Kicks"))
+        cf = cf if (cf is not None and pd.notna(cf)) else None
+        ca = ca if (ca is not None and pd.notna(ca)) else None
+        if cf is not None:
+            fors.append(cf)
+        if ca is not None:
+            againsts.append(ca)
+        if cf is not None and ca is not None:
+            totals.append(cf + ca)
+    return fors, againsts, totals
+
+
+def corner_analysis(stats_df, matches_df: pd.DataFrame, home: str, away: str,
+                    before: pd.Timestamp, n: int = 10) -> dict | None:
+    """
+    Expected total corners (attack+defense combined, Dixon-Coles style) plus the
+    sample's dispersion and size — so the UI can show a GAP vs the line, not a
+    fabricated probability. No historical corner lines exist yet → informative
+    only, not a validated/backtested edge.
+
+    Returns {proj, std, n_home, n_away, confidence} or None if no corner data.
+    """
+    hf, ha, ht = _team_corner_samples(stats_df, matches_df, home, before, n)
+    af, aa, at = _team_corner_samples(stats_df, matches_df, away, before, n)
+    if not (hf and ha and af and aa):
+        return None
+
+    proj = (np.mean(hf) + np.mean(aa)) / 2 + (np.mean(af) + np.mean(ha)) / 2
+    samples = ht + at
+    std = float(np.std(samples)) if len(samples) >= 2 else None
+    n_home = min(len(hf), len(ha))
+    n_away = min(len(af), len(aa))
+    mn = min(n_home, n_away)
+    confidence = "sólida" if mn >= 10 else ("chica" if mn < 5 else "media")
+
+    return {
+        "proj": round(float(proj), 1),
+        "std": round(std, 1) if std is not None else None,
+        "n_home": n_home, "n_away": n_away,
+        "confidence": confidence,
+    }
+
+
 # ---------------------------------------------------------------------------
 # Per-match detail — the last N matches row by row (score24-style)
 # ---------------------------------------------------------------------------
@@ -429,6 +490,9 @@ def build_dossier(
         },
         "reading": None,
     }
+    dossier["stats"]["corners"] = corner_analysis(
+        stats_df, matches_df, home, away, before, n=10
+    )
 
     # Market implied (no-vig) probabilities
     market_probs = None

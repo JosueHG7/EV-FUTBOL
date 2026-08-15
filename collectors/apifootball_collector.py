@@ -166,6 +166,43 @@ def _parse_markets(book: dict) -> dict:
     return out
 
 
+def _parse_corners(bookmakers: list) -> tuple | None:
+    """Main total-corners Over/Under line across all books → (line, over, under).
+
+    Picks the line where over/under odds are most balanced (the bookmakers'
+    main line). Scans every book because not all offer the corners market.
+    """
+    lines: dict = {}
+    for b in bookmakers:
+        for bet in b.get("bets", []):
+            if bet.get("name") != "Corners Over Under":
+                continue
+            for v in bet.get("values", []):
+                parts = str(v.get("value", "")).split()
+                if len(parts) != 2:
+                    continue
+                side = parts[0].lower()
+                if side not in ("over", "under"):
+                    continue
+                try:
+                    ln, od = float(parts[1]), float(v["odd"])
+                except (ValueError, TypeError, KeyError):
+                    continue
+                lines.setdefault(ln, {}).setdefault(side, []).append(od)
+
+    best = None
+    best_bal = 1e9
+    for ln, d in lines.items():
+        if "over" in d and "under" in d:
+            ov = sum(d["over"]) / len(d["over"])
+            un = sum(d["under"]) / len(d["under"])
+            bal = abs(ov - un)
+            if bal < best_bal:
+                best_bal = bal
+                best = (ln, round(ov, 2), round(un, 2))
+    return best
+
+
 def collect_upcoming(days_ahead: int = 3, leagues: dict = LEAGUES) -> None:
     """
     Fetch upcoming fixtures (today..+days_ahead) for our leagues, upsert them as
@@ -200,15 +237,17 @@ def collect_upcoming(days_ahead: int = 3, leagues: dict = LEAGUES) -> None:
                 continue
             if not resp:
                 continue
-            book = _pick_bookmaker(resp[0].get("bookmakers", []))
+            books = resp[0].get("bookmakers", [])
+            book = _pick_bookmaker(books)
             if not book:
                 continue
             bname = book["name"]
             mk = _parse_markets(book)
+            corners = _parse_corners(books)   # main total-corners line (any book)
 
-            # idempotent: clear this fixture+book first
-            session.query(Odds).filter(Odds.match_id == fid, Odds.bookmaker == bname).delete()
-            session.query(MarketOdds).filter(MarketOdds.match_id == fid, MarketOdds.bookmaker == bname).delete()
+            # idempotent: clear this fixture's odds first
+            session.query(Odds).filter(Odds.match_id == fid).delete()
+            session.query(MarketOdds).filter(MarketOdds.match_id == fid).delete()
 
             if mk["x2"]:
                 h, dr, a = mk["x2"]
@@ -228,6 +267,13 @@ def collect_upcoming(days_ahead: int = 3, leagues: dict = LEAGUES) -> None:
                                        selection="yes", line=None, odd=y, collected_at=now))
                 session.add(MarketOdds(match_id=fid, bookmaker=bname, market="btts",
                                        selection="no", line=None, odd=n, collected_at=now))
+                n_mkt += 1
+            if corners:
+                cln, cov, cun = corners
+                session.add(MarketOdds(match_id=fid, bookmaker="consensus", market="corners_ou",
+                                       selection="over", line=cln, odd=cov, collected_at=now))
+                session.add(MarketOdds(match_id=fid, bookmaker="consensus", market="corners_ou",
+                                       selection="under", line=cln, odd=cun, collected_at=now))
                 n_mkt += 1
 
             if i % 25 == 0:

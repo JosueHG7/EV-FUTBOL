@@ -363,6 +363,10 @@ def _get_upcoming() -> list[dict]:
             mos = s.execute(select(MarketOdds).where(MarketOdds.match_id == m.id)).scalars().all()
             ou = {r.selection: r.odd for r in mos if r.market == "ou_goals"}
             bt = {r.selection: r.odd for r in mos if r.market == "btts"}
+            co_o = next((r for r in mos if r.market == "corners_ou" and r.selection == "over"), None)
+            co_u = next((r for r in mos if r.market == "corners_ou" and r.selection == "under"), None)
+            corners = ({"line": co_o.line, "over": co_o.odd, "under": co_u.odd}
+                       if co_o and co_u else None)
             out.append({
                 "match_id": m.id, "league_id": m.league_id, "league": m.league_name,
                 "country": m.country, "home": m.home_team_name, "away": m.away_team_name,
@@ -370,6 +374,7 @@ def _get_upcoming() -> list[dict]:
                 "odds_1x2": {"home_win": o.home_win, "draw": o.draw, "away_win": o.away_win},
                 "ou25": ou if ("over" in ou and "under" in ou) else None,
                 "btts": bt if ("yes" in bt and "no" in bt) else None,
+                "corners": corners,
             })
     out.sort(key=lambda x: x["dt"])
     return out
@@ -382,32 +387,37 @@ def _devig2(a: float, b: float) -> tuple[float, float]:
 
 
 def _signals(d: dict, ou25: dict | None, btts: dict | None) -> list[dict]:
-    """Modelo vs mercado (sin vig) en los mercados del usuario: 1X2, O/U 2.5, BTTS."""
+    """Diagnóstico: dónde el modelo (SIN calibrar) se aleja del mercado.
+
+    Una entrada por mercado real (1X2, Goles O/U 2.5, BTTS), mostrando ambos
+    lados. `delta` = máxima divergencia |modelo − mercado| dentro del mercado.
+    NO es una sugerencia de apuesta: el modelo no está validado contra resultados.
+    """
     sig: list[dict] = []
     mp, kp = d.get("model_probs"), d.get("market_probs")
     if mp and kp:
-        for k, lab in [("home_win", "1X2 Local"), ("draw", "1X2 Empate"), ("away_win", "1X2 Visit.")]:
-            sig.append({"mkt": lab, "model": mp[k], "market": kp[k], "edge": mp[k] - kp[k]})
+        model = {"Local": mp["home_win"], "Empate": mp["draw"], "Visit.": mp["away_win"]}
+        market = {"Local": kp["home_win"], "Empate": kp["draw"], "Visit.": kp["away_win"]}
+        delta = max(abs(model[o] - market[o]) for o in model)
+        sig.append({"mkt": "1X2", "model": model, "market": market, "delta": delta})
     gm = d.get("goal_markets")
     if gm and ou25:
         ov, un = _devig2(ou25["over"], ou25["under"])
-        sig.append({"mkt": "Over 2.5", "model": gm["over25"], "market": ov, "edge": gm["over25"] - ov})
-        sig.append({"mkt": "Under 2.5", "model": gm["under25"], "market": un, "edge": gm["under25"] - un})
+        model = {"Over": gm["over25"], "Under": gm["under25"]}
+        market = {"Over": ov, "Under": un}
+        sig.append({"mkt": "Goles O/U 2.5", "model": model, "market": market,
+                    "delta": abs(model["Over"] - market["Over"])})
     if gm and btts:
         y, n = _devig2(btts["yes"], btts["no"])
-        sig.append({"mkt": "BTTS Sí", "model": gm["btts_yes"], "market": y, "edge": gm["btts_yes"] - y})
-        sig.append({"mkt": "BTTS No", "model": gm["btts_no"], "market": n, "edge": gm["btts_no"] - n})
+        model = {"Sí": gm["btts_yes"], "No": gm["btts_no"]}
+        market = {"Sí": y, "No": n}
+        sig.append({"mkt": "BTTS", "model": model, "market": market,
+                    "delta": abs(model["Sí"] - market["Sí"])})
     return sig
 
 
-def _signal_emoji(edge) -> str:
-    if edge is None:
-        return "⚪"
-    if edge >= 0.10:
-        return "🟢"
-    if edge >= 0.05:
-        return "🟡"
-    return "⚪"
+def _dist_str(dic: dict) -> str:
+    return " / ".join(f"{k} {v:.0%}" for k, v in dic.items())
 
 
 def _render_form_col(label: str, f: dict, pts10: int) -> None:
@@ -480,6 +490,49 @@ def _render_team_detail(det: list, label: str) -> None:
                  column_config={"Res": st.column_config.TextColumn(width="small")})
 
 
+def _render_corner_signal(u: dict) -> None:
+    """Córners: esperado combinado (ataque+defensa) vs línea real, con σ y
+    etiqueta de confianza. Informativo — aún sin backtest de líneas históricas."""
+    ca = u["_d"]["stats"].get("corners")
+    cl = u.get("corners")
+    if not ca and not cl:
+        return
+    if ca is None:
+        if cl:
+            st.caption(f"⚽ Córners — línea de la casa {cl['line']} (faltan stats para proyectar)")
+        return
+
+    proj, std, conf = ca["proj"], ca["std"], ca["confidence"]
+    n_txt = f"n={ca['n_home']}/{ca['n_away']}"
+    sigma_txt = f"{std}" if std is not None else "n/a"
+
+    if cl is not None:
+        line = cl["line"]
+        gap = round(proj - line, 1)
+        # notable solo con dispersión real (σ>0) y gap que la supere — evita
+        # marcar señal falsa cuando la muestra es degenerada (σ=0).
+        notable = std is not None and std > 0 and abs(gap) >= 0.5 * std
+        if notable:
+            lean = "Over" if gap > 0 else "Under"
+            st.markdown(
+                f"**🚩 Córners** — esperado combinado **{proj}** vs línea **{line}** "
+                f"→ **{lean}** (gap {gap:+.1f}, supera 0.5σ)  ·  cuotas O {cl['over']} / U {cl['under']}"
+            )
+        else:
+            st.markdown(
+                f"Córners — esperado combinado {proj} vs línea {line} "
+                f"(gap {gap:+.1f}: dentro de rango normal, sin inclinación clara)  ·  "
+                f"cuotas O {cl['over']} / U {cl['under']}"
+            )
+        st.caption(
+            f"σ muestra ≈ {sigma_txt} · {n_txt} · confianza {conf} · "
+            "informativo (sin backtest de líneas históricas todavía)"
+        )
+    else:
+        st.markdown(f"Córners — esperado combinado {proj} (la casa no publica línea aquí)")
+        st.caption(f"σ ≈ {sigma_txt} · {n_txt} · confianza {conf} · informativo")
+
+
 def _render_detail(u: dict, matches_df, stats_df) -> None:
     from models.match_analysis import team_recent_detail, h2h_detail
     d = u["_d"]
@@ -489,22 +542,27 @@ def _render_detail(u: dict, matches_df, stats_df) -> None:
     st.markdown(f"### {home}  vs  {away}")
     cty = f" ({u['country']})" if u.get("country") else ""
     st.caption(f"{u['league']}{cty} · {d['date']} · cuotas: {u['book']}")
+    st.caption(
+        "Diagnóstico de análisis, **no** sugerencias de apuesta. El modelo no está "
+        "validado contra resultados (no le gana al mercado en backtest). El juicio es tuyo."
+    )
 
     if d["known"] and u["_sig"]:
-        st.markdown("**🎯 Modelo vs mercado** — tus mercados (Δ = modelo − mercado)")
-        rows = [{"Mercado": s["mkt"], "Modelo": s["model"], "Mercado ": s["market"], "Δ": s["edge"]}
-                for s in sorted(u["_sig"], key=lambda x: x["edge"], reverse=True)]
+        st.markdown(
+            "**📊 Dónde el modelo (sin calibrar) más se aleja del mercado** "
+            "— diagnóstico, no apuesta sugerida"
+        )
+        rows = [{"Mercado": s["mkt"], "Modelo": _dist_str(s["model"]),
+                 "Mercado ": _dist_str(s["market"]), "Δ máx": s["delta"]}
+                for s in sorted(u["_sig"], key=lambda x: x["delta"], reverse=True)]
         st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True,
-            column_config={
-                "Modelo":   st.column_config.NumberColumn(format="percent"),
-                "Mercado ": st.column_config.NumberColumn(format="percent"),
-                "Δ":        st.column_config.NumberColumn(format="percent"),
-            })
+            column_config={"Δ máx": st.column_config.NumberColumn(format="percent")})
         cs = " · ".join(f"{c['score']} ({c['prob']:.0%})" for c in d["correct_scores"])
-        st.caption(f"🧭 {d['reading']}  ·  Marcadores probables: {cs}")
+        st.caption(f"Marcadores más probables del modelo: {cs}")
 
     # Resumen de promedios (arriba) + detalle partido-a-partido (abajo)
     _render_stats_table(d)
+    _render_corner_signal(u)
 
     st.markdown("#### 📋 Últimos partidos (partido a partido)")
     dh = team_recent_detail(stats_df, matches_df, home, before, 6)
@@ -544,16 +602,16 @@ def _get_analyzed():
                           u["odds_1x2"], stats_df=stats_df)
         u["_d"] = d
         u["_sig"] = _signals(d, u["ou25"], u["btts"]) if d["known"] else []
-        u["_top"] = max((s["edge"] for s in u["_sig"]), default=None)
+        u["_top"] = max((s["delta"] for s in u["_sig"]), default=None)
     return upcoming, label, n_matches
 
 
 def _render_analysis() -> None:
     st.header("🔍 Análisis por partido — triaje diario")
     st.caption(
-        "Tus partidos próximos, ordenados por dónde el modelo más discrepa del "
-        "mercado, en TUS mercados (1X2, Over/Under 2.5, BTTS). "
-        "🟢 Δ≥10% · 🟡 Δ≥5% · no es un tipster, el juicio es tuyo."
+        "Diagnóstico, **no** sugerencias de apuesta. Los partidos se ordenan por "
+        "dónde el modelo (sin calibrar) más se aleja del mercado. El modelo no le "
+        "gana al mercado en backtest — el juicio es tuyo."
     )
 
     try:
@@ -573,7 +631,7 @@ def _render_analysis() -> None:
     c1, c2 = st.columns([2, 1])
     leagues = ["Todas"] + sorted({u["league"] for u in upcoming})
     sel = c1.selectbox("Liga", leagues)
-    only_signals = c2.checkbox("Solo con señal (Δ ≥ 5%)", value=False)
+    only_signals = c2.checkbox("Solo con discrepancia ≥ 5%", value=False)
 
     view = [u for u in upcoming if sel == "Todas" or u["league"] == sel]
     known = [u for u in view if u["_d"]["known"] and u["_top"] is not None]
@@ -585,33 +643,30 @@ def _render_analysis() -> None:
     if known:
         rows = []
         for u in known:
-            top = max(u["_sig"], key=lambda s: s["edge"])
+            top_mkt = max(u["_sig"], key=lambda s: s["delta"])["mkt"]
             rows.append({
-                "🚦": _signal_emoji(u["_top"]),
                 "Partido": f"{u['home']} vs {u['away']}",
                 "Liga": u["league"],
                 "Fecha": u["date"],
-                "Mejor señal": top["mkt"],
-                "Modelo": top["model"],
-                "Mercado": top["market"],
-                "Δ": top["edge"],
+                "Mayor discrepancia": top_mkt,
+                "Δ": u["_top"],
             })
         st.dataframe(
             pd.DataFrame(rows), hide_index=True, use_container_width=True,
             column_config={
-                "🚦": st.column_config.TextColumn(width="small"),
-                "Modelo":  st.column_config.NumberColumn(format="percent"),
-                "Mercado": st.column_config.NumberColumn(format="percent"),
                 "Δ": st.column_config.NumberColumn(
                     format="percent",
-                    help="Modelo − mercado en el mercado con más discrepancia"),
+                    help="Máxima divergencia |modelo − mercado| del partido"),
             },
         )
-        st.caption(f"{len(known)} partidos · modelo entrenado con {n_matches:,} partidos")
+        st.caption(
+            f"{len(known)} partidos · modelo entrenado con {n_matches:,} partidos "
+            "(sin calibrar — la discrepancia es un diagnóstico, no un edge)"
+        )
 
         st.divider()
         st.subheader("🔎 Detalle del partido")
-        labels = [f"{_signal_emoji(u['_top'])} {u['home']} vs {u['away']} · {u['league']} · Δ{u['_top']:+.0%}"
+        labels = [f"{u['home']} vs {u['away']} · {u['league']} · Δ{u['_top']:.0%}"
                   for u in known]
         idx = st.selectbox("Elige un partido para ver el detalle completo",
                            range(len(known)), format_func=lambda i: labels[i])
@@ -671,11 +726,11 @@ def _render_results() -> None:
 
 def main() -> None:
     st.set_page_config(
-        page_title="Football EV Dashboard",
+        page_title="Asistente de Análisis Pre-Partido",
         page_icon="⚽",
         layout="wide",
     )
-    st.title("⚽ Football EV Betting System")
+    st.title("⚽ Asistente de Análisis Pre-Partido")
 
     tab_analysis, tab_results, tab_live, tab_perf = st.tabs(
         ["🔍 Análisis", "✅ Resultados", "🎯 Picks en vivo", "📈 Rendimiento"]
