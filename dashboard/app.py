@@ -178,7 +178,7 @@ def _render_live_picks() -> None:
         raw_odds = _get_raw_odds()
     except FileNotFoundError as exc:
         st.warning(f"{exc}")
-        st.info("Ejecuta `python collectors/odds_collector.py` para obtener odds actuales.")
+        st.info("Ejecuta `python collectors/apifootball_collector.py --upcoming` para obtener odds actuales.")
         return
 
     collected_at = raw_odds.get("collected_at", "desconocido")

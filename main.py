@@ -107,7 +107,7 @@ def load_raw_odds() -> dict:
     odds_path = config.DATA_DIR / "odds_raw.json"
     if not odds_path.exists():
         raise FileNotFoundError(
-            f"{odds_path} no encontrado. Ejecuta collectors/odds_collector.py primero."
+            f"{odds_path} no encontrado. Ejecuta collectors/apifootball_collector.py --upcoming primero."
         )
     with open(odds_path, encoding="utf-8") as f:
         return json.load(f)
