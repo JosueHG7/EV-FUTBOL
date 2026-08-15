@@ -28,23 +28,24 @@ No es un tipster; el juicio final es del usuario.
   quiere acceso remoto/móvil a futuro; cuando llegue ese momento se migra.
 - El colector respeta un **throttle (~3 req/s)** para no gatillar el firewall.
 
-### Ligas cubiertas (21) — IDs API-Football
+### Ligas cubiertas (24) — IDs API-Football
 
 | ID | Liga | | ID | Liga |
 |---|---|---|---|---|
-| 113 | Suecia Allsvenskan | | 39 | Premier League |
-| 114 | Suecia Superettan | | 140 | La Liga |
-| 244 | Finlandia Veikkausliiga | | 135 | Serie A |
-| 245 | Finlandia Ykkönen | | 78 | Bundesliga |
-| 164 | Islandia Úrvalsdeild | | 61 | Ligue 1 |
-| 165 | Islandia 1. Deild | | 262 | México Liga MX |
-| 103 | Noruega Eliteserien | | 253 | USA MLS |
-| 104 | Noruega 1. Division | | 71 | Brasil Serie A |
-| 94 | Portugal Primeira | | 72 | Brasil Serie B |
-| 95 | Portugal Segunda | | 128 | Argentina Liga Prof. |
-| | | | 162 | Costa Rica Primera |
+| 113 | Suecia Allsvenskan | | 61 | Ligue 1 |
+| 114 | Suecia Superettan | | 262 | México Liga MX |
+| 244 | Finlandia Veikkausliiga | | 253 | USA MLS |
+| 245 | Finlandia Ykkönen | | 71 | Brasil Serie A |
+| 164 | Islandia Úrvalsdeild | | 72 | Brasil Serie B |
+| 165 | Islandia 1. Deild | | 128 | Argentina Liga Prof. |
+| 103 | Noruega Eliteserien | | 162 | Costa Rica Primera |
+| 104 | Noruega 1. Division | | 307 | Arabia Pro League |
+| 94 | Portugal Primeira | | 88 | Países Bajos Eredivisie |
+| 95 | Portugal Segunda | | 89 | Países Bajos Eerste Divisie |
+| 39 | Premier League | | 140 | La Liga |
+| 135 | Serie A | | 78 | Bundesliga |
 
-- **24.698 partidos** ingestados (temporadas 2023-2026), 20.899 finalizados, 462 equipos.
+- **~28.700 partidos** ingestados (temporadas 2023-2026), ~24.000 finalizados.
 - **Cobertura de stats por-partido** (córners/tiros/tarjetas/xG) SOLO en las ligas
   más fuertes: Suecia, Finlandia 1ª, Noruega 1ª, Portugal, 5 grandes, México, MLS,
   Brasil, Argentina. **NO en Islandia, Costa Rica, Finlandia/Noruega 2ª** — ahí el

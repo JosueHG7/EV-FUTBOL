@@ -48,19 +48,23 @@ LEAGUES: dict[int, tuple[str, str]] = {
     135: ("Italy",      "Serie A"),
     78:  ("Germany",    "Bundesliga"),
     61:  ("France",     "Ligue 1"),
-    262: ("Mexico",     "Liga MX"),
-    253: ("USA",        "MLS"),
-    71:  ("Brazil",     "Serie A"),
-    72:  ("Brazil",     "Serie B"),
-    128: ("Argentina",  "Liga Profesional"),
-    162: ("Costa Rica", "Primera División"),
+    262: ("Mexico",       "Liga MX"),
+    253: ("USA",          "MLS"),
+    71:  ("Brazil",       "Serie A"),
+    72:  ("Brazil",       "Serie B"),
+    128: ("Argentina",    "Liga Profesional"),
+    162: ("Costa Rica",   "Primera División"),
+    307: ("Saudi Arabia", "Pro League"),
+    88:  ("Netherlands",  "Eredivisie"),
+    89:  ("Netherlands",  "Eerste Divisie"),
 }
 
 DEFAULT_SEASONS = [2023, 2024, 2025, 2026]
 
 # Leagues that provide per-match statistics (corners/shots/cards/xG). The rest
 # (Iceland, Costa Rica, Finland/Norway 2nd) return empty stats — skip them.
-STAT_LEAGUES = {113, 114, 244, 103, 94, 95, 39, 140, 135, 78, 61, 262, 253, 71, 72, 128}
+STAT_LEAGUES = {113, 114, 244, 103, 94, 95, 39, 140, 135, 78, 61, 262, 253, 71, 72, 128,
+                307, 88, 89}
 
 _STATUS_FINISHED = {"FT", "AET", "PEN"}
 _STATUS_SCHEDULED = {"NS", "TBD", "PST"}
@@ -230,6 +234,69 @@ def collect_upcoming(days_ahead: int = 3, leagues: dict = LEAGUES) -> None:
                 print(f"    odds {i}/{len(fixtures)}...")
 
     print(f"  Guardado: 1X2 para {n_1x2} partidos · mercados O-U/BTTS para {n_mkt}")
+
+
+# ---------------------------------------------------------------------------
+# Recent results (refresh finished matches of the last few days)
+# ---------------------------------------------------------------------------
+
+def collect_recent_results(days_back: int = 2, leagues: dict = LEAGUES,
+                           with_stats: bool = True) -> None:
+    """Fetch the last `days_back` days of fixtures for our leagues and upsert
+    them (final status + goals). Also ingests per-match stats for the finished
+    matches in stats-enabled leagues (corners/shots/cards)."""
+    from sqlalchemy import distinct, select
+    from database.models import TeamStatistic
+
+    init_db()
+    our = set(leagues)
+    fixtures: list[dict] = []
+    for d in range(days_back + 1):
+        day = (date.today() - timedelta(days=d)).isoformat()
+        for x in fetch_fixtures_by_date(day):
+            if x["league"]["id"] in our:
+                fixtures.append(x)
+
+    now = _utcnow()
+    finished = 0
+    stat_fids: list[int] = []
+    with get_session() as session:
+        for fx in fixtures:
+            m = _fixture_to_match(fx)
+            if m is None:
+                continue
+            session.merge(m)
+            if m.status == "finished" and m.home_goals is not None:
+                finished += 1
+                if m.league_id in STAT_LEAGUES:
+                    stat_fids.append(m.id)
+        session.flush()
+
+        n_stats = 0
+        if with_stats and stat_fids:
+            have = set(session.execute(select(distinct(TeamStatistic.match_id))).scalars().all())
+            todo = [f for f in stat_fids if f not in have]
+            for fid in todo:
+                try:
+                    resp = fetch_stats(fid)
+                except Exception:
+                    continue
+                if not resp:
+                    continue
+                for block in resp:
+                    tid = block.get("team", {}).get("id")
+                    if tid is None:
+                        continue
+                    for st in block.get("statistics", []):
+                        num, sstr = _stat_value(st.get("value"))
+                        session.add(TeamStatistic(
+                            match_id=fid, team_id=tid, type=st["type"],
+                            value_num=num, value_str=sstr, collected_at=now,
+                        ))
+                n_stats += 1
+
+    print(f"  {len(fixtures)} fixtures recientes actualizados (últimos {days_back}d) · "
+          f"{finished} finalizados · stats ingestadas de {n_stats}")
 
 
 # ---------------------------------------------------------------------------
@@ -432,7 +499,10 @@ if __name__ == "__main__":
                    help="Recolectar partidos próximos + odds (no reconstruye)")
     p.add_argument("--stats", action="store_true",
                    help="Ingestar stats por-partido de equipos con partido próximo")
+    p.add_argument("--results", action="store_true",
+                   help="Refrescar resultados de partidos finalizados recientes")
     p.add_argument("--days", type=int, default=3, help="Días hacia adelante")
+    p.add_argument("--back", type=int, default=2, help="Días hacia atrás (--results)")
     p.add_argument("--recent", type=int, default=10, help="Partidos recientes por equipo (--stats)")
     args = p.parse_args()
 
@@ -442,6 +512,9 @@ if __name__ == "__main__":
     elif args.stats:
         print("=== API-Football → stats por-partido (equipos próximos) ===\n")
         collect_stats_for_upcoming(days_ahead=args.days, n_recent=args.recent)
+    elif args.results:
+        print("=== API-Football → resultados recientes ===\n")
+        collect_recent_results(days_back=args.back)
     else:
         print("=== API-Football → BD (rebuild) ===\n")
         rebuild(seasons=args.seasons, wipe=not args.no_wipe)

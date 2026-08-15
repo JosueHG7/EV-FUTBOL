@@ -250,6 +250,101 @@ def _stat_averages(stats_df, matches_df: pd.DataFrame, team: str,
 
 
 # ---------------------------------------------------------------------------
+# Per-match detail — the last N matches row by row (score24-style)
+# ---------------------------------------------------------------------------
+
+def _stats_lut(stats_df, match_ids: list) -> dict:
+    lut: dict = {}
+    if stats_df is not None and not getattr(stats_df, "empty", True):
+        s = stats_df[stats_df["match_id"].isin(match_ids)]
+        for r in s.itertuples(index=False):
+            lut[(r.match_id, r.team_id, r.type)] = r.value_num
+    return lut
+
+
+def team_recent_detail(stats_df, matches_df: pd.DataFrame, team: str,
+                       before: pd.Timestamp, n: int = 6) -> list[dict]:
+    """The team's last n matches, each as a row with its own stats (not averaged)."""
+    sub = matches_df[
+        ((matches_df["home_team"] == team) | (matches_df["away_team"] == team)) &
+        (matches_df["match_date"] < before)
+    ].sort_values("match_date", ascending=False).head(n)
+    if sub.empty:
+        return []
+
+    lut = _stats_lut(stats_df, sub["match_id"].tolist())
+
+    def _num(v):
+        return v if (v is not None and pd.notna(v)) else None
+
+    rows = []
+    for _, m in sub.iterrows():
+        is_home = m["home_team"] == team
+        opp = m["away_team"] if is_home else m["home_team"]
+        gf = int(m["home_goals"]) if is_home else int(m["away_goals"])
+        ga = int(m["away_goals"]) if is_home else int(m["home_goals"])
+        res = "V" if gf > ga else ("E" if gf == ga else "D")
+        tid = m["home_team_id"] if is_home else m["away_team_id"]
+        oid = m["away_team_id"] if is_home else m["home_team_id"]
+        mid = m["match_id"]
+
+        def g(stype, opp_side=False):
+            return _num(lut.get((mid, oid if opp_side else tid, stype)))
+
+        rows.append({
+            "Fecha": str(m["match_date"].date()),
+            "Rival": ("vs " if is_home else "@ ") + str(opp),
+            "Marcador": f"{gf}-{ga}",
+            "Res": res,
+            "Córners": g("Corner Kicks"), "Córners_c": g("Corner Kicks", True),
+            "TirosP": g("Shots on Goal"), "TirosP_c": g("Shots on Goal", True),
+            "Tarj": g("Yellow Cards"),
+            "xG": g("expected_goals"), "xG_c": g("expected_goals", True),
+        })
+    return rows
+
+
+def h2h_detail(stats_df, matches_df: pd.DataFrame, home: str, away: str,
+               before: pd.Timestamp, n: int = 6) -> list[dict]:
+    """Last n meetings between the two teams, each with score + stats."""
+    mask = (
+        ((matches_df["home_team"] == home) & (matches_df["away_team"] == away)) |
+        ((matches_df["home_team"] == away) & (matches_df["away_team"] == home))
+    )
+    sub = matches_df[mask & (matches_df["match_date"] < before)] \
+        .sort_values("match_date", ascending=False).head(n)
+    if sub.empty:
+        return []
+
+    lut = _stats_lut(stats_df, sub["match_id"].tolist())
+
+    def _num(v):
+        return v if (v is not None and pd.notna(v)) else None
+
+    rows = []
+    for _, m in sub.iterrows():
+        mid = m["match_id"]
+        hid, aid = m["home_team_id"], m["away_team_id"]
+
+        def pair(stype):
+            h = _num(lut.get((mid, hid, stype)))
+            a = _num(lut.get((mid, aid, stype)))
+            if h is None and a is None:
+                return "—"
+            return f"{h if h is not None else '·'}-{a if a is not None else '·'}"
+
+        rows.append({
+            "Fecha": str(m["match_date"].date()),
+            "Local": m["home_team"], "Visitante": m["away_team"],
+            "Marcador": f"{int(m['home_goals'])}-{int(m['away_goals'])}",
+            "Córners (L-V)": pair("Corner Kicks"),
+            "Tiros P (L-V)": pair("Shots on Goal"),
+            "Tarj (L-V)": pair("Yellow Cards"),
+        })
+    return rows
+
+
+# ---------------------------------------------------------------------------
 # Reading — a short natural-language summary of the model's lean
 # ---------------------------------------------------------------------------
 

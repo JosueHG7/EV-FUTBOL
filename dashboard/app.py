@@ -104,6 +104,49 @@ def _get_stats_df():
     return pd.DataFrame(rows, columns=["match_id", "team_id", "type", "value_num"])
 
 
+@st.cache_data(ttl=600, show_spinner=False)
+def _get_recent_finished(days_back: int = 3):
+    """Partidos finalizados de los últimos días, con desenlace de mercados + stats."""
+    from datetime import datetime, timezone, timedelta
+    from sqlalchemy import select
+    from database.db import get_session
+    from database.models import Match, TeamStatistic
+
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days_back)
+    out = []
+    with get_session() as s:
+        ms = s.execute(select(Match).where(
+            Match.status == "finished", Match.home_goals.is_not(None),
+            Match.match_date >= cutoff,
+        )).scalars().all()
+        mids = [m.id for m in ms]
+        totals: dict = {}
+        if mids:
+            for mid, typ, val in s.execute(select(
+                TeamStatistic.match_id, TeamStatistic.type, TeamStatistic.value_num
+            ).where(TeamStatistic.match_id.in_(mids))).all():
+                if val is None or pd.isna(val):
+                    continue
+                totals.setdefault(mid, {})
+                totals[mid][typ] = totals[mid].get(typ, 0.0) + val
+        for m in ms:
+            md = pd.Timestamp(m.match_date)
+            if md.tzinfo is not None:
+                md = md.tz_localize(None)
+            tg = m.home_goals + m.away_goals
+            st_ = totals.get(m.id, {})
+            out.append({
+                "league": m.league_name, "country": m.country,
+                "home": m.home_team_name, "away": m.away_team_name,
+                "date": str(md.date()), "dt": md,
+                "score": f"{m.home_goals}-{m.away_goals}",
+                "over25": tg > 2.5, "btts": m.home_goals > 0 and m.away_goals > 0,
+                "corners": st_.get("Corner Kicks"), "cards": st_.get("Yellow Cards"),
+            })
+    out.sort(key=lambda x: x["dt"], reverse=True)
+    return out
+
+
 # ---------------------------------------------------------------------------
 # Section: Picks en vivo
 # ---------------------------------------------------------------------------
@@ -415,71 +458,97 @@ def _render_stats_table(d: dict) -> None:
         st.caption("Esta liga no publica córners/tiros/tarjetas — solo goles disponibles.")
 
 
-def _render_card(u: dict) -> None:
+def _pair(f, a) -> str:
+    fs = f"{f:g}" if (f is not None and pd.notna(f)) else "—"
+    ags = f"{a:g}" if (a is not None and pd.notna(a)) else "—"
+    return f"{fs} / {ags}"
+
+
+def _render_team_detail(det: list, label: str) -> None:
+    st.markdown(f"**Últimos {len(det)} — {label}**  ·  columnas = a favor / en contra")
+    rows = []
+    for r in det:
+        rows.append({
+            "Fecha": r["Fecha"], "Rival": r["Rival"], "Marc.": r["Marcador"],
+            "Res": _RESULT_EMOJI.get(r["Res"], "") + r["Res"],
+            "Córners": _pair(r["Córners"], r["Córners_c"]),
+            "Tiros P": _pair(r["TirosP"], r["TirosP_c"]),
+            "Tarj": f"{r['Tarj']:g}" if (r["Tarj"] is not None and pd.notna(r["Tarj"])) else "—",
+            "xG": _pair(r["xG"], r["xG_c"]),
+        })
+    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True,
+                 column_config={"Res": st.column_config.TextColumn(width="small")})
+
+
+def _render_detail(u: dict, matches_df, stats_df) -> None:
+    from models.match_analysis import team_recent_detail, h2h_detail
     d = u["_d"]
     home, away = d["home"], d["away"]
-    with st.container():
-        cty = f" ({u['country']})" if u.get("country") else ""
-        st.caption(f"{u['league']}{cty} · {d['date']} · cuotas: {u['book']}")
+    before = u["dt"]
 
-        if d["known"]:
-            sig = u["_sig"]
-            if sig:
-                st.markdown("**🎯 Modelo vs mercado** — tus mercados (Δ = modelo − mercado)")
-                rows = [{"Mercado": s["mkt"], "Modelo": s["model"],
-                         "Mercado ": s["market"], "Δ": s["edge"]}
-                        for s in sorted(sig, key=lambda x: x["edge"], reverse=True)]
-                st.dataframe(
-                    pd.DataFrame(rows), hide_index=True, use_container_width=True,
-                    column_config={
-                        "Modelo":   st.column_config.NumberColumn(format="percent"),
-                        "Mercado ": st.column_config.NumberColumn(format="percent"),
-                        "Δ":        st.column_config.NumberColumn(format="percent"),
-                    },
-                )
-            cs = " · ".join(f"{c['score']} ({c['prob']:.0%})" for c in d["correct_scores"])
-            st.caption(f"🧭 {d['reading']}  ·  Marcadores probables: {cs}")
-        else:
-            st.warning("Equipo no reconocido por el modelo — solo datos históricos.", icon="⚠️")
+    st.markdown(f"### {home}  vs  {away}")
+    cty = f" ({u['country']})" if u.get("country") else ""
+    st.caption(f"{u['league']}{cty} · {d['date']} · cuotas: {u['book']}")
 
-        _render_stats_table(d)
+    if d["known"] and u["_sig"]:
+        st.markdown("**🎯 Modelo vs mercado** — tus mercados (Δ = modelo − mercado)")
+        rows = [{"Mercado": s["mkt"], "Modelo": s["model"], "Mercado ": s["market"], "Δ": s["edge"]}
+                for s in sorted(u["_sig"], key=lambda x: x["edge"], reverse=True)]
+        st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True,
+            column_config={
+                "Modelo":   st.column_config.NumberColumn(format="percent"),
+                "Mercado ": st.column_config.NumberColumn(format="percent"),
+                "Δ":        st.column_config.NumberColumn(format="percent"),
+            })
+        cs = " · ".join(f"{c['score']} ({c['prob']:.0%})" for c in d["correct_scores"])
+        st.caption(f"🧭 {d['reading']}  ·  Marcadores probables: {cs}")
 
-        st.divider()
-        st.markdown("**🔥 Forma reciente**")
-        fc1, fc2 = st.columns(2)
-        with fc1:
-            _render_form_col(f"{home} (en casa)", d["form"]["home"], d["form"]["home_pts10"])
-        with fc2:
-            _render_form_col(f"{away} (fuera)", d["form"]["away"], d["form"]["away_pts10"])
+    # Resumen de promedios (arriba) + detalle partido-a-partido (abajo)
+    _render_stats_table(d)
 
-        xh, xa = d["xg"]["home"], d["xg"]["away"]
-        if xh["n"] or xa["n"]:
-            def _xg_txt(name, x):
-                if not x["n"]:
-                    return f"{name}: sin xG"
-                return f"{name}: xG {x['xgf']} a favor / {x['xga']} en contra (últimos {x['n']})"
-            st.markdown(f"**📈 xG** — {_xg_txt(home, xh)}  ·  {_xg_txt(away, xa)}")
+    st.markdown("#### 📋 Últimos partidos (partido a partido)")
+    dh = team_recent_detail(stats_df, matches_df, home, before, 6)
+    da = team_recent_detail(stats_df, matches_df, away, before, 6)
+    if dh:
+        _render_team_detail(dh, f"🏠 {home}")
+    if da:
+        _render_team_detail(da, f"✈️ {away}")
 
-        h = d["h2h"]
-        if h["n"]:
-            recent = " · ".join(f"{m['score']}" for m in h["last"])
-            st.markdown(
-                f"**🤝 Head-to-Head** ({h['n']}) — {home}: {h['home_wins']}V · "
-                f"{h['draws']}E · {h['away_wins']}V {away}  ·  "
-                f"media {h['avg_goals']} goles  ·  recientes: {recent}"
-            )
+    hh = h2h_detail(stats_df, matches_df, home, away, before, 6)
+    if hh:
+        st.markdown("#### 🤝 Enfrentamientos directos (detalle)")
+        st.dataframe(pd.DataFrame(hh), hide_index=True, use_container_width=True)
 
-        rh, ra = d["rest"]["home"], d["rest"]["away"]
-        if rh["days_rest"] is not None or ra["days_rest"] is not None:
-            st.caption(
-                f"😴 Descanso — {home}: {rh['days_rest']}d ({rh['games_14d']} en 14d)  ·  "
-                f"{away}: {ra['days_rest']}d ({ra['games_14d']} en 14d)"
-            )
+    rh, ra = d["rest"]["home"], d["rest"]["away"]
+    if rh["days_rest"] is not None or ra["days_rest"] is not None:
+        st.caption(
+            f"😴 Descanso — {home}: {rh['days_rest']}d ({rh['games_14d']} en 14d)  ·  "
+            f"{away}: {ra['days_rest']}d ({ra['games_14d']} en 14d)"
+        )
+
+
+@st.cache_resource(show_spinner="Analizando partidos (una sola vez)…")
+def _get_analyzed():
+    """Construye TODOS los dossiers + señales una sola vez (cacheado).
+
+    Así filtrar/seleccionar en la UI no recalcula nada → respuesta instantánea.
+    """
+    from models.match_analysis import build_dossier
+    model, teams, label, n_matches = _get_live_model()
+    matches_df = _get_matches()
+    xg_df = _get_xg()
+    stats_df = _get_stats_df()
+    upcoming = _get_upcoming()
+    for u in upcoming:
+        d = build_dossier(model, matches_df, xg_df, u["home"], u["away"], u["dt"],
+                          u["odds_1x2"], stats_df=stats_df)
+        u["_d"] = d
+        u["_sig"] = _signals(d, u["ou25"], u["btts"]) if d["known"] else []
+        u["_top"] = max((s["edge"] for s in u["_sig"]), default=None)
+    return upcoming, label, n_matches
 
 
 def _render_analysis() -> None:
-    from models.match_analysis import build_dossier
-
     st.header("🔍 Análisis por partido — triaje diario")
     st.caption(
         "Tus partidos próximos, ordenados por dónde el modelo más discrepa del "
@@ -488,27 +557,18 @@ def _render_analysis() -> None:
     )
 
     try:
-        model, teams, label, n_matches = _get_live_model()
+        upcoming, label, n_matches = _get_analyzed()
     except Exception as exc:
-        st.error(f"No se pudo entrenar el modelo: {exc}")
+        st.error(f"No se pudo analizar: {exc}")
         return
-
-    matches_df = _get_matches()
-    xg_df = _get_xg()
-    stats_df = _get_stats_df()
-    upcoming = _get_upcoming()
 
     if not upcoming:
         st.info("No hay partidos próximos con odds. Corre "
                 "`python collectors/apifootball_collector.py --upcoming` para recolectarlos.")
         return
 
-    for u in upcoming:
-        d = build_dossier(model, matches_df, xg_df, u["home"], u["away"], u["dt"],
-                          u["odds_1x2"], stats_df=stats_df)
-        u["_d"] = d
-        u["_sig"] = _signals(d, u["ou25"], u["btts"]) if d["known"] else []
-        u["_top"] = max((s["edge"] for s in u["_sig"]), default=None)
+    matches_df = _get_matches()   # cacheado — para la vista de detalle
+    stats_df = _get_stats_df()    # cacheado
 
     c1, c2 = st.columns([2, 1])
     leagues = ["Todas"] + sorted({u["league"] for u in upcoming})
@@ -549,12 +609,13 @@ def _render_analysis() -> None:
         )
         st.caption(f"{len(known)} partidos · modelo entrenado con {n_matches:,} partidos")
 
-        st.subheader("Fichas (mayor discrepancia primero)")
-        for u in known:
-            title = (f"{_signal_emoji(u['_top'])}  {u['home']} vs {u['away']}  ·  "
-                     f"{u['league']}  ·  Δ {u['_top']:+.0%}")
-            with st.expander(title, expanded=(u["_top"] >= 0.10)):
-                _render_card(u)
+        st.divider()
+        st.subheader("🔎 Detalle del partido")
+        labels = [f"{_signal_emoji(u['_top'])} {u['home']} vs {u['away']} · {u['league']} · Δ{u['_top']:+.0%}"
+                  for u in known]
+        idx = st.selectbox("Elige un partido para ver el detalle completo",
+                           range(len(known)), format_func=lambda i: labels[i])
+        _render_detail(known[idx], matches_df, stats_df)
     else:
         st.info("Ningún partido próximo con modelo + mercado para el filtro actual.")
 
@@ -562,6 +623,46 @@ def _render_analysis() -> None:
         with st.expander(f"⚠️ {len(unknown)} partidos sin datos de modelo (equipo no entrenado)"):
             for u in unknown:
                 st.markdown(f"- {u['home']} vs {u['away']} · {u['league']}")
+
+
+# ---------------------------------------------------------------------------
+# Section: Resultados (partidos finalizados recientes)
+# ---------------------------------------------------------------------------
+
+def _render_results() -> None:
+    st.header("✅ Resultados recientes")
+    st.caption(
+        "Partidos finalizados (últimos días) con el desenlace de tus mercados "
+        "(Over/Under 2.5, BTTS) calculado del marcador real. Refresca con "
+        "`python collectors/apifootball_collector.py --results`."
+    )
+
+    fin = _get_recent_finished(3)
+    if not fin:
+        st.info("No hay partidos finalizados recientes en la BD.")
+        return
+
+    leagues = ["Todas"] + sorted({f["league"] for f in fin})
+    sel = st.selectbox("Liga", leagues, key="res_liga")
+    view = [f for f in fin if sel == "Todas" or f["league"] == sel]
+
+    rows = []
+    for f in view:
+        rows.append({
+            "Fecha": f["date"],
+            "Partido": f"{f['home']} vs {f['away']}",
+            "Liga": f["league"],
+            "Marcador": f["score"],
+            "Over 2.5": "✅ Over" if f["over25"] else "🔻 Under",
+            "BTTS": "✅ Sí" if f["btts"] else "🔻 No",
+            "Córners": f"{f['corners']:g}" if f["corners"] is not None else "—",
+            "Tarjetas": f"{f['cards']:g}" if f["cards"] is not None else "—",
+        })
+    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True, height=560)
+    st.caption(
+        f"{len(view)} partidos finalizados · Córners/Tarjetas = total del partido "
+        "(donde la liga publica stats)"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -576,11 +677,13 @@ def main() -> None:
     )
     st.title("⚽ Football EV Betting System")
 
-    tab_analysis, tab_live, tab_perf = st.tabs(
-        ["🔍 Análisis", "🎯 Picks en vivo", "📈 Rendimiento"]
+    tab_analysis, tab_results, tab_live, tab_perf = st.tabs(
+        ["🔍 Análisis", "✅ Resultados", "🎯 Picks en vivo", "📈 Rendimiento"]
     )
     with tab_analysis:
         _render_analysis()
+    with tab_results:
+        _render_results()
     with tab_live:
         _render_live_picks()
     with tab_perf:
