@@ -59,13 +59,16 @@ def load_matches(league_id: int | None = None) -> pd.DataFrame:
         rows = session.scalars(stmt).all()
         records = [
             {
-                "home_team":  m.home_team_name,
-                "away_team":  m.away_team_name,
-                "home_goals": m.home_goals,
-                "away_goals": m.away_goals,
-                "league_id":  m.league_id,
-                "season":     m.season,
-                "match_date": m.match_date,
+                "match_id":     m.id,
+                "home_team":    m.home_team_name,
+                "away_team":    m.away_team_name,
+                "home_team_id": m.home_team_id,
+                "away_team_id": m.away_team_id,
+                "home_goals":   m.home_goals,
+                "away_goals":   m.away_goals,
+                "league_id":    m.league_id,
+                "season":       m.season,
+                "match_date":   m.match_date,
             }
             for m in rows
         ]

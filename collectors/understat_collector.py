@@ -282,7 +282,7 @@ def load_all_xg(
     if league_ids is None:
         league_ids = list(LEAGUE_SLUGS.keys())
     if seasons is None:
-        seasons = [2022, 2023, 2024]
+        seasons = [2022, 2023, 2024, 2025]
 
     frames: list[pd.DataFrame] = []
     for league_id in league_ids:

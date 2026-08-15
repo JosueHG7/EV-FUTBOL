@@ -93,11 +93,16 @@ class RealBacktester:
         min_ev: float = config.MIN_EV_THRESHOLD,
         kelly_fraction: float = 0.25,
         max_weekly_exposure: float = 0.20,
+        bookmaker: str = "Pinnacle",
     ) -> None:
         self.initial_bankroll    = bankroll
         self.min_ev              = min_ev
         self.kelly_fraction      = kelly_fraction
         self.max_weekly_exposure = max_weekly_exposure
+        # Bookmaker whose odds are used for candidate generation + settlement.
+        # "Pinnacle" (sharp) is nearly unbeatable; "Bet365" (soft) is the
+        # realistic target. The internal pinnacle_* columns just hold this book.
+        self.bookmaker           = bookmaker
 
     # ------------------------------------------------------------------
     # Public API
@@ -601,7 +606,7 @@ class RealBacktester:
                     "away_win": o.away_win,
                 }
                 for o in session.execute(
-                    select(Odds).where(Odds.bookmaker == "Pinnacle")
+                    select(Odds).where(Odds.bookmaker == self.bookmaker)
                 ).scalars().all()
             }
 

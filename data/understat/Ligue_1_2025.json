@@ -1,0 +1,8573 @@
+{
+  "collected_at": "2026-08-14T15:21:11.590498+00:00",
+  "data": [
+    {
+      "id": "29538",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.31418",
+        "a": "2.07298"
+      },
+      "datetime": "2025-08-15 18:45:00",
+      "forecast": {
+        "w": "0.2107",
+        "d": "0.2256",
+        "l": "0.5637"
+      }
+    },
+    {
+      "id": "29539",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.87447",
+        "a": "1.615"
+      },
+      "datetime": "2025-08-16 15:00:00",
+      "forecast": {
+        "w": "0.4363",
+        "d": "0.2606",
+        "l": "0.3031"
+      }
+    },
+    {
+      "id": "29540",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.88048",
+        "a": "0.427494"
+      },
+      "datetime": "2025-08-16 17:00:00",
+      "forecast": {
+        "w": "0.8017",
+        "d": "0.1577",
+        "l": "0.0406"
+      }
+    },
+    {
+      "id": "29541",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.95554",
+        "a": "0.56945"
+      },
+      "datetime": "2025-08-16 19:05:00",
+      "forecast": {
+        "w": "0.4632",
+        "d": "0.3479",
+        "l": "0.1889"
+      }
+    },
+    {
+      "id": "29542",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "3",
+        "a": "3"
+      },
+      "xG": {
+        "h": "1.49573",
+        "a": "1.84218"
+      },
+      "datetime": "2025-08-17 13:00:00",
+      "forecast": {
+        "w": "0.2749",
+        "d": "0.2663",
+        "l": "0.4588"
+      }
+    },
+    {
+      "id": "29543",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.4925",
+        "a": "1.84516"
+      },
+      "datetime": "2025-08-17 15:15:00",
+      "forecast": {
+        "w": "0.2677",
+        "d": "0.2851",
+        "l": "0.4472"
+      }
+    },
+    {
+      "id": "29544",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.82142",
+        "a": "0.71125"
+      },
+      "datetime": "2025-08-17 15:15:00",
+      "forecast": {
+        "w": "0.3649",
+        "d": "0.3607",
+        "l": "0.2744"
+      }
+    },
+    {
+      "id": "29545",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.184483",
+        "a": "0.731013"
+      },
+      "datetime": "2025-08-17 15:15:00",
+      "forecast": {
+        "w": "0.082",
+        "d": "0.4286",
+        "l": "0.4894"
+      }
+    },
+    {
+      "id": "29546",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.124428",
+        "a": "1.35682"
+      },
+      "datetime": "2025-08-17 18:45:00",
+      "forecast": {
+        "w": "0.0274",
+        "d": "0.242",
+        "l": "0.7306"
+      }
+    },
+    {
+      "id": "29547",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.0878",
+        "a": "0.176876"
+      },
+      "datetime": "2025-08-22 18:45:00",
+      "forecast": {
+        "w": "0.8991",
+        "d": "0.0898",
+        "l": "0.0111"
+      }
+    },
+    {
+      "id": "29548",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "5",
+        "a": "2"
+      },
+      "xG": {
+        "h": "3.337",
+        "a": "1.05457"
+      },
+      "datetime": "2025-08-23 15:00:00",
+      "forecast": {
+        "w": "0.8786",
+        "d": "0.0866",
+        "l": "0.0348"
+      }
+    },
+    {
+      "id": "29549",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.66284",
+        "a": "2.24407"
+      },
+      "datetime": "2025-08-23 17:00:00",
+      "forecast": {
+        "w": "0.4862",
+        "d": "0.2319",
+        "l": "0.2819"
+      }
+    },
+    {
+      "id": "29550",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "3",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.35479",
+        "a": "0.504863"
+      },
+      "datetime": "2025-08-23 19:05:00",
+      "forecast": {
+        "w": "0.8525",
+        "d": "0.1138",
+        "l": "0.0337"
+      }
+    },
+    {
+      "id": "29551",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "4",
+        "a": "0"
+      },
+      "xG": {
+        "h": "3.4466",
+        "a": "0.0728372"
+      },
+      "datetime": "2025-08-24 13:00:00",
+      "forecast": {
+        "w": "0.9855",
+        "d": "0.0134",
+        "l": "0.0011"
+      }
+    },
+    {
+      "id": "29552",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.81743",
+        "a": "0.425423"
+      },
+      "datetime": "2025-08-24 15:15:00",
+      "forecast": {
+        "w": "0.8133",
+        "d": "0.1541",
+        "l": "0.0326"
+      }
+    },
+    {
+      "id": "29553",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "2.0398",
+        "a": "1.29098"
+      },
+      "datetime": "2025-08-24 15:15:00",
+      "forecast": {
+        "w": "0.5641",
+        "d": "0.2708",
+        "l": "0.1651"
+      }
+    },
+    {
+      "id": "29554",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.32432",
+        "a": "0.750148"
+      },
+      "datetime": "2025-08-24 15:15:00",
+      "forecast": {
+        "w": "0.5764",
+        "d": "0.2937",
+        "l": "0.1299"
+      }
+    },
+    {
+      "id": "29555",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.41091",
+        "a": "1.52213"
+      },
+      "datetime": "2025-08-24 18:45:00",
+      "forecast": {
+        "w": "0.5964",
+        "d": "0.2267",
+        "l": "0.1769"
+      }
+    },
+    {
+      "id": "29556",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "4.42054",
+        "a": "0.963409"
+      },
+      "datetime": "2025-08-29 18:45:00",
+      "forecast": {
+        "w": "0.9492",
+        "d": "0.0354",
+        "l": "0.0154"
+      }
+    },
+    {
+      "id": "29557",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "1",
+        "a": "7"
+      },
+      "xG": {
+        "h": "1.1603",
+        "a": "3.70255"
+      },
+      "datetime": "2025-08-30 15:00:00",
+      "forecast": {
+        "w": "0.0186",
+        "d": "0.0702",
+        "l": "0.9112"
+      }
+    },
+    {
+      "id": "29558",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.418091",
+        "a": "1.10996"
+      },
+      "datetime": "2025-08-30 17:00:00",
+      "forecast": {
+        "w": "0.1072",
+        "d": "0.3259",
+        "l": "0.5669"
+      }
+    },
+    {
+      "id": "29559",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "3",
+        "a": "6"
+      },
+      "xG": {
+        "h": "2.33006",
+        "a": "2.49609"
+      },
+      "datetime": "2025-08-30 19:05:00",
+      "forecast": {
+        "w": "0.3283",
+        "d": "0.2611",
+        "l": "0.4106"
+      }
+    },
+    {
+      "id": "29560",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.58619",
+        "a": "1.73758"
+      },
+      "datetime": "2025-08-31 13:00:00",
+      "forecast": {
+        "w": "0.3243",
+        "d": "0.2811",
+        "l": "0.3946"
+      }
+    },
+    {
+      "id": "29561",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.75553",
+        "a": "0.715595"
+      },
+      "datetime": "2025-08-31 15:15:00",
+      "forecast": {
+        "w": "0.6527",
+        "d": "0.2389",
+        "l": "0.1084"
+      }
+    },
+    {
+      "id": "29562",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "3",
+        "a": "2"
+      },
+      "xG": {
+        "h": "3.39898",
+        "a": "1.6248"
+      },
+      "datetime": "2025-08-31 15:15:00",
+      "forecast": {
+        "w": "0.7758",
+        "d": "0.1277",
+        "l": "0.0965"
+      }
+    },
+    {
+      "id": "29563",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "3",
+        "a": "2"
+      },
+      "xG": {
+        "h": "2.35547",
+        "a": "1.7732"
+      },
+      "datetime": "2025-08-31 15:15:00",
+      "forecast": {
+        "w": "0.5177",
+        "d": "0.2407",
+        "l": "0.2416"
+      }
+    },
+    {
+      "id": "29564",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "3.15727",
+        "a": "0.896862"
+      },
+      "datetime": "2025-08-31 18:45:00",
+      "forecast": {
+        "w": "0.9176",
+        "d": "0.0681",
+        "l": "0.0143"
+      }
+    },
+    {
+      "id": "29568",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "4",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.83367",
+        "a": "0.187377"
+      },
+      "datetime": "2025-09-12 18:45:00",
+      "forecast": {
+        "w": "0.9575",
+        "d": "0.0384",
+        "l": "0.0041"
+      }
+    },
+    {
+      "id": "29570",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.34645",
+        "a": "0.775945"
+      },
+      "datetime": "2025-09-13 15:00:00",
+      "forecast": {
+        "w": "0.7659",
+        "d": "0.1616",
+        "l": "0.0725"
+      }
+    },
+    {
+      "id": "29565",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "0.904229",
+        "a": "1.62646"
+      },
+      "datetime": "2025-09-13 19:05:00",
+      "forecast": {
+        "w": "0.1822",
+        "d": "0.2626",
+        "l": "0.5552"
+      }
+    },
+    {
+      "id": "29567",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.42116",
+        "a": "1.15678"
+      },
+      "datetime": "2025-09-14 13:00:00",
+      "forecast": {
+        "w": "0.6998",
+        "d": "0.1988",
+        "l": "0.1014"
+      }
+    },
+    {
+      "id": "29566",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "2.60519",
+        "a": "1.85008"
+      },
+      "datetime": "2025-09-14 15:15:00",
+      "forecast": {
+        "w": "0.5607",
+        "d": "0.2418",
+        "l": "0.1975"
+      }
+    },
+    {
+      "id": "29569",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.76271",
+        "a": "1.98184"
+      },
+      "datetime": "2025-09-14 15:15:00",
+      "forecast": {
+        "w": "0.2847",
+        "d": "0.3063",
+        "l": "0.409"
+      }
+    },
+    {
+      "id": "29571",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.05815",
+        "a": "1.2242"
+      },
+      "datetime": "2025-09-14 15:15:00",
+      "forecast": {
+        "w": "0.2878",
+        "d": "0.2973",
+        "l": "0.4149"
+      }
+    },
+    {
+      "id": "29573",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.43354",
+        "a": "0.524832"
+      },
+      "datetime": "2025-09-14 15:15:00",
+      "forecast": {
+        "w": "0.6606",
+        "d": "0.2456",
+        "l": "0.0938"
+      }
+    },
+    {
+      "id": "29572",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.20918",
+        "a": "1.7381"
+      },
+      "datetime": "2025-09-14 18:45:00",
+      "forecast": {
+        "w": "0.4829",
+        "d": "0.2548",
+        "l": "0.2623"
+      }
+    },
+    {
+      "id": "29578",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.20483",
+        "a": "0.677354"
+      },
+      "datetime": "2025-09-19 18:45:00",
+      "forecast": {
+        "w": "0.7823",
+        "d": "0.1561",
+        "l": "0.0616"
+      }
+    },
+    {
+      "id": "29581",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "2",
+        "a": "2"
+      },
+      "xG": {
+        "h": "2.65629",
+        "a": "1.44041"
+      },
+      "datetime": "2025-09-20 15:00:00",
+      "forecast": {
+        "w": "0.6845",
+        "d": "0.1999",
+        "l": "0.1156"
+      }
+    },
+    {
+      "id": "29575",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "4",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.07376",
+        "a": "2.26393"
+      },
+      "datetime": "2025-09-20 17:00:00",
+      "forecast": {
+        "w": "0.342",
+        "d": "0.2481",
+        "l": "0.4099"
+      }
+    },
+    {
+      "id": "29577",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "3",
+        "a": "0"
+      },
+      "xG": {
+        "h": "3.8174",
+        "a": "1.89889"
+      },
+      "datetime": "2025-09-20 19:05:00",
+      "forecast": {
+        "w": "0.8008",
+        "d": "0.121",
+        "l": "0.0782"
+      }
+    },
+    {
+      "id": "29582",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "3"
+      },
+      "xG": {
+        "h": "1.9014",
+        "a": "2.46459"
+      },
+      "datetime": "2025-09-21 13:00:00",
+      "forecast": {
+        "w": "0.2302",
+        "d": "0.2363",
+        "l": "0.5335"
+      }
+    },
+    {
+      "id": "29574",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.883373",
+        "a": "1.50957"
+      },
+      "datetime": "2025-09-21 15:15:00",
+      "forecast": {
+        "w": "0.1478",
+        "d": "0.3212",
+        "l": "0.531"
+      }
+    },
+    {
+      "id": "29576",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.23396",
+        "a": "1.26993"
+      },
+      "datetime": "2025-09-21 15:15:00",
+      "forecast": {
+        "w": "0.7043",
+        "d": "0.241",
+        "l": "0.0547"
+      }
+    },
+    {
+      "id": "29580",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "5",
+        "a": "2"
+      },
+      "xG": {
+        "h": "3.497",
+        "a": "1.91296"
+      },
+      "datetime": "2025-09-21 15:15:00",
+      "forecast": {
+        "w": "0.7381",
+        "d": "0.1588",
+        "l": "0.1031"
+      }
+    },
+    {
+      "id": "29579",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.77744",
+        "a": "0.919565"
+      },
+      "datetime": "2025-09-22 18:45:00",
+      "forecast": {
+        "w": "0.6088",
+        "d": "0.2395",
+        "l": "0.1517"
+      }
+    },
+    {
+      "id": "29590",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.0976",
+        "a": "2.00258"
+      },
+      "datetime": "2025-09-26 18:45:00",
+      "forecast": {
+        "w": "0.1578",
+        "d": "0.2197",
+        "l": "0.6225"
+      }
+    },
+    {
+      "id": "29585",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.09364",
+        "a": "0.894035"
+      },
+      "datetime": "2025-09-27 15:00:00",
+      "forecast": {
+        "w": "0.6808",
+        "d": "0.2278",
+        "l": "0.0914"
+      }
+    },
+    {
+      "id": "29591",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "2",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.98573",
+        "a": "1.8303"
+      },
+      "datetime": "2025-09-27 17:00:00",
+      "forecast": {
+        "w": "0.3956",
+        "d": "0.273",
+        "l": "0.3314"
+      }
+    },
+    {
+      "id": "29588",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.11672",
+        "a": "0.73132"
+      },
+      "datetime": "2025-09-27 19:05:00",
+      "forecast": {
+        "w": "0.7351",
+        "d": "0.175",
+        "l": "0.0899"
+      }
+    },
+    {
+      "id": "29587",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.36997",
+        "a": "1.49444"
+      },
+      "datetime": "2025-09-28 13:00:00",
+      "forecast": {
+        "w": "0.3095",
+        "d": "0.2998",
+        "l": "0.3907"
+      }
+    },
+    {
+      "id": "29583",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "0",
+        "a": "2"
+      },
+      "xG": {
+        "h": "0.501827",
+        "a": "1.34192"
+      },
+      "datetime": "2025-09-28 15:15:00",
+      "forecast": {
+        "w": "0.0957",
+        "d": "0.2563",
+        "l": "0.648"
+      }
+    },
+    {
+      "id": "29584",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.65271",
+        "a": "0.642572"
+      },
+      "datetime": "2025-09-28 15:15:00",
+      "forecast": {
+        "w": "0.6578",
+        "d": "0.233",
+        "l": "0.1092"
+      }
+    },
+    {
+      "id": "29586",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.39939",
+        "a": "0.395921"
+      },
+      "datetime": "2025-09-28 15:15:00",
+      "forecast": {
+        "w": "0.2433",
+        "d": "0.5192",
+        "l": "0.2375"
+      }
+    },
+    {
+      "id": "29589",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.57438",
+        "a": "1.51932"
+      },
+      "datetime": "2025-09-28 18:45:00",
+      "forecast": {
+        "w": "0.3876",
+        "d": "0.2654",
+        "l": "0.347"
+      }
+    },
+    {
+      "id": "29599",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.83687",
+        "a": "0.855852"
+      },
+      "datetime": "2025-10-03 18:45:00",
+      "forecast": {
+        "w": "0.646",
+        "d": "0.2235",
+        "l": "0.1305"
+      }
+    },
+    {
+      "id": "29597",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "0",
+        "a": "3"
+      },
+      "xG": {
+        "h": "0.1529",
+        "a": "2.67719"
+      },
+      "datetime": "2025-10-04 15:00:00",
+      "forecast": {
+        "w": "0.0063",
+        "d": "0.0439",
+        "l": "0.9498"
+      }
+    },
+    {
+      "id": "29593",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.44552",
+        "a": "0.489862"
+      },
+      "datetime": "2025-10-04 17:00:00",
+      "forecast": {
+        "w": "0.6369",
+        "d": "0.2555",
+        "l": "0.1076"
+      }
+    },
+    {
+      "id": "29592",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.27422",
+        "a": "0.471027"
+      },
+      "datetime": "2025-10-04 19:05:00",
+      "forecast": {
+        "w": "0.6093",
+        "d": "0.2767",
+        "l": "0.114"
+      }
+    },
+    {
+      "id": "29596",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.42206",
+        "a": "1.36525"
+      },
+      "datetime": "2025-10-05 13:00:00",
+      "forecast": {
+        "w": "0.3677",
+        "d": "0.2792",
+        "l": "0.3531"
+      }
+    },
+    {
+      "id": "29594",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "2",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.98097",
+        "a": "1.21285"
+      },
+      "datetime": "2025-10-05 15:15:00",
+      "forecast": {
+        "w": "0.5716",
+        "d": "0.2617",
+        "l": "0.1667"
+      }
+    },
+    {
+      "id": "29598",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "2",
+        "a": "2"
+      },
+      "xG": {
+        "h": "2.4556",
+        "a": "1.13121"
+      },
+      "datetime": "2025-10-05 15:15:00",
+      "forecast": {
+        "w": "0.7374",
+        "d": "0.1881",
+        "l": "0.0745"
+      }
+    },
+    {
+      "id": "29600",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "5",
+        "a": "0"
+      },
+      "xG": {
+        "h": "4.2783",
+        "a": "0.294622"
+      },
+      "datetime": "2025-10-05 15:15:00",
+      "forecast": {
+        "w": "0.9879",
+        "d": "0.0105",
+        "l": "0.0016"
+      }
+    },
+    {
+      "id": "29595",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.647492",
+        "a": "1.71207"
+      },
+      "datetime": "2025-10-05 18:45:00",
+      "forecast": {
+        "w": "0.1092",
+        "d": "0.2289",
+        "l": "0.6619"
+      }
+    },
+    {
+      "id": "29608",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "3",
+        "a": "3"
+      },
+      "xG": {
+        "h": "2.85659",
+        "a": "1.92082"
+      },
+      "datetime": "2025-10-17 18:45:00",
+      "forecast": {
+        "w": "0.6065",
+        "d": "0.2102",
+        "l": "0.1833"
+      }
+    },
+    {
+      "id": "29606",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "3",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.16366",
+        "a": "2.89867"
+      },
+      "datetime": "2025-10-18 15:00:00",
+      "forecast": {
+        "w": "0.0403",
+        "d": "0.1411",
+        "l": "0.8186"
+      }
+    },
+    {
+      "id": "29601",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.58102",
+        "a": "1.65166"
+      },
+      "datetime": "2025-10-18 17:00:00",
+      "forecast": {
+        "w": "0.3289",
+        "d": "0.299",
+        "l": "0.3721"
+      }
+    },
+    {
+      "id": "29604",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "6",
+        "a": "2"
+      },
+      "xG": {
+        "h": "4.20445",
+        "a": "0.352985"
+      },
+      "datetime": "2025-10-18 19:05:00",
+      "forecast": {
+        "w": "0.9887",
+        "d": "0.009",
+        "l": "0.0023"
+      }
+    },
+    {
+      "id": "29602",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.98018",
+        "a": "0.583966"
+      },
+      "datetime": "2025-10-19 13:00:00",
+      "forecast": {
+        "w": "0.7671",
+        "d": "0.1682",
+        "l": "0.0647"
+      }
+    },
+    {
+      "id": "29603",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "3",
+        "a": "3"
+      },
+      "xG": {
+        "h": "1.5878",
+        "a": "1.56803"
+      },
+      "datetime": "2025-10-19 15:15:00",
+      "forecast": {
+        "w": "0.3485",
+        "d": "0.2972",
+        "l": "0.3543"
+      }
+    },
+    {
+      "id": "29607",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "4",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.73037",
+        "a": "0.119104"
+      },
+      "datetime": "2025-10-19 15:15:00",
+      "forecast": {
+        "w": "0.9589",
+        "d": "0.0379",
+        "l": "0.0032"
+      }
+    },
+    {
+      "id": "29609",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "2",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.93587",
+        "a": "1.66634"
+      },
+      "datetime": "2025-10-19 15:15:00",
+      "forecast": {
+        "w": "0.4177",
+        "d": "0.2685",
+        "l": "0.3138"
+      }
+    },
+    {
+      "id": "29605",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "0",
+        "a": "2"
+      },
+      "xG": {
+        "h": "0.772603",
+        "a": "2.7603"
+      },
+      "datetime": "2025-10-19 18:45:00",
+      "forecast": {
+        "w": "0.0472",
+        "d": "0.1166",
+        "l": "0.8362"
+      }
+    },
+    {
+      "id": "29614",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "0.951277",
+        "a": "0.916827"
+      },
+      "datetime": "2025-10-24 18:45:00",
+      "forecast": {
+        "w": "0.3476",
+        "d": "0.3361",
+        "l": "0.3163"
+      }
+    },
+    {
+      "id": "29613",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "0",
+        "a": "3"
+      },
+      "xG": {
+        "h": "1.89257",
+        "a": "2.92453"
+      },
+      "datetime": "2025-10-25 15:00:00",
+      "forecast": {
+        "w": "0.176",
+        "d": "0.208",
+        "l": "0.616"
+      }
+    },
+    {
+      "id": "29615",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "3.37276",
+        "a": "0.584122"
+      },
+      "datetime": "2025-10-25 17:00:00",
+      "forecast": {
+        "w": "0.9395",
+        "d": "0.0474",
+        "l": "0.0131"
+      }
+    },
+    {
+      "id": "29612",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.87596",
+        "a": "0.765479"
+      },
+      "datetime": "2025-10-25 19:05:00",
+      "forecast": {
+        "w": "0.7144",
+        "d": "0.1932",
+        "l": "0.0924"
+      }
+    },
+    {
+      "id": "29617",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "6",
+        "a": "1"
+      },
+      "xG": {
+        "h": "3.85054",
+        "a": "1.01476"
+      },
+      "datetime": "2025-10-26 13:00:00",
+      "forecast": {
+        "w": "0.9124",
+        "d": "0.0635",
+        "l": "0.0241"
+      }
+    },
+    {
+      "id": "29610",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.30397",
+        "a": "2.00206"
+      },
+      "datetime": "2025-10-26 15:15:00",
+      "forecast": {
+        "w": "0.2093",
+        "d": "0.2397",
+        "l": "0.551"
+      }
+    },
+    {
+      "id": "29611",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.563862",
+        "a": "1.52215"
+      },
+      "datetime": "2025-10-26 15:15:00",
+      "forecast": {
+        "w": "0.1067",
+        "d": "0.237",
+        "l": "0.6563"
+      }
+    },
+    {
+      "id": "29618",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.54435",
+        "a": "0.88734"
+      },
+      "datetime": "2025-10-26 15:15:00",
+      "forecast": {
+        "w": "0.5475",
+        "d": "0.2673",
+        "l": "0.1852"
+      }
+    },
+    {
+      "id": "29616",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.14566",
+        "a": "0.798152"
+      },
+      "datetime": "2025-10-26 18:45:00",
+      "forecast": {
+        "w": "0.4442",
+        "d": "0.3648",
+        "l": "0.191"
+      }
+    },
+    {
+      "id": "29619",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.556063",
+        "a": "0.370311"
+      },
+      "datetime": "2025-10-29 17:00:00",
+      "forecast": {
+        "w": "0.3358",
+        "d": "0.4673",
+        "l": "0.1969"
+      }
+    },
+    {
+      "id": "29621",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.192946",
+        "a": "1.28813"
+      },
+      "datetime": "2025-10-29 17:00:00",
+      "forecast": {
+        "w": "0.037",
+        "d": "0.224",
+        "l": "0.739"
+      }
+    },
+    {
+      "id": "29623",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.74459",
+        "a": "0.661109"
+      },
+      "datetime": "2025-10-29 17:00:00",
+      "forecast": {
+        "w": "0.7013",
+        "d": "0.2035",
+        "l": "0.0952"
+      }
+    },
+    {
+      "id": "29625",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "3.11925",
+        "a": "1.23771"
+      },
+      "datetime": "2025-10-29 17:00:00",
+      "forecast": {
+        "w": "0.818",
+        "d": "0.1224",
+        "l": "0.0596"
+      }
+    },
+    {
+      "id": "29620",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "2",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.58833",
+        "a": "0.996929"
+      },
+      "datetime": "2025-10-29 19:05:00",
+      "forecast": {
+        "w": "0.5279",
+        "d": "0.2728",
+        "l": "0.1993"
+      }
+    },
+    {
+      "id": "29622",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "3",
+        "a": "3"
+      },
+      "xG": {
+        "h": "0.581508",
+        "a": "1.21871"
+      },
+      "datetime": "2025-10-29 19:05:00",
+      "forecast": {
+        "w": "0.1145",
+        "d": "0.3088",
+        "l": "0.5767"
+      }
+    },
+    {
+      "id": "29624",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "3",
+        "a": "5"
+      },
+      "xG": {
+        "h": "2.1261",
+        "a": "4.10211"
+      },
+      "datetime": "2025-10-29 19:05:00",
+      "forecast": {
+        "w": "0.0966",
+        "d": "0.1266",
+        "l": "0.7768"
+      }
+    },
+    {
+      "id": "29626",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "2",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.62131",
+        "a": "1.26096"
+      },
+      "datetime": "2025-10-29 19:05:00",
+      "forecast": {
+        "w": "0.4563",
+        "d": "0.2832",
+        "l": "0.2605"
+      }
+    },
+    {
+      "id": "29627",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "3",
+        "a": "0"
+      },
+      "xG": {
+        "h": "4.10806",
+        "a": "0.68695"
+      },
+      "datetime": "2025-10-29 19:05:00",
+      "forecast": {
+        "w": "0.967",
+        "d": "0.027",
+        "l": "0.006"
+      }
+    },
+    {
+      "id": "29634",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.88647",
+        "a": "0.3867"
+      },
+      "datetime": "2025-11-01 16:00:00",
+      "forecast": {
+        "w": "0.7794",
+        "d": "0.169",
+        "l": "0.0516"
+      }
+    },
+    {
+      "id": "29632",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.820947",
+        "a": "1.18048"
+      },
+      "datetime": "2025-11-01 18:00:00",
+      "forecast": {
+        "w": "0.2295",
+        "d": "0.3155",
+        "l": "0.455"
+      }
+    },
+    {
+      "id": "29628",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.09464",
+        "a": "0.698037"
+      },
+      "datetime": "2025-11-01 20:05:00",
+      "forecast": {
+        "w": "0.441",
+        "d": "0.3526",
+        "l": "0.2064"
+      }
+    },
+    {
+      "id": "29635",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "4",
+        "a": "1"
+      },
+      "xG": {
+        "h": "3.06877",
+        "a": "2.08816"
+      },
+      "datetime": "2025-11-02 14:00:00",
+      "forecast": {
+        "w": "0.6082",
+        "d": "0.1935",
+        "l": "0.1983"
+      }
+    },
+    {
+      "id": "29630",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "3",
+        "a": "0"
+      },
+      "xG": {
+        "h": "3.21467",
+        "a": "1.98367"
+      },
+      "datetime": "2025-11-02 16:15:00",
+      "forecast": {
+        "w": "0.6774",
+        "d": "0.175",
+        "l": "0.1476"
+      }
+    },
+    {
+      "id": "29631",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.2089",
+        "a": "0.277522"
+      },
+      "datetime": "2025-11-02 16:15:00",
+      "forecast": {
+        "w": "0.8663",
+        "d": "0.1113",
+        "l": "0.0224"
+      }
+    },
+    {
+      "id": "29633",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "0",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.07598",
+        "a": "1.36245"
+      },
+      "datetime": "2025-11-02 16:15:00",
+      "forecast": {
+        "w": "0.2862",
+        "d": "0.285",
+        "l": "0.4288"
+      }
+    },
+    {
+      "id": "29636",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.07851",
+        "a": "1.07299"
+      },
+      "datetime": "2025-11-02 16:15:00",
+      "forecast": {
+        "w": "0.338",
+        "d": "0.3063",
+        "l": "0.3557"
+      }
+    },
+    {
+      "id": "29629",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.63942",
+        "a": "0.143862"
+      },
+      "datetime": "2025-11-02 19:45:00",
+      "forecast": {
+        "w": "0.8294",
+        "d": "0.1511",
+        "l": "0.0195"
+      }
+    },
+    {
+      "id": "29644",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.2285",
+        "a": "1.36728"
+      },
+      "datetime": "2025-11-07 19:45:00",
+      "forecast": {
+        "w": "0.5979",
+        "d": "0.2293",
+        "l": "0.1728"
+      }
+    },
+    {
+      "id": "29641",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "3",
+        "a": "0"
+      },
+      "xG": {
+        "h": "3.09058",
+        "a": "0.69584"
+      },
+      "datetime": "2025-11-08 16:00:00",
+      "forecast": {
+        "w": "0.9094",
+        "d": "0.0726",
+        "l": "0.018"
+      }
+    },
+    {
+      "id": "29638",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.984753",
+        "a": "0.353936"
+      },
+      "datetime": "2025-11-08 18:00:00",
+      "forecast": {
+        "w": "0.5261",
+        "d": "0.351",
+        "l": "0.1229"
+      }
+    },
+    {
+      "id": "29643",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "1",
+        "a": "4"
+      },
+      "xG": {
+        "h": "2.4076",
+        "a": "3.23933"
+      },
+      "datetime": "2025-11-08 20:05:00",
+      "forecast": {
+        "w": "0.2068",
+        "d": "0.2124",
+        "l": "0.5808"
+      }
+    },
+    {
+      "id": "29639",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.26999",
+        "a": "1.15206"
+      },
+      "datetime": "2025-11-09 14:00:00",
+      "forecast": {
+        "w": "0.3471",
+        "d": "0.3929",
+        "l": "0.26"
+      }
+    },
+    {
+      "id": "29637",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.15143",
+        "a": "0.589602"
+      },
+      "datetime": "2025-11-09 16:15:00",
+      "forecast": {
+        "w": "0.5351",
+        "d": "0.31",
+        "l": "0.1549"
+      }
+    },
+    {
+      "id": "29642",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.32977",
+        "a": "0.784993"
+      },
+      "datetime": "2025-11-09 16:15:00",
+      "forecast": {
+        "w": "0.5476",
+        "d": "0.2835",
+        "l": "0.1689"
+      }
+    },
+    {
+      "id": "29645",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.768163",
+        "a": "0.480004"
+      },
+      "datetime": "2025-11-09 16:15:00",
+      "forecast": {
+        "w": "0.3977",
+        "d": "0.4007",
+        "l": "0.2016"
+      }
+    },
+    {
+      "id": "29640",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "2",
+        "a": "3"
+      },
+      "xG": {
+        "h": "0.712588",
+        "a": "1.69872"
+      },
+      "datetime": "2025-11-09 19:45:00",
+      "forecast": {
+        "w": "0.1127",
+        "d": "0.2298",
+        "l": "0.6575"
+      }
+    },
+    {
+      "id": "29651",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "5"
+      },
+      "xG": {
+        "h": "1.36131",
+        "a": "3.09163"
+      },
+      "datetime": "2025-11-21 19:45:00",
+      "forecast": {
+        "w": "0.0854",
+        "d": "0.1414",
+        "l": "0.7732"
+      }
+    },
+    {
+      "id": "29648",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.2242",
+        "a": "0.400272"
+      },
+      "datetime": "2025-11-22 16:00:00",
+      "forecast": {
+        "w": "0.8385",
+        "d": "0.1248",
+        "l": "0.0367"
+      }
+    },
+    {
+      "id": "29653",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "4",
+        "a": "1"
+      },
+      "xG": {
+        "h": "3.067",
+        "a": "1.60818"
+      },
+      "datetime": "2025-11-22 18:00:00",
+      "forecast": {
+        "w": "0.7272",
+        "d": "0.1552",
+        "l": "0.1176"
+      }
+    },
+    {
+      "id": "29652",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "3",
+        "a": "0"
+      },
+      "xG": {
+        "h": "4.11577",
+        "a": "1.28573"
+      },
+      "datetime": "2025-11-22 20:05:00",
+      "forecast": {
+        "w": "0.9027",
+        "d": "0.0673",
+        "l": "0.03"
+      }
+    },
+    {
+      "id": "29646",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.512",
+        "a": "1.27606"
+      },
+      "datetime": "2025-11-23 14:00:00",
+      "forecast": {
+        "w": "0.4202",
+        "d": "0.3051",
+        "l": "0.2747"
+      }
+    },
+    {
+      "id": "29647",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "3",
+        "a": "2"
+      },
+      "xG": {
+        "h": "3.36815",
+        "a": "1.02855"
+      },
+      "datetime": "2025-11-23 16:15:00",
+      "forecast": {
+        "w": "0.8874",
+        "d": "0.0815",
+        "l": "0.0311"
+      }
+    },
+    {
+      "id": "29650",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.915515",
+        "a": "0.352154"
+      },
+      "datetime": "2025-11-23 16:15:00",
+      "forecast": {
+        "w": "0.5106",
+        "d": "0.3607",
+        "l": "0.1287"
+      }
+    },
+    {
+      "id": "29654",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.85382",
+        "a": "0.324057"
+      },
+      "datetime": "2025-11-23 16:15:00",
+      "forecast": {
+        "w": "0.7903",
+        "d": "0.164",
+        "l": "0.0457"
+      }
+    },
+    {
+      "id": "29649",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "4",
+        "a": "2"
+      },
+      "xG": {
+        "h": "4.14474",
+        "a": "1.50332"
+      },
+      "datetime": "2025-11-23 19:45:00",
+      "forecast": {
+        "w": "0.8998",
+        "d": "0.0746",
+        "l": "0.0256"
+      }
+    },
+    {
+      "id": "29660",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.31354",
+        "a": "0.980088"
+      },
+      "datetime": "2025-11-28 19:45:00",
+      "forecast": {
+        "w": "0.4303",
+        "d": "0.3363",
+        "l": "0.2334"
+      }
+    },
+    {
+      "id": "29661",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.637875",
+        "a": "1.47676"
+      },
+      "datetime": "2025-11-29 16:00:00",
+      "forecast": {
+        "w": "0.1494",
+        "d": "0.2669",
+        "l": "0.5837"
+      }
+    },
+    {
+      "id": "29662",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.80891",
+        "a": "1.15143"
+      },
+      "datetime": "2025-11-29 18:00:00",
+      "forecast": {
+        "w": "0.5501",
+        "d": "0.2657",
+        "l": "0.1842"
+      }
+    },
+    {
+      "id": "29659",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "2",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.62768",
+        "a": "1.09387"
+      },
+      "datetime": "2025-11-29 20:05:00",
+      "forecast": {
+        "w": "0.5054",
+        "d": "0.2668",
+        "l": "0.2278"
+      }
+    },
+    {
+      "id": "29663",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.14608",
+        "a": "1.00638"
+      },
+      "datetime": "2025-11-30 14:00:00",
+      "forecast": {
+        "w": "0.3558",
+        "d": "0.3427",
+        "l": "0.3015"
+      }
+    },
+    {
+      "id": "29655",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.10642",
+        "a": "1.96335"
+      },
+      "datetime": "2025-11-30 16:15:00",
+      "forecast": {
+        "w": "0.1463",
+        "d": "0.2526",
+        "l": "0.6011"
+      }
+    },
+    {
+      "id": "29656",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.867678",
+        "a": "1.35017"
+      },
+      "datetime": "2025-11-30 16:15:00",
+      "forecast": {
+        "w": "0.195",
+        "d": "0.2883",
+        "l": "0.5167"
+      }
+    },
+    {
+      "id": "29657",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "3.49255",
+        "a": "1.3285"
+      },
+      "datetime": "2025-11-30 16:15:00",
+      "forecast": {
+        "w": "0.8731",
+        "d": "0.0927",
+        "l": "0.0342"
+      }
+    },
+    {
+      "id": "29658",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "3",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.1878",
+        "a": "0.384922"
+      },
+      "datetime": "2025-11-30 19:45:00",
+      "forecast": {
+        "w": "0.8418",
+        "d": "0.1268",
+        "l": "0.0314"
+      }
+    },
+    {
+      "id": "29665",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.13774",
+        "a": "0.485017"
+      },
+      "datetime": "2025-12-05 18:00:00",
+      "forecast": {
+        "w": "0.5672",
+        "d": "0.2984",
+        "l": "0.1344"
+      }
+    },
+    {
+      "id": "29667",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.572302",
+        "a": "0.902813"
+      },
+      "datetime": "2025-12-05 20:00:00",
+      "forecast": {
+        "w": "0.1626",
+        "d": "0.3852",
+        "l": "0.4522"
+      }
+    },
+    {
+      "id": "29669",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.1817",
+        "a": "3.26397"
+      },
+      "datetime": "2025-12-06 16:00:00",
+      "forecast": {
+        "w": "0.0385",
+        "d": "0.1093",
+        "l": "0.8522"
+      }
+    },
+    {
+      "id": "29672",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.64097",
+        "a": "0.0918532"
+      },
+      "datetime": "2025-12-06 18:00:00",
+      "forecast": {
+        "w": "0.4768",
+        "d": "0.4792",
+        "l": "0.044"
+      }
+    },
+    {
+      "id": "29671",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "5",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.32641",
+        "a": "0.153549"
+      },
+      "datetime": "2025-12-06 20:05:00",
+      "forecast": {
+        "w": "0.9071",
+        "d": "0.0831",
+        "l": "0.0098"
+      }
+    },
+    {
+      "id": "29670",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.38209",
+        "a": "1.33715"
+      },
+      "datetime": "2025-12-07 14:00:00",
+      "forecast": {
+        "w": "0.3709",
+        "d": "0.2806",
+        "l": "0.3485"
+      }
+    },
+    {
+      "id": "29664",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.22374",
+        "a": "0.346523"
+      },
+      "datetime": "2025-12-07 16:15:00",
+      "forecast": {
+        "w": "0.8808",
+        "d": "0.0981",
+        "l": "0.0211"
+      }
+    },
+    {
+      "id": "29666",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.93371",
+        "a": "1.2524"
+      },
+      "datetime": "2025-12-07 16:15:00",
+      "forecast": {
+        "w": "0.557",
+        "d": "0.2404",
+        "l": "0.2026"
+      }
+    },
+    {
+      "id": "29668",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.48644",
+        "a": "0.475087"
+      },
+      "datetime": "2025-12-07 19:45:00",
+      "forecast": {
+        "w": "0.8656",
+        "d": "0.1042",
+        "l": "0.0302"
+      }
+    },
+    {
+      "id": "29673",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "4",
+        "a": "1"
+      },
+      "xG": {
+        "h": "3.04663",
+        "a": "0.26526"
+      },
+      "datetime": "2025-12-12 19:45:00",
+      "forecast": {
+        "w": "0.9542",
+        "d": "0.0409",
+        "l": "0.0049"
+      }
+    },
+    {
+      "id": "29681",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.58903",
+        "a": "0.872611"
+      },
+      "datetime": "2025-12-13 16:00:00",
+      "forecast": {
+        "w": "0.5654",
+        "d": "0.268",
+        "l": "0.1666"
+      }
+    },
+    {
+      "id": "29677",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "2",
+        "a": "3"
+      },
+      "xG": {
+        "h": "0.363683",
+        "a": "1.94768"
+      },
+      "datetime": "2025-12-13 18:00:00",
+      "forecast": {
+        "w": "0.0403",
+        "d": "0.1546",
+        "l": "0.8051"
+      }
+    },
+    {
+      "id": "29676",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "0",
+        "a": "3"
+      },
+      "xG": {
+        "h": "0.366399",
+        "a": "2.03766"
+      },
+      "datetime": "2025-12-13 20:05:00",
+      "forecast": {
+        "w": "0.026",
+        "d": "0.1236",
+        "l": "0.8504"
+      }
+    },
+    {
+      "id": "29679",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.9604",
+        "a": "1.44459"
+      },
+      "datetime": "2025-12-14 14:00:00",
+      "forecast": {
+        "w": "0.7416",
+        "d": "0.1651",
+        "l": "0.0933"
+      }
+    },
+    {
+      "id": "29674",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "3",
+        "a": "4"
+      },
+      "xG": {
+        "h": "2.50862",
+        "a": "0.733512"
+      },
+      "datetime": "2025-12-14 16:15:00",
+      "forecast": {
+        "w": "0.8765",
+        "d": "0.1056",
+        "l": "0.0179"
+      }
+    },
+    {
+      "id": "29675",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.91622",
+        "a": "0.733412"
+      },
+      "datetime": "2025-12-14 16:15:00",
+      "forecast": {
+        "w": "0.7076",
+        "d": "0.207",
+        "l": "0.0854"
+      }
+    },
+    {
+      "id": "29680",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.911848",
+        "a": "0.415871"
+      },
+      "datetime": "2025-12-14 16:15:00",
+      "forecast": {
+        "w": "0.4824",
+        "d": "0.3685",
+        "l": "0.1491"
+      }
+    },
+    {
+      "id": "29678",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.02467",
+        "a": "1.94962"
+      },
+      "datetime": "2025-12-14 19:45:00",
+      "forecast": {
+        "w": "0.4033",
+        "d": "0.2369",
+        "l": "0.3598"
+      }
+    },
+    {
+      "id": "29690",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "0",
+        "a": "3"
+      },
+      "xG": {
+        "h": "0.46972",
+        "a": "2.67769"
+      },
+      "datetime": "2026-01-02 19:45:00",
+      "forecast": {
+        "w": "0.0256",
+        "d": "0.0849",
+        "l": "0.8895"
+      }
+    },
+    {
+      "id": "29687",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "1",
+        "a": "3"
+      },
+      "xG": {
+        "h": "0.799996",
+        "a": "1.95535"
+      },
+      "datetime": "2026-01-03 16:00:00",
+      "forecast": {
+        "w": "0.0781",
+        "d": "0.2138",
+        "l": "0.7081"
+      }
+    },
+    {
+      "id": "29688",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.39473",
+        "a": "1.38731"
+      },
+      "datetime": "2026-01-03 18:00:00",
+      "forecast": {
+        "w": "0.6277",
+        "d": "0.2244",
+        "l": "0.1479"
+      }
+    },
+    {
+      "id": "29684",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "0",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.06111",
+        "a": "1.49739"
+      },
+      "datetime": "2026-01-03 20:05:00",
+      "forecast": {
+        "w": "0.2543",
+        "d": "0.2756",
+        "l": "0.4701"
+      }
+    },
+    {
+      "id": "29686",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "0",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.14141",
+        "a": "3.16795"
+      },
+      "datetime": "2026-01-04 14:00:00",
+      "forecast": {
+        "w": "0.0459",
+        "d": "0.1105",
+        "l": "0.8436"
+      }
+    },
+    {
+      "id": "29682",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.54399",
+        "a": "0.835513"
+      },
+      "datetime": "2026-01-04 16:15:00",
+      "forecast": {
+        "w": "0.5691",
+        "d": "0.2653",
+        "l": "0.1656"
+      }
+    },
+    {
+      "id": "29683",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.54881",
+        "a": "0.730978"
+      },
+      "datetime": "2026-01-04 16:15:00",
+      "forecast": {
+        "w": "0.6169",
+        "d": "0.2661",
+        "l": "0.117"
+      }
+    },
+    {
+      "id": "29685",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.55407",
+        "a": "0.364932"
+      },
+      "datetime": "2026-01-04 16:15:00",
+      "forecast": {
+        "w": "0.7326",
+        "d": "0.2077",
+        "l": "0.0597"
+      }
+    },
+    {
+      "id": "29689",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.58716",
+        "a": "0.938334"
+      },
+      "datetime": "2026-01-04 19:45:00",
+      "forecast": {
+        "w": "0.5215",
+        "d": "0.3124",
+        "l": "0.1661"
+      }
+    },
+    {
+      "id": "29694",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "3"
+      },
+      "xG": {
+        "h": "1.31321",
+        "a": "1.17141"
+      },
+      "datetime": "2026-01-16 18:00:00",
+      "forecast": {
+        "w": "0.4004",
+        "d": "0.3097",
+        "l": "0.2899"
+      }
+    },
+    {
+      "id": "29696",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "3",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.29284",
+        "a": "0.67995"
+      },
+      "datetime": "2026-01-16 20:00:00",
+      "forecast": {
+        "w": "0.5178",
+        "d": "0.3072",
+        "l": "0.175"
+      }
+    },
+    {
+      "id": "29692",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.61821",
+        "a": "0.393025"
+      },
+      "datetime": "2026-01-17 16:00:00",
+      "forecast": {
+        "w": "0.8813",
+        "d": "0.0943",
+        "l": "0.0244"
+      }
+    },
+    {
+      "id": "29699",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "5",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.77349",
+        "a": "1.41914"
+      },
+      "datetime": "2026-01-17 18:00:00",
+      "forecast": {
+        "w": "0.4558",
+        "d": "0.2489",
+        "l": "0.2953"
+      }
+    },
+    {
+      "id": "29691",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "5"
+      },
+      "xG": {
+        "h": "1.03735",
+        "a": "3.91118"
+      },
+      "datetime": "2026-01-17 20:05:00",
+      "forecast": {
+        "w": "0.0186",
+        "d": "0.0582",
+        "l": "0.9232"
+      }
+    },
+    {
+      "id": "29698",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.019",
+        "a": "0.984265"
+      },
+      "datetime": "2026-01-18 14:00:00",
+      "forecast": {
+        "w": "0.3178",
+        "d": "0.36",
+        "l": "0.3222"
+      }
+    },
+    {
+      "id": "29695",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "0.411699",
+        "a": "0.738941"
+      },
+      "datetime": "2026-01-18 16:15:00",
+      "forecast": {
+        "w": "0.1641",
+        "d": "0.4083",
+        "l": "0.4276"
+      }
+    },
+    {
+      "id": "29697",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.54723",
+        "a": "0.538741"
+      },
+      "datetime": "2026-01-18 16:15:00",
+      "forecast": {
+        "w": "0.8539",
+        "d": "0.1135",
+        "l": "0.0326"
+      }
+    },
+    {
+      "id": "29693",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.62893",
+        "a": "1.16318"
+      },
+      "datetime": "2026-01-18 19:45:00",
+      "forecast": {
+        "w": "0.7356",
+        "d": "0.1706",
+        "l": "0.0938"
+      }
+    },
+    {
+      "id": "29700",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.352997",
+        "a": "2.19544"
+      },
+      "datetime": "2026-01-23 19:00:00",
+      "forecast": {
+        "w": "0.0328",
+        "d": "0.122",
+        "l": "0.8452"
+      }
+    },
+    {
+      "id": "29708",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "0",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.88241",
+        "a": "1.10359"
+      },
+      "datetime": "2026-01-24 16:00:00",
+      "forecast": {
+        "w": "0.57",
+        "d": "0.2614",
+        "l": "0.1686"
+      }
+    },
+    {
+      "id": "29702",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.171551",
+        "a": "0.562454"
+      },
+      "datetime": "2026-01-24 18:00:00",
+      "forecast": {
+        "w": "0.0931",
+        "d": "0.5156",
+        "l": "0.3913"
+      }
+    },
+    {
+      "id": "29704",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.07239",
+        "a": "1.00288"
+      },
+      "datetime": "2026-01-24 20:05:00",
+      "forecast": {
+        "w": "0.3532",
+        "d": "0.3305",
+        "l": "0.3163"
+      }
+    },
+    {
+      "id": "29706",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "1",
+        "a": "4"
+      },
+      "xG": {
+        "h": "1.98581",
+        "a": "1.6112"
+      },
+      "datetime": "2026-01-25 14:00:00",
+      "forecast": {
+        "w": "0.4574",
+        "d": "0.2595",
+        "l": "0.2831"
+      }
+    },
+    {
+      "id": "29701",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "0",
+        "a": "2"
+      },
+      "xG": {
+        "h": "0.988274",
+        "a": "0.684258"
+      },
+      "datetime": "2026-01-25 16:15:00",
+      "forecast": {
+        "w": "0.4321",
+        "d": "0.3463",
+        "l": "0.2216"
+      }
+    },
+    {
+      "id": "29705",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "2",
+        "a": "5"
+      },
+      "xG": {
+        "h": "1.18331",
+        "a": "3.34121"
+      },
+      "datetime": "2026-01-25 16:15:00",
+      "forecast": {
+        "w": "0.0509",
+        "d": "0.106",
+        "l": "0.8431"
+      }
+    },
+    {
+      "id": "29707",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.759097",
+        "a": "0.342734"
+      },
+      "datetime": "2026-01-25 16:15:00",
+      "forecast": {
+        "w": "0.455",
+        "d": "0.3999",
+        "l": "0.1451"
+      }
+    },
+    {
+      "id": "29703",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "4"
+      },
+      "xG": {
+        "h": "1.74087",
+        "a": "3.56512"
+      },
+      "datetime": "2026-01-25 19:45:00",
+      "forecast": {
+        "w": "0.0844",
+        "d": "0.125",
+        "l": "0.7906"
+      }
+    },
+    {
+      "id": "29710",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.60367",
+        "a": "0.407119"
+      },
+      "datetime": "2026-01-30 19:45:00",
+      "forecast": {
+        "w": "0.7048",
+        "d": "0.2247",
+        "l": "0.0705"
+      }
+    },
+    {
+      "id": "29715",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.82048",
+        "a": "2.71118"
+      },
+      "datetime": "2026-01-31 16:00:00",
+      "forecast": {
+        "w": "0.1823",
+        "d": "0.2221",
+        "l": "0.5956"
+      }
+    },
+    {
+      "id": "29711",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.777027",
+        "a": "1.20179"
+      },
+      "datetime": "2026-01-31 18:00:00",
+      "forecast": {
+        "w": "0.208",
+        "d": "0.3341",
+        "l": "0.4579"
+      }
+    },
+    {
+      "id": "29713",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "4",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.28518",
+        "a": "0.427968"
+      },
+      "datetime": "2026-01-31 20:05:00",
+      "forecast": {
+        "w": "0.8482",
+        "d": "0.1181",
+        "l": "0.0337"
+      }
+    },
+    {
+      "id": "29712",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.616999",
+        "a": "0.390671"
+      },
+      "datetime": "2026-02-01 14:00:00",
+      "forecast": {
+        "w": "0.3784",
+        "d": "0.4445",
+        "l": "0.1771"
+      }
+    },
+    {
+      "id": "29709",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.34676",
+        "a": "0.397871"
+      },
+      "datetime": "2026-02-01 16:15:00",
+      "forecast": {
+        "w": "0.6279",
+        "d": "0.272",
+        "l": "0.1001"
+      }
+    },
+    {
+      "id": "29714",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "2",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.2009",
+        "a": "1.83505"
+      },
+      "datetime": "2026-02-01 16:15:00",
+      "forecast": {
+        "w": "0.191",
+        "d": "0.2612",
+        "l": "0.5478"
+      }
+    },
+    {
+      "id": "29717",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.804565",
+        "a": "0.871363"
+      },
+      "datetime": "2026-02-01 16:15:00",
+      "forecast": {
+        "w": "0.2984",
+        "d": "0.3657",
+        "l": "0.3359"
+      }
+    },
+    {
+      "id": "29716",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.97116",
+        "a": "1.16489"
+      },
+      "datetime": "2026-02-01 19:45:00",
+      "forecast": {
+        "w": "0.5924",
+        "d": "0.2399",
+        "l": "0.1677"
+      }
+    },
+    {
+      "id": "29720",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.05135",
+        "a": "0.720569"
+      },
+      "datetime": "2026-02-08 14:00:00",
+      "forecast": {
+        "w": "0.7663",
+        "d": "0.1715",
+        "l": "0.0622"
+      }
+    },
+    {
+      "id": "29722",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.01131",
+        "a": "1.33597"
+      },
+      "datetime": "2026-02-08 14:00:00",
+      "forecast": {
+        "w": "0.2597",
+        "d": "0.2913",
+        "l": "0.449"
+      }
+    },
+    {
+      "id": "29723",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.581838",
+        "a": "1.53538"
+      },
+      "datetime": "2026-02-08 14:00:00",
+      "forecast": {
+        "w": "0.1207",
+        "d": "0.2559",
+        "l": "0.6234"
+      }
+    },
+    {
+      "id": "29724",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.795659",
+        "a": "0.990033"
+      },
+      "datetime": "2026-02-08 14:00:00",
+      "forecast": {
+        "w": "0.2729",
+        "d": "0.3296",
+        "l": "0.3975"
+      }
+    },
+    {
+      "id": "29725",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.455943",
+        "a": "0.827302"
+      },
+      "datetime": "2026-02-08 14:00:00",
+      "forecast": {
+        "w": "0.1774",
+        "d": "0.3794",
+        "l": "0.4432"
+      }
+    },
+    {
+      "id": "29718",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.17089",
+        "a": "0.691991"
+      },
+      "datetime": "2026-02-08 16:15:00",
+      "forecast": {
+        "w": "0.4918",
+        "d": "0.321",
+        "l": "0.1872"
+      }
+    },
+    {
+      "id": "29719",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.27393",
+        "a": "0.758207"
+      },
+      "datetime": "2026-02-08 16:15:00",
+      "forecast": {
+        "w": "0.4953",
+        "d": "0.3043",
+        "l": "0.2004"
+      }
+    },
+    {
+      "id": "29721",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.856821",
+        "a": "0.51294"
+      },
+      "datetime": "2026-02-08 16:15:00",
+      "forecast": {
+        "w": "0.4196",
+        "d": "0.376",
+        "l": "0.2044"
+      }
+    },
+    {
+      "id": "29726",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "5",
+        "a": "0"
+      },
+      "xG": {
+        "h": "4.63077",
+        "a": "0.90611"
+      },
+      "datetime": "2026-02-08 19:45:00",
+      "forecast": {
+        "w": "0.9641",
+        "d": "0.0273",
+        "l": "0.0086"
+      }
+    },
+    {
+      "id": "29735",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.80204",
+        "a": "4.17604"
+      },
+      "datetime": "2026-02-13 18:00:00",
+      "forecast": {
+        "w": "0.0402",
+        "d": "0.0851",
+        "l": "0.8747"
+      }
+    },
+    {
+      "id": "29733",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.20188",
+        "a": "1.00661"
+      },
+      "datetime": "2026-02-13 20:05:00",
+      "forecast": {
+        "w": "0.6819",
+        "d": "0.1952",
+        "l": "0.1229"
+      }
+    },
+    {
+      "id": "29731",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.61535",
+        "a": "2.39153"
+      },
+      "datetime": "2026-02-14 16:00:00",
+      "forecast": {
+        "w": "0.1953",
+        "d": "0.2305",
+        "l": "0.5742"
+      }
+    },
+    {
+      "id": "29728",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.77426",
+        "a": "0.841964"
+      },
+      "datetime": "2026-02-14 18:00:00",
+      "forecast": {
+        "w": "0.6194",
+        "d": "0.2334",
+        "l": "0.1472"
+      }
+    },
+    {
+      "id": "29734",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "0",
+        "a": "5"
+      },
+      "xG": {
+        "h": "0.399344",
+        "a": "3.50163"
+      },
+      "datetime": "2026-02-14 20:05:00",
+      "forecast": {
+        "w": "0.002",
+        "d": "0.0174",
+        "l": "0.9806"
+      }
+    },
+    {
+      "id": "29727",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.977711",
+        "a": "3.12342"
+      },
+      "datetime": "2026-02-15 14:00:00",
+      "forecast": {
+        "w": "0.0385",
+        "d": "0.1015",
+        "l": "0.86"
+      }
+    },
+    {
+      "id": "29729",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.4393",
+        "a": "0.406012"
+      },
+      "datetime": "2026-02-15 16:15:00",
+      "forecast": {
+        "w": "0.7129",
+        "d": "0.2221",
+        "l": "0.065"
+      }
+    },
+    {
+      "id": "29732",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "1",
+        "a": "3"
+      },
+      "xG": {
+        "h": "0.753602",
+        "a": "1.05829"
+      },
+      "datetime": "2026-02-15 16:15:00",
+      "forecast": {
+        "w": "0.249",
+        "d": "0.3314",
+        "l": "0.4196"
+      }
+    },
+    {
+      "id": "29730",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.9974",
+        "a": "1.30477"
+      },
+      "datetime": "2026-02-15 19:45:00",
+      "forecast": {
+        "w": "0.5677",
+        "d": "0.2668",
+        "l": "0.1655"
+      }
+    },
+    {
+      "id": "29738",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.33408",
+        "a": "1.3575"
+      },
+      "datetime": "2026-02-20 19:45:00",
+      "forecast": {
+        "w": "0.3287",
+        "d": "0.3119",
+        "l": "0.3594"
+      }
+    },
+    {
+      "id": "29739",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "2",
+        "a": "3"
+      },
+      "xG": {
+        "h": "1.82827",
+        "a": "2.34004"
+      },
+      "datetime": "2026-02-21 16:00:00",
+      "forecast": {
+        "w": "0.2579",
+        "d": "0.233",
+        "l": "0.5091"
+      }
+    },
+    {
+      "id": "29744",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.67763",
+        "a": "0.687806"
+      },
+      "datetime": "2026-02-21 18:00:00",
+      "forecast": {
+        "w": "0.8566",
+        "d": "0.1125",
+        "l": "0.0309"
+      }
+    },
+    {
+      "id": "29742",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "3",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.41445",
+        "a": "0.0591146"
+      },
+      "datetime": "2026-02-21 20:05:00",
+      "forecast": {
+        "w": "0.9396",
+        "d": "0.0576",
+        "l": "0.0028"
+      }
+    },
+    {
+      "id": "29737",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "0",
+        "a": "3"
+      },
+      "xG": {
+        "h": "0.700042",
+        "a": "1.10597"
+      },
+      "datetime": "2026-02-22 14:00:00",
+      "forecast": {
+        "w": "0.2222",
+        "d": "0.3177",
+        "l": "0.4601"
+      }
+    },
+    {
+      "id": "29736",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.24039",
+        "a": "2.74265"
+      },
+      "datetime": "2026-02-22 16:15:00",
+      "forecast": {
+        "w": "0.0064",
+        "d": "0.0429",
+        "l": "0.9507"
+      }
+    },
+    {
+      "id": "29740",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.70753",
+        "a": "0.753349"
+      },
+      "datetime": "2026-02-22 16:15:00",
+      "forecast": {
+        "w": "0.6461",
+        "d": "0.2432",
+        "l": "0.1107"
+      }
+    },
+    {
+      "id": "29741",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "3",
+        "a": "3"
+      },
+      "xG": {
+        "h": "2.74646",
+        "a": "1.97697"
+      },
+      "datetime": "2026-02-22 16:15:00",
+      "forecast": {
+        "w": "0.5876",
+        "d": "0.2247",
+        "l": "0.1877"
+      }
+    },
+    {
+      "id": "29743",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.22901",
+        "a": "0.427324"
+      },
+      "datetime": "2026-02-22 19:45:00",
+      "forecast": {
+        "w": "0.8571",
+        "d": "0.1167",
+        "l": "0.0262"
+      }
+    },
+    {
+      "id": "29753",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.874721",
+        "a": "2.03807"
+      },
+      "datetime": "2026-02-27 19:45:00",
+      "forecast": {
+        "w": "0.1296",
+        "d": "0.2086",
+        "l": "0.6618"
+      }
+    },
+    {
+      "id": "29752",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.709138",
+        "a": "0.668386"
+      },
+      "datetime": "2026-02-28 16:00:00",
+      "forecast": {
+        "w": "0.3187",
+        "d": "0.3887",
+        "l": "0.2926"
+      }
+    },
+    {
+      "id": "29750",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.67082",
+        "a": "0.609359"
+      },
+      "datetime": "2026-02-28 18:00:00",
+      "forecast": {
+        "w": "0.6989",
+        "d": "0.2351",
+        "l": "0.066"
+      }
+    },
+    {
+      "id": "29745",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.682797",
+        "a": "4.03627"
+      },
+      "datetime": "2026-02-28 20:05:00",
+      "forecast": {
+        "w": "0.0072",
+        "d": "0.0283",
+        "l": "0.9645"
+      }
+    },
+    {
+      "id": "29751",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.3017",
+        "a": "1.26295"
+      },
+      "datetime": "2026-03-01 14:00:00",
+      "forecast": {
+        "w": "0.3547",
+        "d": "0.3106",
+        "l": "0.3347"
+      }
+    },
+    {
+      "id": "29746",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.495693",
+        "a": "0.171014"
+      },
+      "datetime": "2026-03-01 16:15:00",
+      "forecast": {
+        "w": "0.3593",
+        "d": "0.5401",
+        "l": "0.1006"
+      }
+    },
+    {
+      "id": "29747",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "2",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.02766",
+        "a": "1.96667"
+      },
+      "datetime": "2026-03-01 16:15:00",
+      "forecast": {
+        "w": "0.1511",
+        "d": "0.2165",
+        "l": "0.6324"
+      }
+    },
+    {
+      "id": "29749",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.58374",
+        "a": "0.963216"
+      },
+      "datetime": "2026-03-01 16:15:00",
+      "forecast": {
+        "w": "0.526",
+        "d": "0.277",
+        "l": "0.197"
+      }
+    },
+    {
+      "id": "29748",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "3",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.78764",
+        "a": "1.78524"
+      },
+      "datetime": "2026-03-01 19:45:00",
+      "forecast": {
+        "w": "0.3794",
+        "d": "0.2519",
+        "l": "0.3687"
+      }
+    },
+    {
+      "id": "29761",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "1",
+        "a": "3"
+      },
+      "xG": {
+        "h": "1.22179",
+        "a": "1.75294"
+      },
+      "datetime": "2026-03-06 19:45:00",
+      "forecast": {
+        "w": "0.2385",
+        "d": "0.2515",
+        "l": "0.51"
+      }
+    },
+    {
+      "id": "29759",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.611683",
+        "a": "0.853223"
+      },
+      "datetime": "2026-03-07 16:00:00",
+      "forecast": {
+        "w": "0.245",
+        "d": "0.3703",
+        "l": "0.3847"
+      }
+    },
+    {
+      "id": "29754",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.03226",
+        "a": "1.27324"
+      },
+      "datetime": "2026-03-07 18:00:00",
+      "forecast": {
+        "w": "0.276",
+        "d": "0.3097",
+        "l": "0.4143"
+      }
+    },
+    {
+      "id": "29762",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.28713",
+        "a": "1.3226"
+      },
+      "datetime": "2026-03-07 20:05:00",
+      "forecast": {
+        "w": "0.3362",
+        "d": "0.2954",
+        "l": "0.3684"
+      }
+    },
+    {
+      "id": "29756",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "3",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.22106",
+        "a": "0.250806"
+      },
+      "datetime": "2026-03-08 14:00:00",
+      "forecast": {
+        "w": "0.8476",
+        "d": "0.1259",
+        "l": "0.0265"
+      }
+    },
+    {
+      "id": "29755",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.26459",
+        "a": "1.10286"
+      },
+      "datetime": "2026-03-08 16:15:00",
+      "forecast": {
+        "w": "0.3879",
+        "d": "0.3088",
+        "l": "0.3033"
+      }
+    },
+    {
+      "id": "29757",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.850092",
+        "a": "0.929269"
+      },
+      "datetime": "2026-03-08 16:15:00",
+      "forecast": {
+        "w": "0.289",
+        "d": "0.3631",
+        "l": "0.3479"
+      }
+    },
+    {
+      "id": "29760",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "0",
+        "a": "4"
+      },
+      "xG": {
+        "h": "2.68488",
+        "a": "1.87138"
+      },
+      "datetime": "2026-03-08 16:15:00",
+      "forecast": {
+        "w": "0.5872",
+        "d": "0.2191",
+        "l": "0.1937"
+      }
+    },
+    {
+      "id": "29758",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.92522",
+        "a": "2.32579"
+      },
+      "datetime": "2026-03-08 19:45:00",
+      "forecast": {
+        "w": "0.2755",
+        "d": "0.2494",
+        "l": "0.4751"
+      }
+    },
+    {
+      "id": "29766",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.12898",
+        "a": "0.293047"
+      },
+      "datetime": "2026-03-13 19:45:00",
+      "forecast": {
+        "w": "0.617",
+        "d": "0.3022",
+        "l": "0.0808"
+      }
+    },
+    {
+      "id": "29765",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.37345",
+        "a": "1.01216"
+      },
+      "datetime": "2026-03-14 16:00:00",
+      "forecast": {
+        "w": "0.7719",
+        "d": "0.1541",
+        "l": "0.074"
+      }
+    },
+    {
+      "id": "29763",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "0",
+        "a": "2"
+      },
+      "xG": {
+        "h": "0.889177",
+        "a": "1.60128"
+      },
+      "datetime": "2026-03-14 18:00:00",
+      "forecast": {
+        "w": "0.1785",
+        "d": "0.2593",
+        "l": "0.5622"
+      }
+    },
+    {
+      "id": "29768",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.81345",
+        "a": "1.56097"
+      },
+      "datetime": "2026-03-14 20:05:00",
+      "forecast": {
+        "w": "0.6922",
+        "d": "0.1878",
+        "l": "0.12"
+      }
+    },
+    {
+      "id": "29771",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.20221",
+        "a": "0.616395"
+      },
+      "datetime": "2026-03-15 14:00:00",
+      "forecast": {
+        "w": "0.5342",
+        "d": "0.3007",
+        "l": "0.1651"
+      }
+    },
+    {
+      "id": "29764",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.640079",
+        "a": "1.13833"
+      },
+      "datetime": "2026-03-15 16:15:00",
+      "forecast": {
+        "w": "0.198",
+        "d": "0.3166",
+        "l": "0.4854"
+      }
+    },
+    {
+      "id": "29767",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "3",
+        "a": "4"
+      },
+      "xG": {
+        "h": "1.62616",
+        "a": "1.74262"
+      },
+      "datetime": "2026-03-15 16:15:00",
+      "forecast": {
+        "w": "0.3438",
+        "d": "0.2481",
+        "l": "0.4081"
+      }
+    },
+    {
+      "id": "29770",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.5463",
+        "a": "1.3508"
+      },
+      "datetime": "2026-03-15 19:45:00",
+      "forecast": {
+        "w": "0.4084",
+        "d": "0.2929",
+        "l": "0.2987"
+      }
+    },
+    {
+      "id": "29773",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "5",
+        "a": "1"
+      },
+      "xG": {
+        "h": "4.33933",
+        "a": "1.15185"
+      },
+      "datetime": "2026-03-20 19:45:00",
+      "forecast": {
+        "w": "0.927",
+        "d": "0.0514",
+        "l": "0.0216"
+      }
+    },
+    {
+      "id": "29780",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.48458",
+        "a": "0.477676"
+      },
+      "datetime": "2026-03-21 16:00:00",
+      "forecast": {
+        "w": "0.6743",
+        "d": "0.2414",
+        "l": "0.0843"
+      }
+    },
+    {
+      "id": "29772",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "3",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.0573",
+        "a": "0.882319"
+      },
+      "datetime": "2026-03-21 18:00:00",
+      "forecast": {
+        "w": "0.6896",
+        "d": "0.2003",
+        "l": "0.1101"
+      }
+    },
+    {
+      "id": "29777",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "0",
+        "a": "4"
+      },
+      "xG": {
+        "h": "0.17662",
+        "a": "4.04442"
+      },
+      "datetime": "2026-03-21 20:05:00",
+      "forecast": {
+        "w": "0.0011",
+        "d": "0.008",
+        "l": "0.9909"
+      }
+    },
+    {
+      "id": "29774",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.10723",
+        "a": "3.4997"
+      },
+      "datetime": "2026-03-22 14:00:00",
+      "forecast": {
+        "w": "0.0453",
+        "d": "0.089",
+        "l": "0.8657"
+      }
+    },
+    {
+      "id": "29775",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.02929",
+        "a": "1.61107"
+      },
+      "datetime": "2026-03-22 16:15:00",
+      "forecast": {
+        "w": "0.2145",
+        "d": "0.2594",
+        "l": "0.5261"
+      }
+    },
+    {
+      "id": "29778",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "3",
+        "a": "2"
+      },
+      "xG": {
+        "h": "2.42628",
+        "a": "1.74386"
+      },
+      "datetime": "2026-03-22 16:15:00",
+      "forecast": {
+        "w": "0.5417",
+        "d": "0.2109",
+        "l": "0.2474"
+      }
+    },
+    {
+      "id": "29779",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.70552",
+        "a": "0.314914"
+      },
+      "datetime": "2026-03-22 16:15:00",
+      "forecast": {
+        "w": "0.7443",
+        "d": "0.1992",
+        "l": "0.0565"
+      }
+    },
+    {
+      "id": "29776",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "3"
+      },
+      "xG": {
+        "h": "1.91469",
+        "a": "2.83907"
+      },
+      "datetime": "2026-03-22 19:45:00",
+      "forecast": {
+        "w": "0.1892",
+        "d": "0.2032",
+        "l": "0.6076"
+      }
+    },
+    {
+      "id": "29788",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.7337",
+        "a": "0.102597"
+      },
+      "datetime": "2026-04-03 18:45:00",
+      "forecast": {
+        "w": "0.9181",
+        "d": "0.0759",
+        "l": "0.006"
+      }
+    },
+    {
+      "id": "29789",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.70892",
+        "a": "0.354354"
+      },
+      "datetime": "2026-04-04 15:00:00",
+      "forecast": {
+        "w": "0.9353",
+        "d": "0.0548",
+        "l": "0.0099"
+      }
+    },
+    {
+      "id": "29782",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "3",
+        "a": "4"
+      },
+      "xG": {
+        "h": "1.89452",
+        "a": "2.7958"
+      },
+      "datetime": "2026-04-04 17:00:00",
+      "forecast": {
+        "w": "0.1761",
+        "d": "0.2173",
+        "l": "0.6066"
+      }
+    },
+    {
+      "id": "29784",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "3",
+        "a": "0"
+      },
+      "xG": {
+        "h": "3.82171",
+        "a": "0.412713"
+      },
+      "datetime": "2026-04-04 19:05:00",
+      "forecast": {
+        "w": "0.975",
+        "d": "0.0222",
+        "l": "0.0028"
+      }
+    },
+    {
+      "id": "29781",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.353538",
+        "a": "0.522379"
+      },
+      "datetime": "2026-04-05 13:00:00",
+      "forecast": {
+        "w": "0.1898",
+        "d": "0.4858",
+        "l": "0.3244"
+      }
+    },
+    {
+      "id": "29783",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.711193",
+        "a": "2.40825"
+      },
+      "datetime": "2026-04-05 15:15:00",
+      "forecast": {
+        "w": "0.05",
+        "d": "0.1321",
+        "l": "0.8179"
+      }
+    },
+    {
+      "id": "29785",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.16554",
+        "a": "1.39879"
+      },
+      "datetime": "2026-04-05 15:15:00",
+      "forecast": {
+        "w": "0.2701",
+        "d": "0.3006",
+        "l": "0.4293"
+      }
+    },
+    {
+      "id": "29786",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.3189",
+        "a": "0.389282"
+      },
+      "datetime": "2026-04-05 15:15:00",
+      "forecast": {
+        "w": "0.8776",
+        "d": "0.0993",
+        "l": "0.0231"
+      }
+    },
+    {
+      "id": "29787",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.67743",
+        "a": "3.10791"
+      },
+      "datetime": "2026-04-05 18:45:00",
+      "forecast": {
+        "w": "0.1131",
+        "d": "0.1662",
+        "l": "0.7207"
+      }
+    },
+    {
+      "id": "29796",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "4",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.95341",
+        "a": "1.7647"
+      },
+      "datetime": "2026-04-10 17:00:00",
+      "forecast": {
+        "w": "0.6568",
+        "d": "0.1757",
+        "l": "0.1675"
+      }
+    },
+    {
+      "id": "29794",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "3.31638",
+        "a": "0.535052"
+      },
+      "datetime": "2026-04-10 19:05:00",
+      "forecast": {
+        "w": "0.9244",
+        "d": "0.0602",
+        "l": "0.0154"
+      }
+    },
+    {
+      "id": "29790",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.797017",
+        "a": "1.44705"
+      },
+      "datetime": "2026-04-11 17:00:00",
+      "forecast": {
+        "w": "0.1706",
+        "d": "0.2883",
+        "l": "0.5411"
+      }
+    },
+    {
+      "id": "29797",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.09968",
+        "a": "1.19461"
+      },
+      "datetime": "2026-04-11 19:05:00",
+      "forecast": {
+        "w": "0.2935",
+        "d": "0.3237",
+        "l": "0.3828"
+      }
+    },
+    {
+      "id": "29795",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.14773",
+        "a": "2.12622"
+      },
+      "datetime": "2026-04-12 15:15:00",
+      "forecast": {
+        "w": "0.3465",
+        "d": "0.2833",
+        "l": "0.3702"
+      }
+    },
+    {
+      "id": "29798",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "0",
+        "a": "4"
+      },
+      "xG": {
+        "h": "1.46514",
+        "a": "2.08775"
+      },
+      "datetime": "2026-04-12 15:15:00",
+      "forecast": {
+        "w": "0.2072",
+        "d": "0.2736",
+        "l": "0.5192"
+      }
+    },
+    {
+      "id": "29793",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.84879",
+        "a": "1.57488"
+      },
+      "datetime": "2026-04-12 18:45:00",
+      "forecast": {
+        "w": "0.439",
+        "d": "0.266",
+        "l": "0.295"
+      }
+    },
+    {
+      "id": "29800",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "3",
+        "a": "2"
+      },
+      "xG": {
+        "h": "3.98387",
+        "a": "0.578481"
+      },
+      "datetime": "2026-04-17 18:45:00",
+      "forecast": {
+        "w": "0.9543",
+        "d": "0.0375",
+        "l": "0.0082"
+      }
+    },
+    {
+      "id": "29802",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.28628",
+        "a": "2.13073"
+      },
+      "datetime": "2026-04-18 15:00:00",
+      "forecast": {
+        "w": "0.1826",
+        "d": "0.2236",
+        "l": "0.5938"
+      }
+    },
+    {
+      "id": "29799",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.961095",
+        "a": "1.54566"
+      },
+      "datetime": "2026-04-18 17:00:00",
+      "forecast": {
+        "w": "0.2055",
+        "d": "0.2803",
+        "l": "0.5142"
+      }
+    },
+    {
+      "id": "29801",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.413432",
+        "a": "0.171356"
+      },
+      "datetime": "2026-04-18 19:05:00",
+      "forecast": {
+        "w": "0.2988",
+        "d": "0.5922",
+        "l": "0.109"
+      }
+    },
+    {
+      "id": "29804",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "2",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.94243",
+        "a": "0.745123"
+      },
+      "datetime": "2026-04-19 13:00:00",
+      "forecast": {
+        "w": "0.7225",
+        "d": "0.1882",
+        "l": "0.0893"
+      }
+    },
+    {
+      "id": "29803",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "3"
+      },
+      "xG": {
+        "h": "1.48448",
+        "a": "1.97282"
+      },
+      "datetime": "2026-04-19 15:15:00",
+      "forecast": {
+        "w": "0.2605",
+        "d": "0.2467",
+        "l": "0.4928"
+      }
+    },
+    {
+      "id": "29805",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.970265",
+        "a": "0.631132"
+      },
+      "datetime": "2026-04-19 15:15:00",
+      "forecast": {
+        "w": "0.427",
+        "d": "0.3401",
+        "l": "0.2329"
+      }
+    },
+    {
+      "id": "29807",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "0",
+        "a": "3"
+      },
+      "xG": {
+        "h": "0.944239",
+        "a": "3.25297"
+      },
+      "datetime": "2026-04-19 15:15:00",
+      "forecast": {
+        "w": "0.0207",
+        "d": "0.0928",
+        "l": "0.8865"
+      }
+    },
+    {
+      "id": "29806",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "3.20455",
+        "a": "1.20364"
+      },
+      "datetime": "2026-04-19 18:45:00",
+      "forecast": {
+        "w": "0.8183",
+        "d": "0.1187",
+        "l": "0.063"
+      }
+    },
+    {
+      "id": "29769",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "3",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.26452",
+        "a": "0.672206"
+      },
+      "datetime": "2026-04-22 18:00:00",
+      "forecast": {
+        "w": "0.813",
+        "d": "0.135",
+        "l": "0.052"
+      }
+    },
+    {
+      "id": "29809",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "3",
+        "a": "3"
+      },
+      "xG": {
+        "h": "0.309794",
+        "a": "3.24582"
+      },
+      "datetime": "2026-04-24 18:45:00",
+      "forecast": {
+        "w": "0.0058",
+        "d": "0.0337",
+        "l": "0.9605"
+      }
+    },
+    {
+      "id": "29812",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "3",
+        "a": "2"
+      },
+      "xG": {
+        "h": "2.16328",
+        "a": "0.883316"
+      },
+      "datetime": "2026-04-25 13:00:00",
+      "forecast": {
+        "w": "0.7302",
+        "d": "0.2008",
+        "l": "0.069"
+      }
+    },
+    {
+      "id": "29808",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "0",
+        "a": "3"
+      },
+      "xG": {
+        "h": "0.977437",
+        "a": "3.00296"
+      },
+      "datetime": "2026-04-25 17:00:00",
+      "forecast": {
+        "w": "0.0568",
+        "d": "0.117",
+        "l": "0.8262"
+      }
+    },
+    {
+      "id": "29816",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "2",
+        "a": "2"
+      },
+      "xG": {
+        "h": "2.15303",
+        "a": "1.34617"
+      },
+      "datetime": "2026-04-25 19:05:00",
+      "forecast": {
+        "w": "0.5813",
+        "d": "0.2225",
+        "l": "0.1962"
+      }
+    },
+    {
+      "id": "29811",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "3"
+      },
+      "xG": {
+        "h": "2.57081",
+        "a": "1.98869"
+      },
+      "datetime": "2026-04-26 13:00:00",
+      "forecast": {
+        "w": "0.5102",
+        "d": "0.2379",
+        "l": "0.2519"
+      }
+    },
+    {
+      "id": "29810",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "4",
+        "a": "4"
+      },
+      "xG": {
+        "h": "2.64995",
+        "a": "1.88709"
+      },
+      "datetime": "2026-04-26 15:15:00",
+      "forecast": {
+        "w": "0.5654",
+        "d": "0.224",
+        "l": "0.2106"
+      }
+    },
+    {
+      "id": "29814",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.12423",
+        "a": "1.75999"
+      },
+      "datetime": "2026-04-26 15:15:00",
+      "forecast": {
+        "w": "0.1641",
+        "d": "0.3107",
+        "l": "0.5252"
+      }
+    },
+    {
+      "id": "29815",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.55601",
+        "a": "2.51691"
+      },
+      "datetime": "2026-04-26 15:15:00",
+      "forecast": {
+        "w": "0.1554",
+        "d": "0.2215",
+        "l": "0.6231"
+      }
+    },
+    {
+      "id": "29813",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.82843",
+        "a": "1.41493"
+      },
+      "datetime": "2026-04-26 18:45:00",
+      "forecast": {
+        "w": "0.705",
+        "d": "0.1815",
+        "l": "0.1135"
+      }
+    },
+    {
+      "id": "29818",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.9163",
+        "a": "0.334256"
+      },
+      "datetime": "2026-05-03 13:00:00",
+      "forecast": {
+        "w": "0.7993",
+        "d": "0.1612",
+        "l": "0.0395"
+      }
+    },
+    {
+      "id": "29820",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.1478",
+        "a": "1.58879"
+      },
+      "datetime": "2026-05-03 13:00:00",
+      "forecast": {
+        "w": "0.2549",
+        "d": "0.2652",
+        "l": "0.4799"
+      }
+    },
+    {
+      "id": "29821",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "3",
+        "a": "0"
+      },
+      "xG": {
+        "h": "3.07178",
+        "a": "1.55164"
+      },
+      "datetime": "2026-05-03 13:00:00",
+      "forecast": {
+        "w": "0.7159",
+        "d": "0.1638",
+        "l": "0.1203"
+      }
+    },
+    {
+      "id": "29822",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.33864",
+        "a": "1.55241"
+      },
+      "datetime": "2026-05-03 13:00:00",
+      "forecast": {
+        "w": "0.2978",
+        "d": "0.2931",
+        "l": "0.4091"
+      }
+    },
+    {
+      "id": "29824",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "2"
+      },
+      "xG": {
+        "h": "2.98414",
+        "a": "1.27737"
+      },
+      "datetime": "2026-05-03 13:00:00",
+      "forecast": {
+        "w": "0.7754",
+        "d": "0.1437",
+        "l": "0.0809"
+      }
+    },
+    {
+      "id": "29817",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.5499",
+        "a": "2.16783"
+      },
+      "datetime": "2026-05-03 15:15:00",
+      "forecast": {
+        "w": "0.4716",
+        "d": "0.2437",
+        "l": "0.2847"
+      }
+    },
+    {
+      "id": "29823",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "4",
+        "a": "0"
+      },
+      "xG": {
+        "h": "2.86094",
+        "a": "0.733091"
+      },
+      "datetime": "2026-05-03 15:15:00",
+      "forecast": {
+        "w": "0.8705",
+        "d": "0.093",
+        "l": "0.0365"
+      }
+    },
+    {
+      "id": "29825",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "0.405296",
+        "a": "1.67665"
+      },
+      "datetime": "2026-05-03 15:15:00",
+      "forecast": {
+        "w": "0.0637",
+        "d": "0.2139",
+        "l": "0.7224"
+      }
+    },
+    {
+      "id": "29819",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "4",
+        "a": "2"
+      },
+      "xG": {
+        "h": "2.6657",
+        "a": "1.06495"
+      },
+      "datetime": "2026-05-03 18:45:00",
+      "forecast": {
+        "w": "0.7681",
+        "d": "0.1609",
+        "l": "0.071"
+      }
+    },
+    {
+      "id": "29829",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.719134",
+        "a": "1.06721"
+      },
+      "datetime": "2026-05-08 18:45:00",
+      "forecast": {
+        "w": "0.2318",
+        "d": "0.3283",
+        "l": "0.4399"
+      }
+    },
+    {
+      "id": "29826",
+      "isResult": true,
+      "h": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.793655",
+        "a": "1.81952"
+      },
+      "datetime": "2026-05-10 19:00:00",
+      "forecast": {
+        "w": "0.1099",
+        "d": "0.226",
+        "l": "0.6641"
+      }
+    },
+    {
+      "id": "29827",
+      "isResult": true,
+      "h": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "a": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.866185",
+        "a": "2.07007"
+      },
+      "datetime": "2026-05-10 19:00:00",
+      "forecast": {
+        "w": "0.1",
+        "d": "0.1942",
+        "l": "0.7058"
+      }
+    },
+    {
+      "id": "29828",
+      "isResult": true,
+      "h": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "a": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.23305",
+        "a": "1.03467"
+      },
+      "datetime": "2026-05-10 19:00:00",
+      "forecast": {
+        "w": "0.361",
+        "d": "0.4123",
+        "l": "0.2267"
+      }
+    },
+    {
+      "id": "29830",
+      "isResult": true,
+      "h": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "a": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "goals": {
+        "h": "0",
+        "a": "4"
+      },
+      "xG": {
+        "h": "0.730271",
+        "a": "1.76754"
+      },
+      "datetime": "2026-05-10 19:00:00",
+      "forecast": {
+        "w": "0.1119",
+        "d": "0.237",
+        "l": "0.6511"
+      }
+    },
+    {
+      "id": "29831",
+      "isResult": true,
+      "h": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "a": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "goals": {
+        "h": "0",
+        "a": "1"
+      },
+      "xG": {
+        "h": "0.308864",
+        "a": "0.400405"
+      },
+      "datetime": "2026-05-10 19:00:00",
+      "forecast": {
+        "w": "0.1879",
+        "d": "0.5446",
+        "l": "0.2675"
+      }
+    },
+    {
+      "id": "29832",
+      "isResult": true,
+      "h": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "a": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "goals": {
+        "h": "1",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.608",
+        "a": "0.123268"
+      },
+      "datetime": "2026-05-10 19:00:00",
+      "forecast": {
+        "w": "0.7861",
+        "d": "0.1932",
+        "l": "0.0207"
+      }
+    },
+    {
+      "id": "29833",
+      "isResult": true,
+      "h": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "a": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.53143",
+        "a": "1.59351"
+      },
+      "datetime": "2026-05-10 19:00:00",
+      "forecast": {
+        "w": "0.3412",
+        "d": "0.2849",
+        "l": "0.3739"
+      }
+    },
+    {
+      "id": "29834",
+      "isResult": true,
+      "h": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "a": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "1.87108",
+        "a": "1.56954"
+      },
+      "datetime": "2026-05-10 19:00:00",
+      "forecast": {
+        "w": "0.4493",
+        "d": "0.2472",
+        "l": "0.3035"
+      }
+    },
+    {
+      "id": "29791",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "goals": {
+        "h": "1",
+        "a": "2"
+      },
+      "xG": {
+        "h": "2.64653",
+        "a": "1.69163"
+      },
+      "datetime": "2026-05-13 17:00:00",
+      "forecast": {
+        "w": "0.5948",
+        "d": "0.2114",
+        "l": "0.1938"
+      }
+    },
+    {
+      "id": "29792",
+      "isResult": true,
+      "h": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "0",
+        "a": "2"
+      },
+      "xG": {
+        "h": "3.03896",
+        "a": "0.943876"
+      },
+      "datetime": "2026-05-13 19:00:00",
+      "forecast": {
+        "w": "0.8403",
+        "d": "0.1074",
+        "l": "0.0523"
+      }
+    },
+    {
+      "id": "29840",
+      "isResult": true,
+      "h": {
+        "id": "168",
+        "title": "Nantes",
+        "short_title": "NAN"
+      },
+      "a": {
+        "id": "174",
+        "title": "Toulouse",
+        "short_title": "TOU"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "0.0840142",
+        "a": "0.319014"
+      },
+      "datetime": "2026-05-17 18:00:00",
+      "forecast": {
+        "w": "0.0575",
+        "d": "0.6542",
+        "l": "0.2883"
+      }
+    },
+    {
+      "id": "29835",
+      "isResult": true,
+      "h": {
+        "id": "241",
+        "title": "Brest",
+        "short_title": "BRE"
+      },
+      "a": {
+        "id": "167",
+        "title": "Angers",
+        "short_title": "ANG"
+      },
+      "goals": {
+        "h": "1",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.38724",
+        "a": "1.06418"
+      },
+      "datetime": "2026-05-17 19:00:00",
+      "forecast": {
+        "w": "0.7026",
+        "d": "0.1838",
+        "l": "0.1136"
+      }
+    },
+    {
+      "id": "29836",
+      "isResult": true,
+      "h": {
+        "id": "160",
+        "title": "Lille",
+        "short_title": "LIL"
+      },
+      "a": {
+        "id": "275",
+        "title": "Auxerre",
+        "short_title": "AUX"
+      },
+      "goals": {
+        "h": "0",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.22445",
+        "a": "0.615778"
+      },
+      "datetime": "2026-05-17 19:00:00",
+      "forecast": {
+        "w": "0.5318",
+        "d": "0.2974",
+        "l": "0.1708"
+      }
+    },
+    {
+      "id": "29837",
+      "isResult": true,
+      "h": {
+        "id": "179",
+        "title": "Lorient",
+        "short_title": "LOR"
+      },
+      "a": {
+        "id": "282",
+        "title": "Le Havre",
+        "short_title": "LHV"
+      },
+      "goals": {
+        "h": "0",
+        "a": "2"
+      },
+      "xG": {
+        "h": "1.26937",
+        "a": "1.28765"
+      },
+      "datetime": "2026-05-17 19:00:00",
+      "forecast": {
+        "w": "0.31",
+        "d": "0.3607",
+        "l": "0.3293"
+      }
+    },
+    {
+      "id": "29838",
+      "isResult": true,
+      "h": {
+        "id": "178",
+        "title": "Lyon",
+        "short_title": "LYO"
+      },
+      "a": {
+        "id": "210",
+        "title": "Lens",
+        "short_title": "LEN"
+      },
+      "goals": {
+        "h": "0",
+        "a": "4"
+      },
+      "xG": {
+        "h": "1.12358",
+        "a": "2.01573"
+      },
+      "datetime": "2026-05-17 19:00:00",
+      "forecast": {
+        "w": "0.1842",
+        "d": "0.2206",
+        "l": "0.5952"
+      }
+    },
+    {
+      "id": "29839",
+      "isResult": true,
+      "h": {
+        "id": "164",
+        "title": "Marseille",
+        "short_title": "MAR"
+      },
+      "a": {
+        "id": "163",
+        "title": "Rennes",
+        "short_title": "REN"
+      },
+      "goals": {
+        "h": "3",
+        "a": "1"
+      },
+      "xG": {
+        "h": "3.90151",
+        "a": "2.20696"
+      },
+      "datetime": "2026-05-17 19:00:00",
+      "forecast": {
+        "w": "0.7157",
+        "d": "0.1372",
+        "l": "0.1471"
+      }
+    },
+    {
+      "id": "29841",
+      "isResult": true,
+      "h": {
+        "id": "170",
+        "title": "Nice",
+        "short_title": "NIC"
+      },
+      "a": {
+        "id": "180",
+        "title": "Metz",
+        "short_title": "MET"
+      },
+      "goals": {
+        "h": "0",
+        "a": "0"
+      },
+      "xG": {
+        "h": "1.216",
+        "a": "0.836784"
+      },
+      "datetime": "2026-05-17 19:00:00",
+      "forecast": {
+        "w": "0.4542",
+        "d": "0.2938",
+        "l": "0.252"
+      }
+    },
+    {
+      "id": "29842",
+      "isResult": true,
+      "h": {
+        "id": "290",
+        "title": "Paris FC",
+        "short_title": "PAR"
+      },
+      "a": {
+        "id": "161",
+        "title": "Paris Saint Germain",
+        "short_title": "PSG"
+      },
+      "goals": {
+        "h": "2",
+        "a": "1"
+      },
+      "xG": {
+        "h": "2.32862",
+        "a": "0.863934"
+      },
+      "datetime": "2026-05-17 19:00:00",
+      "forecast": {
+        "w": "0.7654",
+        "d": "0.1623",
+        "l": "0.0723"
+      }
+    },
+    {
+      "id": "29843",
+      "isResult": true,
+      "h": {
+        "id": "225",
+        "title": "Strasbourg",
+        "short_title": "STR"
+      },
+      "a": {
+        "id": "171",
+        "title": "Monaco",
+        "short_title": "MON"
+      },
+      "goals": {
+        "h": "5",
+        "a": "4"
+      },
+      "xG": {
+        "h": "2.11536",
+        "a": "1.44729"
+      },
+      "datetime": "2026-05-17 19:00:00",
+      "forecast": {
+        "w": "0.5538",
+        "d": "0.22",
+        "l": "0.2262"
+      }
+    }
+  ]
+}

@@ -13,7 +13,11 @@ build/
 htmlcov/
 *.db
 *.sqlite3
+*.db.bak*
 data/*.csv
 data/*.parquet
 data/*.json
+data/*.old_*
+# Documentación externa pesada (PDF ~20MB)
+api-football-documentation/
 .DS_Store

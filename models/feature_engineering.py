@@ -271,7 +271,11 @@ def build_features(
     """
     df = matches_df.copy()
     df["match_date"] = pd.to_datetime(df["match_date"])
-    df = df.sort_values("match_date").reset_index(drop=True)
+    # Stable sort: preserves the caller's row order for matches sharing the
+    # same kickoff timestamp.  Critical because callers (e.g. real_backtester)
+    # attach external columns (odds, match_id) to the result BY POSITION —
+    # an unstable sort would misalign ~24% of rows (same-timestamp matches).
+    df = df.sort_values("match_date", kind="stable").reset_index(drop=True)
 
     # Build xG lookup: (date_str, home_team, away_team) → (xg_h, xg_a)
     # Using date-only key to handle minor timezone differences between sources.

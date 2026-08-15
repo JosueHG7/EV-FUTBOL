@@ -118,9 +118,12 @@ _TEAM_NAME_MAP: dict[str, str] = {
 }
 
 # CSVs to download when missing (season_code, division)
+# 2021/2122: temporadas anteriores a la BD API-Football (crean partidos).
+# 2526: temporada 2025/26 completa — API-Football Free no da acceso (cap 2022-2024),
+#       así que se crea desde football-data.co.uk (resultados + odds Pinnacle).
 _CSV_DOWNLOADS: list[tuple[str, str]] = [
     (code, div)
-    for code in ("2021", "2122")
+    for code in ("2021", "2122", "2526")
     for div in ("E0", "D1", "SP1", "I1", "F1")
 ]
 _FD_BASE = "https://www.football-data.co.uk/mmz4281"
