@@ -344,6 +344,22 @@ def _hit_rates(samples: list, thresholds: list) -> dict:
     return out
 
 
+# Tendencias booleanas de goles/tiempos (rate por ventana, no por umbral).
+_GOAL_TREND_KEYS = ("goals_for15", "goals_ag15", "scored_both_halves",
+                    "won_both_halves", "btts", "over25", "clean_sheet")
+
+
+def _rate(flags: list) -> dict:
+    """Por ventana (5, 10): (aciertos, n) de una lista de booleanos (más reciente
+    primero). Mismo formato (h, n) que _hit_rates → sirve con is_strong."""
+    out = {}
+    for w in TREND_WINDOWS:
+        window = flags[:w]
+        nn = len(window)
+        out[w] = (sum(1 for f in window if f), nn) if nn else None
+    return out
+
+
 def team_trends(stats_df, matches_df: pd.DataFrame, team: str,
                 before: pd.Timestamp, n: int = _TREND_LOOKBACK) -> dict:
     """Rachas del equipo: córners (indiv/total) y tiros a puerta (indiv/total),
@@ -356,16 +372,33 @@ def team_trends(stats_df, matches_df: pd.DataFrame, team: str,
     ].sort_values("match_date", ascending=False, kind="stable").head(n)
 
     empty = {k: _hit_rates([], v) for k, v in TREND_THRESHOLDS.items()}
-    if sub.empty or stats_df is None or getattr(stats_df, "empty", True):
-        return {**empty, "n_corners": 0, "n_sot": 0}
+    empty_rate = _rate([])
+    empty_all = {**empty, "n_corners": 0, "n_sot": 0, "n_goals": 0,
+                 **{k: empty_rate for k in _GOAL_TREND_KEYS}}
+    if sub.empty:
+        return empty_all
 
-    recs = [
-        (m["match_id"], m["home_team_id"], m["away_team_id"]) if m["home_team"] == team
-        else (m["match_id"], m["away_team_id"], m["home_team_id"])
-        for _, m in sub.iterrows()
-    ]
+    recs, g_for15, g_ag15, both_scored, both_won, btts_f, ov25_f, cs_f = [], [], [], [], [], [], [], []
+    for _, m in sub.iterrows():
+        if m["home_team"] == team:
+            recs.append((m["match_id"], m["home_team_id"], m["away_team_id"]))
+            gf, ga, gfht, gaht = m["home_goals"], m["away_goals"], m.get("home_goals_ht"), m.get("away_goals_ht")
+        else:
+            recs.append((m["match_id"], m["away_team_id"], m["home_team_id"]))
+            gf, ga, gfht, gaht = m["away_goals"], m["home_goals"], m.get("away_goals_ht"), m.get("home_goals_ht")
+        # Goles/tiempos — salen del marcador, disponibles en TODAS las ligas.
+        g_for15.append(gf > 1.5)
+        g_ag15.append(ga > 1.5)
+        btts_f.append(gf >= 1 and ga >= 1)
+        ov25_f.append((gf + ga) > 2.5)
+        cs_f.append(ga == 0)
+        if gfht is not None and gaht is not None and pd.notna(gfht) and pd.notna(gaht):
+            gf2, ga2 = gf - gfht, ga - gaht
+            both_scored.append(gfht >= 1 and gf2 >= 1)
+            both_won.append(gfht > gaht and gf2 > ga2)
+
+    # Córners / tiros — solo si la liga publica stats por-partido.
     lut = _stats_lut(stats_df, [r[0] for r in recs])
-
     samples = {"Corner Kicks": ([], []), "Shots on Goal": ([], [])}  # (a favor, total)
     for mid, tid, oid in recs:
         for stype in ("Corner Kicks", "Shots on Goal"):
@@ -386,7 +419,14 @@ def team_trends(stats_df, matches_df: pd.DataFrame, team: str,
         "corners_tot": _hit_rates(ct, TREND_THRESHOLDS["corners_tot"]),
         "sot_ind":     _hit_rates(sf, TREND_THRESHOLDS["sot_ind"]),
         "sot_tot":     _hit_rates(st_, TREND_THRESHOLDS["sot_tot"]),
-        "n_corners": len(cf), "n_sot": len(sf),
+        "goals_for15":        _rate(g_for15),
+        "goals_ag15":         _rate(g_ag15),
+        "scored_both_halves": _rate(both_scored),
+        "won_both_halves":    _rate(both_won),
+        "btts":               _rate(btts_f),
+        "over25":             _rate(ov25_f),
+        "clean_sheet":        _rate(cs_f),
+        "n_corners": len(cf), "n_sot": len(sf), "n_goals": len(g_for15),
     }
 
 

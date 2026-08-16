@@ -615,13 +615,60 @@ def _trend_highlights(trends: dict, thr_map: dict) -> list:
     return out
 
 
+# Tendencias booleanas de goles/tiempos (rate simple, no por umbral).
+_GOAL_TREND_LABELS = [
+    ("Marca +1.5 goles",        "goals_for15"),
+    ("Recibe +1.5 goles",       "goals_ag15"),
+    ("Marcó en ambos tiempos",  "scored_both_halves"),
+    ("Ganó ambos tiempos",      "won_both_halves"),
+]
+
+
+def _goal_highlights(trends: dict) -> list:
+    """Rachas fuertes (u10) de goles/tiempos como strings cortos."""
+    from models.match_analysis import is_strong
+    out = []
+    for label, key in _GOAL_TREND_LABELS:
+        hn = trends[key][10]
+        if hn and is_strong(*hn):
+            h, n = hn
+            mark = "🔥" if h / n >= 0.8 else "❄️"
+            out.append(f"{mark} {label}: {h}/{n}")
+    return out
+
+
+def _render_result_rates(th: dict, ta: dict, home: str, away: str) -> None:
+    """BTTS / Over 2.5 / portería a cero de cada equipo (últimos 10) — junto a
+    los promedios. Salen del marcador, así que aplican a todas las ligas."""
+    if not (th["n_goals"] or ta["n_goals"]):
+        return
+
+    def pct(tr, key):
+        hn = tr[key][10]
+        return f"{round(100 * hn[0] / hn[1])}%" if hn else "—"
+
+    st.markdown("**📌 Resultados recientes (últimos 10)**")
+    for emoji, name, tr in (("🏠", home, th), ("✈️", away, ta)):
+        st.markdown(
+            f"- {emoji} **{name}**: BTTS {pct(tr, 'btts')} · Over 2.5 "
+            f"{pct(tr, 'over25')} · Portería a cero {pct(tr, 'clean_sheet')}"
+        )
+    st.caption(
+        "% de los últimos 10 partidos del equipo · BTTS = ambos marcaron · "
+        "Over 2.5 = +3 goles totales · Portería a cero = el equipo no recibió gol."
+    )
+
+
 def _render_team_trends_full(trends: dict, label: str, thr_map: dict) -> None:
     st.markdown(
-        f"**{label}**  ·  córners a favor: {trends['n_corners']} · "
-        f"tiros a favor: {trends['n_sot']} partidos con datos  "
-        f"_(las filas 'totales' requieren datos de ambos equipos — ver el "
-        f"denominador de cada celda)_"
+        f"**{label}**  ·  goles: {trends['n_goals']} · córners a favor: "
+        f"{trends['n_corners']} · tiros a favor: {trends['n_sot']} partidos con datos"
     )
+    # Goles / tiempos (todas las ligas)
+    for glabel, key in _GOAL_TREND_LABELS:
+        st.markdown(f"{glabel} — u10 {_tr_cell(trends[key][10])} · "
+                    f"u5 {_tr_cell(trends[key][5])}")
+    # Córners / tiros (donde hay stats) — por umbral
     for glabel, key in _TREND_GROUPS:
         thrs = thr_map[key]
         line = " · ".join(f"+{t} {_tr_cell(trends[key][10].get(t))}" for t in thrs)
@@ -630,20 +677,21 @@ def _render_team_trends_full(trends: dict, label: str, thr_map: dict) -> None:
         st.caption(f"u5: {u5}")
 
 
-def _render_trends(u: dict, matches_df, stats_df) -> None:
-    """Rachas de ambos equipos vs umbrales fijos, con la línea del bookie al lado."""
-    from models.match_analysis import team_trends, TREND_THRESHOLDS
-    d = u["_d"]
-    home, away, before = d["home"], d["away"], u["dt"]
-    th = team_trends(stats_df, matches_df, home, before, 10)
-    ta = team_trends(stats_df, matches_df, away, before, 10)
-    if not any((th["n_corners"], th["n_sot"], ta["n_corners"], ta["n_sot"])):
-        return   # liga sin stats por-partido
+def _render_trends(u: dict, th: dict, ta: dict) -> None:
+    """Rachas de ambos equipos (goles/tiempos + córners/tiros), con la línea del
+    bookie al lado. th/ta vienen precalculados (team_trends)."""
+    from models.match_analysis import TREND_THRESHOLDS
+    home, away = u["_d"]["home"], u["_d"]["away"]
+    if not (th["n_goals"] or ta["n_goals"]):
+        return
 
     st.markdown("#### 📈 Tendencias / rachas (últimos 5 · 10)")
     st.caption(
-        "Descriptivo ('8/10'), **no** probabilidad ni valor. 🔥 = ≥80% · ❄️ = ≤20% "
-        "(racha fuerte). Ventanas fijas, sin cherry-picking."
+        "Descriptivo ('8/10'), **no** probabilidad ni valor. 🔥 = pasa seguido "
+        "(≥80%) · ❄️ = pasa rara vez (≤20%) — es **frecuencia**, no bueno/malo "
+        "(ej. 'recibe +1.5 goles 🔥' = concede seguido). Ventanas fijas, sin "
+        "cherry-picking. Goles/tiempos aplican a todas las ligas; córners/tiros "
+        "solo donde la liga publica stats."
     )
     cl = u.get("corners")
     if cl:
@@ -655,13 +703,13 @@ def _render_trends(u: dict, matches_df, stats_df) -> None:
     c1, c2 = st.columns(2)
     for col, name, tr, emoji in ((c1, home, th, "🏠"), (c2, away, ta, "✈️")):
         with col:
-            hi = _trend_highlights(tr, TREND_THRESHOLDS)
+            hi = _goal_highlights(tr) + _trend_highlights(tr, TREND_THRESHOLDS)
             if hi:
-                st.markdown(f"{emoji} **{name}** — rachas fuertes:")
+                st.markdown(f"{emoji} **{name}** — rachas notables:")
                 for x in hi:
                     st.markdown(f"- {x}")
             else:
-                st.markdown(f"{emoji} **{name}** — sin rachas fuertes (u10)")
+                st.markdown(f"{emoji} **{name}** — sin rachas notables (u10)")
 
     with st.expander("Ver todas las tendencias (u5 / u10)"):
         _render_team_trends_full(th, f"🏠 {home}", TREND_THRESHOLDS)
@@ -760,10 +808,16 @@ def _render_detail(u: dict, matches_df, stats_df) -> None:
 
     _render_goal_internals(u)
 
+    # Tendencias de ambos equipos (una sola vez) → Promedios + bloque Tendencias.
+    from models.match_analysis import team_trends
+    th = team_trends(stats_df, matches_df, home, before)
+    ta = team_trends(stats_df, matches_df, away, before)
+
     # Resumen de promedios (arriba) + detalle partido-a-partido (abajo)
     _render_stats_table(d)
+    _render_result_rates(th, ta, home, away)
     _render_corner_signal(u)
-    _render_trends(u, matches_df, stats_df)
+    _render_trends(u, th, ta)
 
     st.markdown("#### 📋 Últimos partidos (partido a partido)")
     dh = team_recent_detail(stats_df, matches_df, home, before, 6)

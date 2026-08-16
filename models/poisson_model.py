@@ -66,6 +66,8 @@ def load_matches(league_id: int | None = None) -> pd.DataFrame:
                 "away_team_id": m.away_team_id,
                 "home_goals":   m.home_goals,
                 "away_goals":   m.away_goals,
+                "home_goals_ht": m.home_goals_ht,
+                "away_goals_ht": m.away_goals_ht,
                 "league_id":    m.league_id,
                 "season":       m.season,
                 "match_date":   m.match_date,
