@@ -311,6 +311,94 @@ def corner_analysis(stats_df, matches_df: pd.DataFrame, home: str, away: str,
 
 
 # ---------------------------------------------------------------------------
+# Tendencias / rachas — hit-rate sobre umbrales FIJOS en ventanas fijas (5, 10).
+# Descriptivo ("8/10"), NO probabilidad ni "valor". El usuario ya usa este método
+# a mano; lo automatizamos sin cherry-picking de umbrales.
+# ---------------------------------------------------------------------------
+
+# Umbrales acordados con el usuario.
+TREND_THRESHOLDS = {
+    "corners_ind": [2.5, 3.5, 4.5, 5.5],
+    "corners_tot": [7.5, 8.5, 9.5, 10.5],
+    "sot_ind":     [1.5, 2.5, 3.5, 4.5, 5.5],
+    "sot_tot":     [6.5, 7.5, 8.5, 9.5],
+}
+TREND_WINDOWS = (5, 10)
+
+
+# Buscamos más partidos de calendario que el tamaño de ventana para que la
+# ventana de 10 pueda llenarse aunque algunos partidos no publiquen stats.
+_TREND_LOOKBACK = 16
+_TREND_MIN_N = 5   # n mínimo para llamar "fuerte" a una racha
+
+
+def _hit_rates(samples: list, thresholds: list) -> dict:
+    """Por ventana (5, 10) y umbral: (aciertos, n). Toma las últimas w APARICIONES
+    CON DATOS (samples ya viene más-reciente-primero, solo partidos con el dato)."""
+    out = {}
+    for w in TREND_WINDOWS:
+        window = samples[:w]
+        nn = len(window)
+        out[w] = {thr: ((sum(1 for v in window if v > thr), nn) if nn else None)
+                  for thr in thresholds}
+    return out
+
+
+def team_trends(stats_df, matches_df: pd.DataFrame, team: str,
+                before: pd.Timestamp, n: int = _TREND_LOOKBACK) -> dict:
+    """Rachas del equipo: córners (indiv/total) y tiros a puerta (indiv/total),
+    hit-rate sobre umbrales fijos en las últimas 5 y 10 apariciones con datos.
+
+    Un solo filtro + un solo LUT para ambos stats (córners y tiros)."""
+    sub = matches_df[
+        ((matches_df["home_team"] == team) | (matches_df["away_team"] == team)) &
+        (matches_df["match_date"] < before)
+    ].sort_values("match_date", ascending=False, kind="stable").head(n)
+
+    empty = {k: _hit_rates([], v) for k, v in TREND_THRESHOLDS.items()}
+    if sub.empty or stats_df is None or getattr(stats_df, "empty", True):
+        return {**empty, "n_corners": 0, "n_sot": 0}
+
+    recs = [
+        (m["match_id"], m["home_team_id"], m["away_team_id"]) if m["home_team"] == team
+        else (m["match_id"], m["away_team_id"], m["home_team_id"])
+        for _, m in sub.iterrows()
+    ]
+    lut = _stats_lut(stats_df, [r[0] for r in recs])
+
+    samples = {"Corner Kicks": ([], []), "Shots on Goal": ([], [])}  # (a favor, total)
+    for mid, tid, oid in recs:
+        for stype in ("Corner Kicks", "Shots on Goal"):
+            vf = lut.get((mid, tid, stype))
+            va = lut.get((mid, oid, stype))
+            vf = vf if (vf is not None and pd.notna(vf)) else None
+            va = va if (va is not None and pd.notna(va)) else None
+            fors, totals = samples[stype]
+            if vf is not None:
+                fors.append(vf)
+            if vf is not None and va is not None:
+                totals.append(vf + va)
+
+    cf, ct = samples["Corner Kicks"]
+    sf, st_ = samples["Shots on Goal"]
+    return {
+        "corners_ind": _hit_rates(cf, TREND_THRESHOLDS["corners_ind"]),
+        "corners_tot": _hit_rates(ct, TREND_THRESHOLDS["corners_tot"]),
+        "sot_ind":     _hit_rates(sf, TREND_THRESHOLDS["sot_ind"]),
+        "sot_tot":     _hit_rates(st_, TREND_THRESHOLDS["sot_tot"]),
+        "n_corners": len(cf), "n_sot": len(sf),
+    }
+
+
+def is_strong(hits: int, n: int, min_n: int = _TREND_MIN_N) -> bool:
+    """Racha fuerte = ≥80% u ≤20% de aciertos, con muestra suficiente (n≥min_n)."""
+    if n < min_n:
+        return False
+    r = hits / n
+    return r >= 0.8 or r <= 0.2
+
+
+# ---------------------------------------------------------------------------
 # Per-match detail — the last N matches row by row (score24-style)
 # ---------------------------------------------------------------------------
 

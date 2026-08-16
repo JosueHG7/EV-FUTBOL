@@ -570,6 +570,105 @@ def _render_corner_signal(u: dict) -> None:
         st.caption(f"σ ≈ {sigma_txt} · {n_txt} · confianza {conf} · informativo")
 
 
+_TREND_GROUPS = [
+    ("Córners individuales",   "corners_ind"),
+    ("Córners totales",        "corners_tot"),
+    ("Tiros a puerta indiv.",  "sot_ind"),
+    ("Tiros a puerta totales", "sot_tot"),
+]
+
+
+def _tr_mark(hits: int, n: int) -> str:
+    if not n:
+        return ""
+    r = hits / n
+    return " 🔥" if r >= 0.8 else (" ❄️" if r <= 0.2 else "")
+
+
+def _tr_cell(hn) -> str:
+    if hn is None:
+        return "—"
+    h, n = hn
+    return f"{h}/{n}{_tr_mark(h, n)}"
+
+
+def _trend_highlights(trends: dict, thr_map: dict) -> list:
+    """Rachas fuertes (u10) por grupo: el umbral MÁS ALTO que supera de forma
+    fiable (≥80%) y el MÁS BAJO bajo el que se queda (≤20%). Máx 2 por grupo,
+    sin sesgo por orden de lista."""
+    from models.match_analysis import is_strong
+    out = []
+    for label, key in _TREND_GROUPS:
+        rates = trends[key][10]
+        overs = [t for t in thr_map[key]
+                 if rates[t] and is_strong(*rates[t]) and rates[t][0] / rates[t][1] >= 0.8]
+        unders = [t for t in thr_map[key]
+                  if rates[t] and is_strong(*rates[t]) and rates[t][0] / rates[t][1] <= 0.2]
+        if overs:
+            t = max(overs)
+            h, n = rates[t]
+            out.append(f"🔥 {label}: supera **+{t}** en {h}/{n}")
+        if unders:
+            t = min(unders)
+            h, n = rates[t]
+            out.append(f"❄️ {label}: por debajo de **+{t}** en {n - h}/{n}")
+    return out
+
+
+def _render_team_trends_full(trends: dict, label: str, thr_map: dict) -> None:
+    st.markdown(
+        f"**{label}**  ·  córners a favor: {trends['n_corners']} · "
+        f"tiros a favor: {trends['n_sot']} partidos con datos  "
+        f"_(las filas 'totales' requieren datos de ambos equipos — ver el "
+        f"denominador de cada celda)_"
+    )
+    for glabel, key in _TREND_GROUPS:
+        thrs = thr_map[key]
+        line = " · ".join(f"+{t} {_tr_cell(trends[key][10].get(t))}" for t in thrs)
+        u5 = " · ".join(f"+{t} {_tr_cell(trends[key][5].get(t))}" for t in thrs)
+        st.markdown(f"{glabel} — **u10:** {line}")
+        st.caption(f"u5: {u5}")
+
+
+def _render_trends(u: dict, matches_df, stats_df) -> None:
+    """Rachas de ambos equipos vs umbrales fijos, con la línea del bookie al lado."""
+    from models.match_analysis import team_trends, TREND_THRESHOLDS
+    d = u["_d"]
+    home, away, before = d["home"], d["away"], u["dt"]
+    th = team_trends(stats_df, matches_df, home, before, 10)
+    ta = team_trends(stats_df, matches_df, away, before, 10)
+    if not any((th["n_corners"], th["n_sot"], ta["n_corners"], ta["n_sot"])):
+        return   # liga sin stats por-partido
+
+    st.markdown("#### 📈 Tendencias / rachas (últimos 5 · 10)")
+    st.caption(
+        "Descriptivo ('8/10'), **no** probabilidad ni valor. 🔥 = ≥80% · ❄️ = ≤20% "
+        "(racha fuerte). Ventanas fijas, sin cherry-picking."
+    )
+    cl = u.get("corners")
+    if cl:
+        st.caption(
+            f"📏 Línea de córners de la casa: **{cl['line']}** "
+            f"(O {cl['over']} / U {cl['under']}) — compará con 'Córners totales'."
+        )
+
+    c1, c2 = st.columns(2)
+    for col, name, tr, emoji in ((c1, home, th, "🏠"), (c2, away, ta, "✈️")):
+        with col:
+            hi = _trend_highlights(tr, TREND_THRESHOLDS)
+            if hi:
+                st.markdown(f"{emoji} **{name}** — rachas fuertes:")
+                for x in hi:
+                    st.markdown(f"- {x}")
+            else:
+                st.markdown(f"{emoji} **{name}** — sin rachas fuertes (u10)")
+
+    with st.expander("Ver todas las tendencias (u5 / u10)"):
+        _render_team_trends_full(th, f"🏠 {home}", TREND_THRESHOLDS)
+        st.divider()
+        _render_team_trends_full(ta, f"✈️ {away}", TREND_THRESHOLDS)
+
+
 def _render_detail(u: dict, matches_df, stats_df) -> None:
     from models.match_analysis import team_recent_detail, h2h_detail
     d = u["_d"]
@@ -600,6 +699,7 @@ def _render_detail(u: dict, matches_df, stats_df) -> None:
     # Resumen de promedios (arriba) + detalle partido-a-partido (abajo)
     _render_stats_table(d)
     _render_corner_signal(u)
+    _render_trends(u, matches_df, stats_df)
 
     st.markdown("#### 📋 Últimos partidos (partido a partido)")
     dh = team_recent_detail(stats_df, matches_df, home, before, 6)
