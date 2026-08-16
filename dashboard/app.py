@@ -52,7 +52,17 @@ _BACKTEST_PATH = config.DATA_DIR / "real_backtest_results.json"
 # Cached data / model loaders
 # ---------------------------------------------------------------------------
 
-@st.cache_resource(show_spinner="Cargando modelo…")
+def _db_mtime() -> float:
+    """mtime de la BD SQLite. Se pasa como clave de caché a los loaders de datos:
+    cuando refresh.py escribe en la BD el mtime cambia y las cachés se invalidan
+    solas → el dashboard refleja el refresco sin reiniciar ni esperar el TTL."""
+    try:
+        return config.DB_PATH.stat().st_mtime
+    except OSError:
+        return 0.0
+
+
+@st.cache_resource(max_entries=2, show_spinner="Cargando modelo…")
 def _load_model_cached(pkl_mtime: float):
     """Carga el modelo entrenado por refresh.py (instantáneo). Si no existe,
     lo entrena al vuelo (lento) como respaldo. Cacheado por mtime del .pkl:
@@ -84,11 +94,15 @@ def _load_backtest():
     return json.loads(_BACKTEST_PATH.read_text(encoding="utf-8"))
 
 
-@st.cache_data(show_spinner=False)
-def _get_matches():
+@st.cache_data(ttl=900, max_entries=3, show_spinner=False)
+def _get_matches_cached(db_mtime: float):
     """Partidos finalizados de la BD (para forma/H2H/descanso)."""
     from models.poisson_model import load_matches
     return load_matches()
+
+
+def _get_matches():
+    return _get_matches_cached(_db_mtime())
 
 
 @st.cache_data(ttl=3600, show_spinner=False)
@@ -101,22 +115,19 @@ def _get_xg():
         return None
 
 
-@st.cache_data(ttl=600, show_spinner=False)
-def _get_stats_df():
+@st.cache_data(ttl=900, max_entries=3, show_spinner=False)
+def _get_stats_df_cached(db_mtime: float):
     """Estadísticas por-partido (team_statistics) para promedios rodantes."""
-    from sqlalchemy import select
-    from database.db import get_session
-    from database.models import TeamStatistic
-    with get_session() as s:
-        rows = s.execute(
-            select(TeamStatistic.match_id, TeamStatistic.team_id,
-                   TeamStatistic.type, TeamStatistic.value_num)
-        ).all()
-    return pd.DataFrame(rows, columns=["match_id", "team_id", "type", "value_num"])
+    from models.analysis_builder import load_stats_df
+    return load_stats_df()
 
 
-@st.cache_data(ttl=600, show_spinner=False)
-def _get_recent_finished(days_back: int = 3):
+def _get_stats_df():
+    return _get_stats_df_cached(_db_mtime())
+
+
+@st.cache_data(ttl=900, max_entries=4, show_spinner=False)
+def _get_recent_finished_cached(db_mtime: float, days_back: int = 3):
     """Partidos finalizados de los últimos días, con desenlace de mercados + stats."""
     from datetime import datetime, timezone, timedelta
     from sqlalchemy import select
@@ -158,8 +169,12 @@ def _get_recent_finished(days_back: int = 3):
     return out
 
 
-@st.cache_data(ttl=300, show_spinner=False)
-def _get_predictions():
+def _get_recent_finished(days_back: int = 3):
+    return _get_recent_finished_cached(_db_mtime(), days_back)
+
+
+@st.cache_data(ttl=900, max_entries=3, show_spinner=False)
+def _get_predictions_cached(db_mtime: float):
     """Snapshots de ModelPrediction, partidos en dos grupos:
     - graded: partido finalizado → calificado contra el resultado real.
     - pending: aún sin jugar → solo lo que el modelo predijo.
@@ -233,6 +248,10 @@ def _get_predictions():
     graded.sort(key=lambda x: x["dt"], reverse=True)
     pending.sort(key=lambda x: x["dt"])
     return graded, pending, summarize(grade_objs), summarize_pnl(pnl_objs)
+
+
+def _get_predictions():
+    return _get_predictions_cached(_db_mtime())
 
 
 # ---------------------------------------------------------------------------
@@ -432,76 +451,8 @@ def _render_performance() -> None:
 _RESULT_EMOJI = {"V": "🟢", "E": "🟡", "D": "🔴"}
 
 
-@st.cache_data(ttl=600, show_spinner=False)
-def _get_upcoming() -> list[dict]:
-    """Partidos próximos con odds (desde la BD API-Football): 1X2 + O/U 2.5 + BTTS."""
-    from sqlalchemy import select
-    from database.db import get_session
-    from database.models import Match, Odds, MarketOdds
-
-    out: list[dict] = []
-    with get_session() as s:
-        for o in s.execute(select(Odds).where(Odds.market == "1x2")).scalars().all():
-            m = s.get(Match, o.match_id)
-            if m is None:
-                continue
-            md = pd.Timestamp(m.match_date)
-            if md.tzinfo is not None:
-                md = md.tz_localize(None)
-            mos = s.execute(select(MarketOdds).where(MarketOdds.match_id == m.id)).scalars().all()
-            ou = {r.selection: r.odd for r in mos if r.market == "ou_goals"}
-            bt = {r.selection: r.odd for r in mos if r.market == "btts"}
-            co_o = next((r for r in mos if r.market == "corners_ou" and r.selection == "over"), None)
-            co_u = next((r for r in mos if r.market == "corners_ou" and r.selection == "under"), None)
-            corners = ({"line": co_o.line, "over": co_o.odd, "under": co_u.odd}
-                       if co_o and co_u else None)
-            out.append({
-                "match_id": m.id, "league_id": m.league_id, "league": m.league_name,
-                "country": m.country, "home": m.home_team_name, "away": m.away_team_name,
-                "date": str(md.date()), "dt": md, "book": o.bookmaker,
-                "odds_1x2": {"home_win": o.home_win, "draw": o.draw, "away_win": o.away_win},
-                "ou25": ou if ("over" in ou and "under" in ou) else None,
-                "btts": bt if ("yes" in bt and "no" in bt) else None,
-                "corners": corners,
-            })
-    out.sort(key=lambda x: x["dt"])
-    return out
-
-
-def _devig2(a: float, b: float) -> tuple[float, float]:
-    ia, ib = 1.0 / a, 1.0 / b
-    tot = ia + ib
-    return ia / tot, ib / tot
-
-
-def _signals(d: dict, ou25: dict | None, btts: dict | None) -> list[dict]:
-    """Diagnóstico: dónde el modelo (SIN calibrar) se aleja del mercado.
-
-    Una entrada por mercado real (1X2, Goles O/U 2.5, BTTS), mostrando ambos
-    lados. `delta` = máxima divergencia |modelo − mercado| dentro del mercado.
-    NO es una sugerencia de apuesta: el modelo no está validado contra resultados.
-    """
-    sig: list[dict] = []
-    mp, kp = d.get("model_probs"), d.get("market_probs")
-    if mp and kp:
-        model = {"Local": mp["home_win"], "Empate": mp["draw"], "Visit.": mp["away_win"]}
-        market = {"Local": kp["home_win"], "Empate": kp["draw"], "Visit.": kp["away_win"]}
-        delta = max(abs(model[o] - market[o]) for o in model)
-        sig.append({"mkt": "1X2", "model": model, "market": market, "delta": delta})
-    gm = d.get("goal_markets")
-    if gm and ou25:
-        ov, un = _devig2(ou25["over"], ou25["under"])
-        model = {"Over": gm["over25"], "Under": gm["under25"]}
-        market = {"Over": ov, "Under": un}
-        sig.append({"mkt": "Goles O/U 2.5", "model": model, "market": market,
-                    "delta": abs(model["Over"] - market["Over"])})
-    if gm and btts:
-        y, n = _devig2(btts["yes"], btts["no"])
-        model = {"Sí": gm["btts_yes"], "No": gm["btts_no"]}
-        market = {"Sí": y, "No": n}
-        sig.append({"mkt": "BTTS", "model": model, "market": market,
-                    "delta": abs(model["Sí"] - market["Sí"])})
-    return sig
+# load_upcoming / devig2 / signals viven ahora en models.analysis_builder
+# (puros, sin streamlit) para que refresh.py pueda precalcular el análisis.
 
 
 def _dist_str(dic: dict) -> str:
@@ -673,25 +624,30 @@ def _render_detail(u: dict, matches_df, stats_df) -> None:
         )
 
 
-@st.cache_resource(show_spinner="Analizando partidos (una sola vez)…")
-def _get_analyzed():
-    """Construye TODOS los dossiers + señales una sola vez (cacheado).
+@st.cache_resource(max_entries=2, show_spinner="Cargando análisis…")
+def _analyzed_cached(analysis_mtime: float):
+    """Carga el análisis precalculado por refresh.py (instantáneo). Si el
+    artefacto falta, lo arma en vivo (lento) como respaldo. Cacheado por mtime
+    del .pkl: cuando refresh.py lo reescribe, el mtime cambia y la caché se
+    invalida sola (el dashboard recoge el análisis nuevo sin reiniciar)."""
+    loaded = pipeline.load_analysis_artifact()
+    if loaded is not None:
+        return loaded  # (analyzed, label, n_matches)
 
-    Así filtrar/seleccionar en la UI no recalcula nada → respuesta instantánea.
-    """
-    from models.match_analysis import build_dossier
+    # Respaldo en vivo — solo si nunca se corrió refresh.py.
+    from models.analysis_builder import load_upcoming, build_analysis
     model, teams, label, n_matches = _get_live_model()
     matches_df = _get_matches()
     xg_df = _get_xg()
     stats_df = _get_stats_df()
-    upcoming = _get_upcoming()
-    for u in upcoming:
-        d = build_dossier(model, matches_df, xg_df, u["home"], u["away"], u["dt"],
-                          u["odds_1x2"], stats_df=stats_df)
-        u["_d"] = d
-        u["_sig"] = _signals(d, u["ou25"], u["btts"]) if d["known"] else []
-        u["_top"] = max((s["delta"] for s in u["_sig"]), default=None)
+    upcoming = build_analysis(model, matches_df, xg_df, stats_df, load_upcoming())
     return upcoming, label, n_matches
+
+
+def _get_analyzed():
+    mtime = (pipeline.ANALYSIS_PATH.stat().st_mtime
+             if pipeline.ANALYSIS_PATH.exists() else 0.0)
+    return _analyzed_cached(mtime)
 
 
 def _render_analysis() -> None:

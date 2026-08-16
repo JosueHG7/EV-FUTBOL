@@ -14,6 +14,9 @@ from models.kelly import recommended_stake
 
 # Trained model artifact (gitignored) — refresh.py writes it, dashboard loads it.
 MODEL_PATH = config.BASE_DIR / "models" / "trained_model.pkl"
+# Precomputed pre-match analysis (dossiers + signals) — same idea, so the
+# dashboard's Análisis tab opens instantly instead of rebuilding ~200 dossiers.
+ANALYSIS_PATH = config.BASE_DIR / "models" / "analyzed.pkl"
 
 
 def save_model_artifact(model, label: str, n_matches: int) -> None:
@@ -23,6 +26,29 @@ def save_model_artifact(model, label: str, n_matches: int) -> None:
          "saved_at": datetime.now(timezone.utc)},
         MODEL_PATH,
     )
+
+
+def save_analysis_artifact(analyzed: list, label: str, n_matches: int) -> None:
+    import joblib
+    joblib.dump(
+        {"analyzed": analyzed, "label": label, "n": n_matches,
+         "saved_at": datetime.now(timezone.utc)},
+        ANALYSIS_PATH,
+    )
+
+
+def load_analysis_artifact():
+    """Return (analyzed, label, n_matches) from disk, or None if absent/corrupt."""
+    if not ANALYSIS_PATH.exists():
+        return None
+    try:
+        import joblib
+        d = joblib.load(ANALYSIS_PATH)
+        return d["analyzed"], d["label"], d["n"]
+    except Exception as exc:
+        print(f"[load_analysis_artifact] no se pudo cargar {ANALYSIS_PATH.name}: "
+              f"{type(exc).__name__}: {exc} — se armará en vivo.", file=sys.stderr)
+        return None
 
 
 def load_model_artifact():
