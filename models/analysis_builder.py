@@ -58,6 +58,7 @@ def load_upcoming() -> list[dict]:
                        if co_o and co_u else None)
             out.append({
                 "match_id": m.id, "league_id": m.league_id, "league": m.league_name,
+                "season": m.season,
                 "country": m.country, "home": m.home_team_name, "away": m.away_team_name,
                 "date": str(md.date()), "dt": md, "book": o.bookmaker,
                 "odds_1x2": {"home_win": o.home_win, "draw": o.draw, "away_win": o.away_win},
@@ -110,7 +111,8 @@ def build_analysis(model, matches_df, xg_df, stats_df, upcoming: list[dict]) -> 
     Cada item recibe `_d` (dossier), `_sig` (señales), `_top` (máxima divergencia)."""
     for u in upcoming:
         d = build_dossier(model, matches_df, xg_df, u["home"], u["away"], u["dt"],
-                          u["odds_1x2"], stats_df=stats_df)
+                          u["odds_1x2"], stats_df=stats_df,
+                          season=u.get("season"), league_id=u.get("league_id"))
         u["_d"] = d
         u["_sig"] = signals(d, u["ou25"], u["btts"]) if d["known"] else []
         u["_top"] = max((s["delta"] for s in u["_sig"]), default=None)

@@ -522,6 +522,30 @@ def _reading(probs: dict, market: dict | None, home: str, away: str) -> str:
 # Main
 # ---------------------------------------------------------------------------
 
+# Menos partidos que esto en la temporada en curso → el multiplicador de
+# ataque/defensa arrastra sobre todo forma de la temporada anterior (aviso).
+GOALS_MIN_SEASON_GAMES = 4
+
+
+def season_games(matches_df: pd.DataFrame, team: str, season, before,
+                 league_id=None) -> int | None:
+    """Partidos que `team` jugó en la temporada `season` (liga) antes de `before`.
+    None si no hay dato de temporada. Mide cuán fresca es la base del modelo.
+
+    Filtra por league_id cuando se da — los equipos se emparejan por NOMBRE, así
+    que sin esto un homónimo de otra liga (mismo año de temporada) inflaría el
+    conteo y ocultaría el aviso de muestra chica."""
+    cols = getattr(matches_df, "columns", [])
+    if season is None or "season" not in cols:
+        return None
+    m = matches_df
+    cond = (((m["home_team"] == team) | (m["away_team"] == team))
+            & (m["season"] == season) & (m["match_date"] < before))
+    if league_id is not None and "league_id" in cols:
+        cond = cond & (m["league_id"] == league_id)
+    return int(cond.sum())
+
+
 def build_dossier(
     model,
     matches_df: pd.DataFrame,
@@ -531,6 +555,8 @@ def build_dossier(
     commence_time: pd.Timestamp,
     market_odds: dict | None = None,
     stats_df=None,
+    season: int | None = None,
+    league_id=None,
 ) -> dict:
     """
     Build a full pre-match analysis dossier for `home` vs `away`.
@@ -554,7 +580,7 @@ def build_dossier(
     dossier: dict = {
         "home": home, "away": away, "date": str(before.date()),
         "known": False, "model_probs": None, "market_probs": None,
-        "goal_markets": None, "correct_scores": None,
+        "goal_markets": None, "correct_scores": None, "goal_internals": None,
         "form": {
             "home": _form(matches_df, home, before, 5, venue="home"),
             "away": _form(matches_df, away, before, 5, venue="away"),
@@ -609,6 +635,29 @@ def build_dossier(
             "btts_yes": round(btts["yes"], 4),
             "btts_no":  round(btts["no"], 4),
         }
+        # Internos del Poisson de goles + señal de muestra de temporada actual.
+        # Transparencia (NO se toca el cálculo): expone λ y los multiplicadores
+        # que produjeron los mercados de goles, y cuántos partidos de la
+        # temporada en curso respaldan esos multiplicadores.
+        try:
+            hp = poi.get_team_params(home)
+            ap = poi.get_team_params(away)
+            lam_h = hp["attack"] * ap["defense"] * poi.home_advantage * poi.avg_goals
+            lam_a = ap["attack"] * hp["defense"] * poi.avg_goals
+            dossier["goal_internals"] = {
+                "lambda_home": round(lam_h, 2), "lambda_away": round(lam_a, 2),
+                "home_attack": round(hp["attack"], 2), "home_defense": round(hp["defense"], 2),
+                "away_attack": round(ap["attack"], 2), "away_defense": round(ap["defense"], 2),
+                "home_advantage": round(poi.home_advantage, 3),
+                "avg_goals": round(poi.avg_goals, 3),
+                "home_season_games": season_games(matches_df, home, season, before, league_id),
+                "away_season_games": season_games(matches_df, away, season, before, league_id),
+            }
+        except Exception as exc:
+            print(f"[goal_internals] {home} vs {away}: "
+                  f"{type(exc).__name__}: {exc}", file=sys.stderr)
+            dossier["goal_internals"] = None
+
         matrix = poi.predict_score_matrix(home, away)
         flat = [(i, j, float(matrix[i, j]))
                 for i in range(matrix.shape[0]) for j in range(matrix.shape[1])]

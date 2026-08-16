@@ -669,6 +669,68 @@ def _render_trends(u: dict, matches_df, stats_df) -> None:
         _render_team_trends_full(ta, f"✈️ {away}", TREND_THRESHOLDS)
 
 
+def _low_season(u: dict) -> bool:
+    """True si algún equipo tiene pocos partidos de la temporada en curso — el
+    modelo de goles arrastra forma de la temporada anterior."""
+    from models.match_analysis import GOALS_MIN_SEASON_GAMES
+    gi = u["_d"].get("goal_internals")
+    if not gi:
+        return False
+    for g in (gi.get("home_season_games"), gi.get("away_season_games")):
+        if g is not None and g < GOALS_MIN_SEASON_GAMES:
+            return True
+    return False
+
+
+def _render_goal_internals(u: dict) -> None:
+    """Base del Poisson de goles: λ y multiplicadores ataque/defensa, con aviso
+    si la muestra de la temporada actual es chica. Transparencia, no cambia nada."""
+    from models.match_analysis import GOALS_MIN_SEASON_GAMES
+    gi = u["_d"].get("goal_internals")
+    if not gi:
+        return
+    home, away = u["_d"]["home"], u["_d"]["away"]
+    hg, ag = gi.get("home_season_games"), gi.get("away_season_games")
+
+    st.markdown("#### ⚙️ Base del modelo de goles (Over/Under · BTTS)")
+    for name, g in ((home, hg), (away, ag)):
+        if g is not None and g < GOALS_MIN_SEASON_GAMES:
+            st.warning(
+                f"⚠️ **{name}: {g} partido{'s' if g != 1 else ''} esta temporada** "
+                "— el modelo arrastra forma de la temporada anterior; su confianza "
+                "en los mercados de goles puede estar inflada por falta de muestra "
+                "actual."
+            )
+
+    rows = []
+    for emoji, name, atk, dfn, lam, g in (
+        ("🏠", home, gi["home_attack"], gi["home_defense"], gi["lambda_home"], hg),
+        ("✈️", away, gi["away_attack"], gi["away_defense"], gi["lambda_away"], ag),
+    ):
+        gtxt = "—" if g is None else (f"{g} ⚠️" if g < GOALS_MIN_SEASON_GAMES else str(g))
+        rows.append({
+            "Equipo": f"{emoji} {name}",
+            "Ataque": f"{atk:.2f}×",
+            "Defensa": f"{dfn:.2f}×",
+            "λ (goles esp.)": f"{lam:.2f}",
+            "Part. temporada": gtxt,
+        })
+    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+    total = gi["lambda_home"] + gi["lambda_away"]
+    ha = gi.get("home_advantage")
+    ag_ = gi.get("avg_goals")
+    factores = (f" · ventaja local ×{ha} · media liga {ag_}"
+                if ha is not None and ag_ is not None else "")
+    st.caption(
+        f"λ = goles esperados. Local = ataque × defensa rival × ventaja local × "
+        f"media liga; Visitante = ataque × defensa rival × media liga{factores}. "
+        f"Multiplicador **1.00× = promedio de la liga** (más bajo = mejor defensa / "
+        f"peor ataque). **Total esperado ≈ {total:.2f} goles** → el Over/Under y el "
+        "BTTS salen de esta base con un ajuste Dixon-Coles para marcadores bajos "
+        "(por eso no coinciden exacto con λ). Diagnóstico: expone la base, no la cambia."
+    )
+
+
 def _render_detail(u: dict, matches_df, stats_df) -> None:
     from models.match_analysis import team_recent_detail, h2h_detail
     d = u["_d"]
@@ -695,6 +757,8 @@ def _render_detail(u: dict, matches_df, stats_df) -> None:
             column_config={"Δ máx": st.column_config.NumberColumn(format="percent")})
         cs = " · ".join(f"{c['score']} ({c['prob']:.0%})" for c in d["correct_scores"])
         st.caption(f"Marcadores más probables del modelo: {cs}")
+
+    _render_goal_internals(u)
 
     # Resumen de promedios (arriba) + detalle partido-a-partido (abajo)
     _render_stats_table(d)
@@ -833,8 +897,11 @@ def _render_analysis() -> None:
     if known:
         rows = []
         for u, (mkt, side, mp, kp, gap) in known:
+            partido = f"{u['home']} vs {u['away']}"
+            if _low_season(u):
+                partido += " ⚠️"
             rows.append({
-                "Partido": f"{u['home']} vs {u['away']}",
+                "Partido": partido,
                 "Liga": u["league"],
                 "Fecha": u["date"],
                 "Mercado": mkt,
@@ -858,7 +925,9 @@ def _render_analysis() -> None:
             f"{len(known)} partidos · **Señal** = el lado (Over/Under, Sí/No, "
             "Local/Empate/Visit.) al que el modelo le da MÁS probabilidad que la "
             "casa; **Modelo/Casa** = probabilidad de ese lado, **Δ** = cuánto más. "
-            f"Diagnóstico, no apuesta — modelo sin calibrar ({n_matches:,} partidos)."
+            "**⚠️** = algún equipo con pocos partidos esta temporada (el modelo "
+            "arrastra forma vieja — pesa más en Over/Under y BTTS que en 1X2; ver "
+            f"detalle). Diagnóstico, no apuesta — modelo sin calibrar ({n_matches:,} partidos)."
         )
 
         st.divider()
