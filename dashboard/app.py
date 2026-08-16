@@ -832,10 +832,15 @@ def _day_label(date_str: str) -> str:
 
 def _day_selectbox(items: list, key: str, container=st, reverse: bool = False) -> str:
     """Selectbox 'Día' con las fechas distintas de items (+ 'Todos'). Devuelve la
-    selección ('Todos' o 'YYYY-MM-DD'). reverse=True ordena de más reciente."""
+    selección ('Todos' o 'YYYY-MM-DD'). reverse=True ordena de más reciente.
+
+    Por defecto arranca en HOY si hay partidos hoy; si no, en 'Todos'. Tras la
+    primera carga respeta lo que elija el usuario (Streamlit persiste por key)."""
     days = ["Todos"] + sorted({x["date"] for x in items}, reverse=reverse)
+    today = str(datetime.now().date())
+    idx = days.index(today) if today in days else 0
     return container.selectbox(
-        "Día", days, key=key,
+        "Día", days, index=idx, key=key,
         format_func=lambda d: "Todos los días" if d == "Todos" else _day_label(d))
 
 
