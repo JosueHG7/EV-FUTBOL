@@ -158,6 +158,79 @@ def _get_recent_finished(days_back: int = 3):
     return out
 
 
+@st.cache_data(ttl=300, show_spinner=False)
+def _get_predictions():
+    """Snapshots de ModelPrediction, partidos en dos grupos:
+    - graded: partido finalizado → calificado contra el resultado real.
+    - pending: aún sin jugar → solo lo que el modelo predijo.
+    Devuelve (graded, pending, summary). Todo se resuelve dentro de la sesión
+    (los objetos ORM no sobreviven fuera de ella)."""
+    from sqlalchemy import select
+    from database.db import get_session
+    from database.models import ModelPrediction, Match, TeamStatistic
+    from models.grading import grade_snapshot, summarize, model_calls, market_calls
+
+    graded, pending, grade_objs = [], [], []
+    with get_session() as s:
+        preds = s.execute(select(ModelPrediction)).scalars().all()
+        pids = [p.match_id for p in preds]
+        # Un solo SELECT para todos los Match (evita N+1).
+        matches = {}
+        if pids:
+            matches = {m.id: m for m in s.execute(
+                select(Match).where(Match.id.in_(pids))).scalars().all()}
+
+        # Un partido está calificable solo con AMBOS goles presentes.
+        finished_ids = [
+            mid for mid, m in matches.items()
+            if m.status == "finished"
+            and m.home_goals is not None and m.away_goals is not None
+        ]
+        # Córners totales solo de los finalizados (los pendientes no los usan).
+        corners: dict = {}
+        if finished_ids:
+            for mid, val in s.execute(select(
+                TeamStatistic.match_id, TeamStatistic.value_num
+            ).where(TeamStatistic.match_id.in_(finished_ids),
+                    TeamStatistic.type == "Corner Kicks")).all():
+                if val is None or pd.isna(val):
+                    continue
+                corners[mid] = corners.get(mid, 0.0) + val
+        finished_set = set(finished_ids)
+
+        for p in preds:
+            m = matches.get(p.match_id)
+            if m is None:
+                continue
+            md = pd.Timestamp(m.match_date)
+            if md.tzinfo is not None:
+                md = md.tz_localize(None)
+            base = {
+                "date": str(md.date()), "dt": md,
+                "home": m.home_team_name, "away": m.away_team_name,
+                "league": m.league_name,
+            }
+            if m.id in finished_set:
+                g = grade_snapshot(p, m.home_goals, m.away_goals, corners.get(m.id))
+                grade_objs.append(g)
+                graded.append({
+                    **base, "score": f"{m.home_goals}-{m.away_goals}",
+                    "corners_total": corners.get(m.id), "g": g,
+                })
+            else:
+                pending.append({
+                    **base,
+                    "mc": model_calls(p), "kc": market_calls(p),
+                    "m_home": p.m_home, "m_draw": p.m_draw, "m_away": p.m_away,
+                    "m_over25": p.m_over25, "m_btts_yes": p.m_btts_yes,
+                    "corner_proj": p.corner_proj, "corner_line": p.corner_line,
+                })
+
+    graded.sort(key=lambda x: x["dt"], reverse=True)
+    pending.sort(key=lambda x: x["dt"])
+    return graded, pending, summarize(grade_objs)
+
+
 # ---------------------------------------------------------------------------
 # Section: Picks en vivo
 # ---------------------------------------------------------------------------
@@ -732,6 +805,149 @@ def _render_results() -> None:
 
 
 # ---------------------------------------------------------------------------
+# Section: Predicciones (bitácora de validación del modelo)
+# ---------------------------------------------------------------------------
+
+_1X2_LBL = {"home": "Local", "draw": "Empate", "away": "Visit."}
+
+
+def _mark(hit) -> str:
+    return "✅" if hit is True else ("❌" if hit is False else "—")
+
+
+def _graded_cell(cell, lblmap=None) -> str:
+    """'Local ✅' / 'Over ❌' / '—' según la llamada del modelo y si acertó."""
+    call = cell["model"]
+    if call is None:
+        return "—"
+    txt = lblmap.get(call, call) if lblmap else call
+    return f"{txt} {_mark(cell['model_hit'])}"
+
+
+def _hitrate_metric(col, title: str, v: dict) -> None:
+    mn, kn = v["model_n"], v["market_n"]
+    if mn == 0:
+        col.metric(title, "—", help="Aún sin partidos calificados en este mercado.")
+        return
+    mod = f"{v['model_hits'] / mn:.0%} ({v['model_hits']}/{mn})"
+    delta = f"Mercado {v['market_hits'] / kn:.0%}" if kn else "Mercado n/a"
+    col.metric(title, mod, delta=delta, delta_color="off")
+
+
+def _render_predictions() -> None:
+    st.header("📋 Predicciones del modelo")
+    st.caption(
+        "Bitácora de validación: lo que el modelo predijo **antes** de cada "
+        "partido, sellado en el refresco diario. Al finalizar el partido se "
+        "califica contra el resultado real (✅ acertó el lado más probable / "
+        "❌ falló). Es **diagnóstico de acierto direccional**, no un backtest de "
+        "rentabilidad — un modelo sin calibrar puede acertar dirección y aun así "
+        "no ganarle a la cuota."
+    )
+
+    graded, pending, summary = _get_predictions()
+
+    if not graded and not pending:
+        st.info(
+            "No hay predicciones registradas. Ejecuta `python refresh.py` para "
+            "sellar el snapshot de los partidos próximos."
+        )
+        return
+
+    # --- Resumen de acierto (modelo vs mercado) ---
+    st.subheader("Acierto acumulado")
+    if not graded:
+        st.info(
+            f"Aún no hay partidos calificados — {len(pending)} predicciones "
+            "esperando que se jueguen. El acierto aparecerá aquí cuando el "
+            "refresco recoja los resultados."
+        )
+    else:
+        c1, c2, c3, c4 = st.columns(4)
+        _hitrate_metric(c1, "1X2", summary["1x2"])
+        _hitrate_metric(c2, "O/U 2.5", summary["ou25"])
+        _hitrate_metric(c3, "BTTS", summary["btts"])
+        _hitrate_metric(c4, "Córners", summary["corners"])
+        st.caption(
+            f"{len(graded)} partidos calificados · 'Mercado' = acierto del lado "
+            "favorito de la cuota (de-vigged), como referencia. Córners: solo "
+            "modelo vs línea (el mercado no tiene lado favorito)."
+        )
+
+    # --- Calificados ---
+    if graded:
+        st.subheader(f"Calificados ({len(graded)})")
+        rows = []
+        for x in graded:
+            g = x["g"]
+            ct = x["corners_total"]
+            corner_real = f"{ct:g}" if ct is not None else "—"
+            rows.append({
+                "Fecha": x["date"],
+                "Partido": f"{x['home']} vs {x['away']}",
+                "Marcador": x["score"],
+                "1X2": _graded_cell(g["1x2"], _1X2_LBL),
+                "O/U 2.5": _graded_cell(g["ou25"]),
+                "BTTS": _graded_cell(g["btts"]),
+                "Córners": _graded_cell(g["corners"]),
+                "C. total": corner_real,
+            })
+        st.dataframe(pd.DataFrame(rows), hide_index=True,
+                     use_container_width=True, height=420)
+        st.caption(
+            "Cada celda = lado más probable del modelo + si salió. "
+            "'C. total' = córners reales del partido (donde la liga publica stats)."
+        )
+
+    # --- Pendientes ---
+    if pending:
+        st.subheader(f"Pendientes ({len(pending)})")
+        leagues = ["Todas"] + sorted({x["league"] for x in pending})
+        sel = st.selectbox("Liga", leagues, key="pred_liga")
+        view = [x for x in pending if sel == "Todas" or x["league"] == sel]
+
+        rows = []
+        for x in view:
+            mc = x["mc"]
+            # prob del lado llamado en 1X2
+            p1x2 = {"home": x["m_home"], "draw": x["m_draw"],
+                    "away": x["m_away"]}.get(mc["1x2"])
+            c1x2 = (f"{_1X2_LBL[mc['1x2']]} {p1x2:.0%}"
+                    if mc["1x2"] and p1x2 is not None else "—")
+            if mc["ou25"] and x["m_over25"] is not None:
+                p_ou = x["m_over25"] if mc["ou25"] == "Over" else 1 - x["m_over25"]
+                cou = f"{mc['ou25']} {p_ou:.0%}"
+            else:
+                cou = "—"
+            if mc["btts"] and x["m_btts_yes"] is not None:
+                p_bt = x["m_btts_yes"] if mc["btts"] == "Sí" else 1 - x["m_btts_yes"]
+                cbt = f"{mc['btts']} {p_bt:.0%}"
+            else:
+                cbt = "—"
+            if x["corner_proj"] is not None and x["corner_line"] is not None:
+                cco = f"{x['corner_proj']:.1f} vs {x['corner_line']:g}"
+            elif x["corner_proj"] is not None:
+                cco = f"{x['corner_proj']:.1f} (sin línea)"
+            else:
+                cco = "—"
+            rows.append({
+                "Fecha": x["date"],
+                "Partido": f"{x['home']} vs {x['away']}",
+                "Liga": x["league"],
+                "1X2 modelo": c1x2,
+                "O/U 2.5": cou,
+                "BTTS": cbt,
+                "Córners (proy/línea)": cco,
+            })
+        st.dataframe(pd.DataFrame(rows), hide_index=True,
+                     use_container_width=True, height=480)
+        st.caption(
+            f"{len(view)} partidos · lado más probable del modelo con su "
+            "probabilidad. Se calificarán al finalizar."
+        )
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -743,13 +959,16 @@ def main() -> None:
     )
     st.title("⚽ Asistente de Análisis Pre-Partido")
 
-    tab_analysis, tab_results, tab_live, tab_perf = st.tabs(
-        ["🔍 Análisis", "✅ Resultados", "🎯 Picks en vivo", "📈 Rendimiento"]
+    tab_analysis, tab_results, tab_pred, tab_live, tab_perf = st.tabs(
+        ["🔍 Análisis", "✅ Resultados", "📋 Predicciones",
+         "🎯 Picks en vivo", "📈 Rendimiento"]
     )
     with tab_analysis:
         _render_analysis()
     with tab_results:
         _render_results()
+    with tab_pred:
+        _render_predictions()
     with tab_live:
         _render_live_picks()
     with tab_perf:
