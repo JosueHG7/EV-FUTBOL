@@ -830,6 +830,11 @@ def _day_label(date_str: str) -> str:
     return f"{prefix} · {date_str}"
 
 
+def _hhmm(dt) -> str:
+    """Hora local del partido como 'HH:MM' (dt ya viene en hora local)."""
+    return pd.Timestamp(dt).strftime("%H:%M") if dt is not None else "—"
+
+
 def _day_selectbox(items: list, key: str, container=st, reverse: bool = False) -> str:
     """Selectbox 'Día' con las fechas distintas de items (+ 'Todos'). Devuelve la
     selección ('Todos' o 'YYYY-MM-DD'). reverse=True ordena de más reciente.
@@ -881,11 +886,12 @@ def _render_analysis() -> None:
     matches_df = _get_matches()   # cacheado — para la vista de detalle
     stats_df = _get_stats_df()    # cacheado
 
-    c1, c2, c3 = st.columns([2, 2, 1])
+    c1, c2, c3, c4 = st.columns([2, 2, 1.4, 1.4])
     leagues = ["Todas"] + sorted({u["league"] for u in upcoming})
     sel = c1.selectbox("Liga", leagues)
     sel_day = _day_selectbox(upcoming, "ana_dia", c2)
-    only_signals = c3.checkbox("Solo con discrepancia ≥ 5%", value=False)
+    orden = c3.selectbox("Ordenar por", ["Discrepancia", "Hora"], key="ana_orden")
+    only_signals = c4.checkbox("Solo con discrepancia ≥ 5%", value=False)
 
     view = [u for u in upcoming
             if (sel == "Todas" or u["league"] == sel)
@@ -894,9 +900,12 @@ def _render_analysis() -> None:
     known = [(u, _best_lean(u["_sig"]))
              for u in view if u["_d"]["known"] and u["_sig"]]
     known = [(u, bl) for u, bl in known if bl is not None]
-    known.sort(key=lambda p: p[1][4], reverse=True)
     if only_signals:
         known = [(u, bl) for u, bl in known if bl[4] >= 0.05]
+    if orden == "Hora":
+        known.sort(key=lambda p: p[0]["dt"])            # cronológico, próximos primero
+    else:
+        known.sort(key=lambda p: p[1][4], reverse=True)  # mayor discrepancia primero
     unknown = [u for u in view if not (u["_d"]["known"] and u["_sig"])]
 
     if known:
@@ -909,14 +918,17 @@ def _render_analysis() -> None:
                 "Partido": partido,
                 "Liga": u["league"],
                 "Fecha": u["date"],
+                "Hora": _hhmm(u["dt"]),
                 "Mercado": mkt,
                 "Señal": side,
                 "Modelo": mp,
                 "Casa": kp,
                 "Δ": gap,
             })
-        st.dataframe(
+        event = st.dataframe(
             pd.DataFrame(rows), hide_index=True, use_container_width=True,
+            on_select="rerun", selection_mode="single-row",
+            key=f"ana_tbl_{sel}_{sel_day}_{orden}_{only_signals}",
             column_config={
                 "Modelo": st.column_config.NumberColumn(
                     format="percent", help="Prob. del modelo para ese lado"),
@@ -935,13 +947,14 @@ def _render_analysis() -> None:
             f"detalle). Diagnóstico, no apuesta — modelo sin calibrar ({n_matches:,} partidos)."
         )
 
+        sel_rows = event.selection.rows if (event and event.selection) else []
+        idx = sel_rows[0] if (sel_rows and sel_rows[0] < len(known)) else 0
+
         st.divider()
-        st.subheader("🔎 Detalle del partido")
-        labels = [f"{u['home']} vs {u['away']} · {u['league']} · "
-                  f"{bl[1]} {bl[4]:+.0%}" for u, bl in known]
-        idx = st.selectbox("Elige un partido para ver el detalle completo",
-                           range(len(known)), format_func=lambda i: labels[i])
-        _render_detail(known[idx][0], matches_df, stats_df)
+        u_sel = known[idx][0]
+        st.subheader(f"🔎 Detalle — {u_sel['home']} vs {u_sel['away']}")
+        st.caption("👆 Hacé clic en una fila de la tabla para ver el detalle de otro partido.")
+        _render_detail(u_sel, matches_df, stats_df)
     else:
         st.info("Ningún partido próximo con modelo + mercado para el filtro actual.")
 
@@ -980,6 +993,7 @@ def _render_results() -> None:
     for f in view:
         rows.append({
             "Fecha": f["date"],
+            "Hora": _hhmm(f["dt"]),
             "Partido": f"{f['home']} vs {f['away']}",
             "Liga": f["league"],
             "Marcador": f["score"],
@@ -1094,6 +1108,7 @@ def _render_predictions() -> None:
             corner_real = f"{ct:g}" if ct is not None else "—"
             rows.append({
                 "Fecha": x["date"],
+                "Hora": _hhmm(x["dt"]),
                 "Partido": f"{x['home']} vs {x['away']}",
                 "Marcador": x["score"],
                 "1X2": _graded_cell(g["1x2"], od["1x2"], _1X2_LBL),
@@ -1147,6 +1162,7 @@ def _render_predictions() -> None:
                 cco = "—"
             rows.append({
                 "Fecha": x["date"],
+                "Hora": _hhmm(x["dt"]),
                 "Partido": f"{x['home']} vs {x['away']}",
                 "Liga": x["league"],
                 "1X2 modelo": c1x2,
