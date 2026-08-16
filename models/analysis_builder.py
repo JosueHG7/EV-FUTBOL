@@ -8,12 +8,25 @@ Compartido por:
 Mantener libre de imports de streamlit para que refresh.py pueda usarlo.
 """
 
+from datetime import datetime
+
 import pandas as pd
 from sqlalchemy import select
 
 from database.db import get_session
 from database.models import Match, Odds, MarketOdds, TeamStatistic
 from models.match_analysis import build_dossier
+
+# Las fechas en la BD son naive pero en UTC (API-Football). El dashboard corre
+# en la máquina del usuario, así que mostramos/agrupamos en su hora local.
+_LOCAL_TZ = datetime.now().astimezone().tzinfo
+
+
+def to_local(dt) -> "pd.Timestamp":
+    """Interpreta un datetime naive como UTC y lo devuelve en hora local (naive)."""
+    ts = pd.Timestamp(dt)
+    ts = ts.tz_localize("UTC") if ts.tzinfo is None else ts.tz_convert("UTC")
+    return ts.tz_convert(_LOCAL_TZ).tz_localize(None)
 
 
 def load_stats_df() -> "pd.DataFrame":
@@ -35,9 +48,7 @@ def load_upcoming() -> list[dict]:
             m = s.get(Match, o.match_id)
             if m is None:
                 continue
-            md = pd.Timestamp(m.match_date)
-            if md.tzinfo is not None:
-                md = md.tz_localize(None)
+            md = to_local(m.match_date)   # UTC → hora local del usuario
             mos = s.execute(select(MarketOdds).where(MarketOdds.match_id == m.id)).scalars().all()
             ou = {r.selection: r.odd for r in mos if r.market == "ou_goals"}
             bt = {r.selection: r.odd for r in mos if r.market == "btts"}

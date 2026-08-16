@@ -151,10 +151,9 @@ def _get_recent_finished_cached(db_mtime: float, days_back: int = 3):
                     continue
                 totals.setdefault(mid, {})
                 totals[mid][typ] = totals[mid].get(typ, 0.0) + val
+        from models.analysis_builder import to_local
         for m in ms:
-            md = pd.Timestamp(m.match_date)
-            if md.tzinfo is not None:
-                md = md.tz_localize(None)
+            md = to_local(m.match_date)   # UTC → hora local
             tg = m.home_goals + m.away_goals
             st_ = totals.get(m.id, {})
             out.append({
@@ -215,13 +214,12 @@ def _get_predictions_cached(db_mtime: float):
                 corners[mid] = corners.get(mid, 0.0) + val
         finished_set = set(finished_ids)
 
+        from models.analysis_builder import to_local
         for p in preds:
             m = matches.get(p.match_id)
             if m is None:
                 continue
-            md = pd.Timestamp(m.match_date)
-            if md.tzinfo is not None:
-                md = md.tz_localize(None)
+            md = to_local(m.match_date)   # UTC → hora local
             base = {
                 "date": str(md.date()), "dt": md,
                 "home": m.home_team_name, "away": m.away_team_name,
@@ -650,6 +648,33 @@ def _get_analyzed():
     return _analyzed_cached(mtime)
 
 
+_WEEKDAYS_ES = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
+
+
+def _day_label(date_str: str) -> str:
+    """'Hoy 2026-08-16' / 'Mañana …' / 'Sábado …' según la fecha (hora local)."""
+    d = pd.Timestamp(date_str).date()
+    delta = (d - datetime.now().date()).days
+    if delta == 0:
+        prefix = "Hoy"
+    elif delta == 1:
+        prefix = "Mañana"
+    elif delta == -1:
+        prefix = "Ayer"
+    else:
+        prefix = _WEEKDAYS_ES[d.weekday()].capitalize()
+    return f"{prefix} · {date_str}"
+
+
+def _day_selectbox(items: list, key: str, container=st, reverse: bool = False) -> str:
+    """Selectbox 'Día' con las fechas distintas de items (+ 'Todos'). Devuelve la
+    selección ('Todos' o 'YYYY-MM-DD'). reverse=True ordena de más reciente."""
+    days = ["Todos"] + sorted({x["date"] for x in items}, reverse=reverse)
+    return container.selectbox(
+        "Día", days, key=key,
+        format_func=lambda d: "Todos los días" if d == "Todos" else _day_label(d))
+
+
 def _render_analysis() -> None:
     st.header("🔍 Análisis por partido — triaje diario")
     st.caption(
@@ -672,12 +697,15 @@ def _render_analysis() -> None:
     matches_df = _get_matches()   # cacheado — para la vista de detalle
     stats_df = _get_stats_df()    # cacheado
 
-    c1, c2 = st.columns([2, 1])
+    c1, c2, c3 = st.columns([2, 2, 1])
     leagues = ["Todas"] + sorted({u["league"] for u in upcoming})
     sel = c1.selectbox("Liga", leagues)
-    only_signals = c2.checkbox("Solo con discrepancia ≥ 5%", value=False)
+    sel_day = _day_selectbox(upcoming, "ana_dia", c2)
+    only_signals = c3.checkbox("Solo con discrepancia ≥ 5%", value=False)
 
-    view = [u for u in upcoming if sel == "Todas" or u["league"] == sel]
+    view = [u for u in upcoming
+            if (sel == "Todas" or u["league"] == sel)
+            and (sel_day == "Todos" or u["date"] == sel_day)]
     known = [u for u in view if u["_d"]["known"] and u["_top"] is not None]
     known.sort(key=lambda u: u["_top"], reverse=True)
     if only_signals:
@@ -741,9 +769,13 @@ def _render_results() -> None:
         st.info("No hay partidos finalizados recientes en la BD.")
         return
 
+    c1, c2 = st.columns(2)
     leagues = ["Todas"] + sorted({f["league"] for f in fin})
-    sel = st.selectbox("Liga", leagues, key="res_liga")
-    view = [f for f in fin if sel == "Todas" or f["league"] == sel]
+    sel = c1.selectbox("Liga", leagues, key="res_liga")
+    sel_day = _day_selectbox(fin, "res_dia", c2, reverse=True)
+    view = [f for f in fin
+            if (sel == "Todas" or f["league"] == sel)
+            and (sel_day == "Todos" or f["date"] == sel_day)]
 
     rows = []
     for f in view:
@@ -854,8 +886,10 @@ def _render_predictions() -> None:
     # --- Calificados ---
     if graded:
         st.subheader(f"Calificados ({len(graded)})")
+        gsel_day = _day_selectbox(graded, "pred_grad_dia", reverse=True)
+        gview = [x for x in graded if gsel_day == "Todos" or x["date"] == gsel_day]
         rows = []
-        for x in graded:
+        for x in gview:
             g, od = x["g"], x["odds"]
             ct = x["corners_total"]
             corner_real = f"{ct:g}" if ct is not None else "—"
@@ -872,17 +906,21 @@ def _render_predictions() -> None:
         st.dataframe(pd.DataFrame(rows), hide_index=True,
                      use_container_width=True, height=420)
         st.caption(
-            "Cada celda = lado más probable del modelo + si salió + la cuota "
-            "sellada (@). 'C. total' = córners reales del partido (donde la liga "
-            "publica stats)."
+            f"{len(gview)} de {len(graded)} calificados. Cada celda = lado más "
+            "probable del modelo + si salió + la cuota sellada (@). 'C. total' = "
+            "córners reales del partido (donde la liga publica stats)."
         )
 
     # --- Pendientes ---
     if pending:
         st.subheader(f"Pendientes ({len(pending)})")
+        c1, c2 = st.columns(2)
         leagues = ["Todas"] + sorted({x["league"] for x in pending})
-        sel = st.selectbox("Liga", leagues, key="pred_liga")
-        view = [x for x in pending if sel == "Todas" or x["league"] == sel]
+        sel = c1.selectbox("Liga", leagues, key="pred_liga")
+        sel_day = _day_selectbox(pending, "pred_pend_dia", c2)
+        view = [x for x in pending
+                if (sel == "Todas" or x["league"] == sel)
+                and (sel_day == "Todos" or x["date"] == sel_day)]
 
         rows = []
         for x in view:
