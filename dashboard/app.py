@@ -325,7 +325,7 @@ def _render_live_picks() -> None:
     st.dataframe(
         df,
         hide_index=True,
-        use_container_width=True,
+        use_container_width=False,
         column_config={
             "Modelo":     st.column_config.NumberColumn(format="percent"),
             "Implícita":  st.column_config.NumberColumn(format="percent"),
@@ -428,7 +428,7 @@ def _render_performance() -> None:
     st.dataframe(
         show,
         hide_index=True,
-        use_container_width=True,
+        use_container_width=False,
         height=420,
         column_config={
             "Modelo":   st.column_config.NumberColumn(format="percent"),
@@ -500,7 +500,7 @@ def _render_stats_table(d: dict) -> None:
             continue
         rows.append({"Métrica": lab, f"🏠 {home}": _stat_cell(h5, key),
                      f"✈️ {away}": _stat_cell(a5, key)})
-    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=False)
     if not has:
         st.caption("Esta liga no publica córners/tiros/tarjetas — solo goles disponibles.")
 
@@ -523,7 +523,7 @@ def _render_team_detail(det: list, label: str) -> None:
             "Tarj": f"{r['Tarj']:g}" if (r["Tarj"] is not None and pd.notna(r["Tarj"])) else "—",
             "xG": _pair(r["xG"], r["xG_c"]),
         })
-    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True,
+    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=False,
                  column_config={"Res": st.column_config.TextColumn(width="small")})
 
 
@@ -763,7 +763,7 @@ def _render_goal_internals(u: dict) -> None:
             "λ (goles esp.)": f"{lam:.2f}",
             "Part. temporada": gtxt,
         })
-    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=False)
     total = gi["lambda_home"] + gi["lambda_away"]
     ha = gi.get("home_advantage")
     ag_ = gi.get("avg_goals")
@@ -801,7 +801,7 @@ def _render_detail(u: dict, matches_df, stats_df) -> None:
         rows = [{"Mercado": s["mkt"], "Modelo": _dist_str(s["model"]),
                  "Mercado ": _dist_str(s["market"]), "Δ máx": s["delta"]}
                 for s in sorted(u["_sig"], key=lambda x: x["delta"], reverse=True)]
-        st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True,
+        st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=False,
             column_config={"Δ máx": st.column_config.NumberColumn(format="percent")})
         cs = " · ".join(f"{c['score']} ({c['prob']:.0%})" for c in d["correct_scores"])
         st.caption(f"Marcadores más probables del modelo: {cs}")
@@ -830,7 +830,7 @@ def _render_detail(u: dict, matches_df, stats_df) -> None:
     hh = h2h_detail(stats_df, matches_df, home, away, before, 6)
     if hh:
         st.markdown("#### 🤝 Enfrentamientos directos (detalle)")
-        st.dataframe(pd.DataFrame(hh), hide_index=True, use_container_width=True)
+        st.dataframe(pd.DataFrame(hh), hide_index=True, use_container_width=False)
 
     rh, ra = d["rest"]["home"], d["rest"]["away"]
     if rh["days_rest"] is not None or ra["days_rest"] is not None:
@@ -985,7 +985,7 @@ def _render_analysis() -> None:
                 "Δ": gap,
             })
         event = st.dataframe(
-            pd.DataFrame(rows), hide_index=True, use_container_width=True,
+            pd.DataFrame(rows), hide_index=True, use_container_width=False,
             on_select="rerun", selection_mode="single-row",
             key=f"ana_tbl_{sel}_{sel_day}_{orden}_{only_signals}_{solo_prox}",
             column_config={
@@ -1061,7 +1061,7 @@ def _render_results() -> None:
             "Córners": f"{f['corners']:g}" if f["corners"] is not None else "—",
             "Tarjetas": f"{f['cards']:g}" if f["cards"] is not None else "—",
         })
-    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True, height=560)
+    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=False, height=560)
     st.caption(
         f"{len(view)} partidos finalizados · Córners/Tarjetas = total del partido "
         "(donde la liga publica stats)"
@@ -1146,7 +1146,7 @@ def _render_predictions() -> None:
         )
     else:
         st.dataframe(_summary_table(summary, pnl), hide_index=True,
-                     use_container_width=True)
+                     use_container_width=False)
         st.caption(
             f"{len(graded)} partidos calificados. **ROI** = apostar 1u plana al "
             "lado que llama cada uno, a la cuota sellada antes del partido "
@@ -1177,7 +1177,7 @@ def _render_predictions() -> None:
                 "C. total": corner_real,
             })
         st.dataframe(pd.DataFrame(rows), hide_index=True,
-                     use_container_width=True, height=420)
+                     use_container_width=False, height=420)
         st.caption(
             f"{len(gview)} de {len(graded)} calificados. Cada celda = lado más "
             "probable del modelo + si salió + la cuota sellada (@). 'C. total' = "
@@ -1230,7 +1230,7 @@ def _render_predictions() -> None:
                 "Córners (proy/línea)": cco,
             })
         st.dataframe(pd.DataFrame(rows), hide_index=True,
-                     use_container_width=True, height=480)
+                     use_container_width=False, height=480)
         st.caption(
             f"{len(view)} partidos · lado más probable del modelo con su "
             "probabilidad. Se calificarán al finalizar."
