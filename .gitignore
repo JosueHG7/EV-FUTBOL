@@ -24,4 +24,6 @@ data/*.old_*
 api-football-documentation/
 # Permisos locales de Claude Code (personales, no compartir)
 .claude/settings.local.json
+# Capturas de referencia de ligas (personales)
+Ligas/
 .DS_Store
