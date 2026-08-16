@@ -775,6 +775,21 @@ def _day_selectbox(items: list, key: str, container=st, reverse: bool = False) -
         format_func=lambda d: "Todos los días" if d == "Todos" else _day_label(d))
 
 
+def _best_lean(sigs: list) -> tuple | None:
+    """Entre TODOS los mercados del partido, el lado que el modelo más FAVORECE
+    frente a la casa (máxima diferencia positiva modelo − casa). Ese es el lado
+    accionable: 'el modelo le da más probabilidad que la casa'.
+
+    Devuelve (mercado, lado, prob_modelo, prob_casa, gap) o None."""
+    best = None
+    for s in sigs:
+        for side in s["model"]:
+            gap = s["model"][side] - s["market"][side]
+            if best is None or gap > best[4]:
+                best = (s["mkt"], side, s["model"][side], s["market"][side], gap)
+    return best
+
+
 def _render_analysis() -> None:
     st.header("🔍 Análisis por partido — triaje diario")
     st.caption(
@@ -806,43 +821,53 @@ def _render_analysis() -> None:
     view = [u for u in upcoming
             if (sel == "Todas" or u["league"] == sel)
             and (sel_day == "Todos" or u["date"] == sel_day)]
-    known = [u for u in view if u["_d"]["known"] and u["_top"] is not None]
-    known.sort(key=lambda u: u["_top"], reverse=True)
+    # (partido, lean) donde lean = (mercado, lado, prob_modelo, prob_casa, gap)
+    known = [(u, _best_lean(u["_sig"]))
+             for u in view if u["_d"]["known"] and u["_sig"]]
+    known = [(u, bl) for u, bl in known if bl is not None]
+    known.sort(key=lambda p: p[1][4], reverse=True)
     if only_signals:
-        known = [u for u in known if u["_top"] >= 0.05]
-    unknown = [u for u in view if not (u["_d"]["known"] and u["_top"] is not None)]
+        known = [(u, bl) for u, bl in known if bl[4] >= 0.05]
+    unknown = [u for u in view if not (u["_d"]["known"] and u["_sig"])]
 
     if known:
         rows = []
-        for u in known:
-            top_mkt = max(u["_sig"], key=lambda s: s["delta"])["mkt"]
+        for u, (mkt, side, mp, kp, gap) in known:
             rows.append({
                 "Partido": f"{u['home']} vs {u['away']}",
                 "Liga": u["league"],
                 "Fecha": u["date"],
-                "Mayor discrepancia": top_mkt,
-                "Δ": u["_top"],
+                "Mercado": mkt,
+                "Señal": side,
+                "Modelo": mp,
+                "Casa": kp,
+                "Δ": gap,
             })
         st.dataframe(
             pd.DataFrame(rows), hide_index=True, use_container_width=True,
             column_config={
+                "Modelo": st.column_config.NumberColumn(
+                    format="percent", help="Prob. del modelo para ese lado"),
+                "Casa": st.column_config.NumberColumn(
+                    format="percent", help="Prob. implícita de la casa (sin vig) para ese lado"),
                 "Δ": st.column_config.NumberColumn(
-                    format="percent",
-                    help="Máxima divergencia |modelo − mercado| del partido"),
+                    format="percent", help="Cuánto MÁS probable lo ve el modelo que la casa"),
             },
         )
         st.caption(
-            f"{len(known)} partidos · modelo entrenado con {n_matches:,} partidos "
-            "(sin calibrar — la discrepancia es un diagnóstico, no un edge)"
+            f"{len(known)} partidos · **Señal** = el lado (Over/Under, Sí/No, "
+            "Local/Empate/Visit.) al que el modelo le da MÁS probabilidad que la "
+            "casa; **Modelo/Casa** = probabilidad de ese lado, **Δ** = cuánto más. "
+            f"Diagnóstico, no apuesta — modelo sin calibrar ({n_matches:,} partidos)."
         )
 
         st.divider()
         st.subheader("🔎 Detalle del partido")
-        labels = [f"{u['home']} vs {u['away']} · {u['league']} · Δ{u['_top']:.0%}"
-                  for u in known]
+        labels = [f"{u['home']} vs {u['away']} · {u['league']} · "
+                  f"{bl[1]} {bl[4]:+.0%}" for u, bl in known]
         idx = st.selectbox("Elige un partido para ver el detalle completo",
                            range(len(known)), format_func=lambda i: labels[i])
-        _render_detail(known[idx], matches_df, stats_df)
+        _render_detail(known[idx][0], matches_df, stats_df)
     else:
         st.info("Ningún partido próximo con modelo + mercado para el filtro actual.")
 
