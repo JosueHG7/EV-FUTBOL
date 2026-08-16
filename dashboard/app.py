@@ -52,11 +52,22 @@ _BACKTEST_PATH = config.DATA_DIR / "real_backtest_results.json"
 # Cached data / model loaders
 # ---------------------------------------------------------------------------
 
-@st.cache_resource(show_spinner="Entrenando EnsembleModel (BD + xG + features)…")
-def _get_live_model():
-    """Entrena una vez el EnsembleModel por sesión (cacheado como recurso)."""
+@st.cache_resource(show_spinner="Cargando modelo…")
+def _load_model_cached(pkl_mtime: float):
+    """Carga el modelo entrenado por refresh.py (instantáneo). Si no existe,
+    lo entrena al vuelo (lento) como respaldo. Cacheado por mtime del .pkl:
+    cuando refresh.py reescribe el artefacto, el mtime cambia y la caché se
+    invalida sola (un dashboard abierto recoge el modelo nuevo sin reiniciar)."""
+    loaded = pipeline.load_model_artifact()
+    if loaded is not None:
+        return loaded
     model, teams, label, df = pipeline.build_live_model()
     return model, teams, label, len(df)
+
+
+def _get_live_model():
+    mtime = pipeline.MODEL_PATH.stat().st_mtime if pipeline.MODEL_PATH.exists() else 0.0
+    return _load_model_cached(mtime)
 
 
 @st.cache_data(ttl=300, show_spinner=False)

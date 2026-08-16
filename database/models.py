@@ -69,6 +69,7 @@ class Match(Base):
     lineups:     Mapped[list["Lineup"]]       = relationship(back_populates="match", cascade="all, delete-orphan")
     statistics:  Mapped[list["TeamStatistic"]] = relationship(back_populates="match", cascade="all, delete-orphan")
     prediction:  Mapped["Prediction | None"]  = relationship(back_populates="match", cascade="all, delete-orphan", uselist=False)
+    model_prediction: Mapped["ModelPrediction | None"] = relationship(back_populates="match", cascade="all, delete-orphan", uselist=False)
 
     def __repr__(self) -> str:
         return f"<Match {self.home_team_name} vs {self.away_team_name} ({self.match_date.date()})>"
@@ -210,6 +211,43 @@ class Prediction(Base):
     collected_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=_utcnow)
 
     match: Mapped["Match"] = relationship(back_populates="prediction")
+
+
+# ---------------------------------------------------------------------------
+# Model prediction snapshots — recorded BEFORE kickoff, graded after the result.
+# A read-only observation log to measure (over time) whether the model's
+# discrepancy vs market predicts anything. NOT a bet suggestion.
+# ---------------------------------------------------------------------------
+
+class ModelPrediction(Base):
+    __tablename__ = "model_predictions"
+
+    id:          Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    match_id:    Mapped[int] = mapped_column(ForeignKey("matches.id"), nullable=False, unique=True, index=True)
+    snapshot_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, default=_utcnow)
+
+    # 1X2 — model vs market (de-vigged)
+    m_home:   Mapped[float | None] = mapped_column(Float, nullable=True)
+    m_draw:   Mapped[float | None] = mapped_column(Float, nullable=True)
+    m_away:   Mapped[float | None] = mapped_column(Float, nullable=True)
+    mk_home:  Mapped[float | None] = mapped_column(Float, nullable=True)
+    mk_draw:  Mapped[float | None] = mapped_column(Float, nullable=True)
+    mk_away:  Mapped[float | None] = mapped_column(Float, nullable=True)
+
+    # Over/Under 2.5 goals
+    m_over25:  Mapped[float | None] = mapped_column(Float, nullable=True)
+    mk_over25: Mapped[float | None] = mapped_column(Float, nullable=True)
+
+    # BTTS
+    m_btts_yes:  Mapped[float | None] = mapped_column(Float, nullable=True)
+    mk_btts_yes: Mapped[float | None] = mapped_column(Float, nullable=True)
+
+    # Total corners
+    corner_proj: Mapped[float | None] = mapped_column(Float, nullable=True)
+    corner_line: Mapped[float | None] = mapped_column(Float, nullable=True)
+    corner_std:  Mapped[float | None] = mapped_column(Float, nullable=True)
+
+    match: Mapped["Match"] = relationship(back_populates="model_prediction")
 
 
 # ---------------------------------------------------------------------------

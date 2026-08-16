@@ -1,5 +1,6 @@
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent))
@@ -10,6 +11,38 @@ from models.feature_engineering import build_features
 from collectors.understat_collector import load_all_xg
 from models.ev_calculator import find_value_bets
 from models.kelly import recommended_stake
+
+# Trained model artifact (gitignored) — refresh.py writes it, dashboard loads it.
+MODEL_PATH = config.BASE_DIR / "models" / "trained_model.pkl"
+
+
+def save_model_artifact(model, label: str, n_matches: int) -> None:
+    import joblib
+    joblib.dump(
+        {"model": model, "label": label, "n": n_matches,
+         "saved_at": datetime.now(timezone.utc)},
+        MODEL_PATH,
+    )
+
+
+def load_model_artifact():
+    """Return (model, teams, label, n_matches) from disk, or None if the artifact
+    is absent, corrupt, or version-incompatible (caller then retrains from scratch).
+
+    A None on a *present* file means the pkl could not be unpickled — the reason is
+    printed to stderr so the operator knows to regenerate it (run refresh.py)."""
+    if not MODEL_PATH.exists():
+        return None
+    try:
+        import joblib
+        d = joblib.load(MODEL_PATH)
+        m = d["model"]
+        return m, m.teams, d["label"], d["n"]
+    except Exception as exc:
+        print(f"[load_model_artifact] no se pudo cargar {MODEL_PATH.name}: "
+              f"{type(exc).__name__}: {exc} — se reentrenará desde cero.",
+              file=sys.stderr)
+        return None
 
 _LEAGUE_LABELS = {
     "soccer_spain_la_liga":         "La Liga",
