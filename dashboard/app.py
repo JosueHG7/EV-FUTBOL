@@ -940,16 +940,21 @@ def _render_analysis() -> None:
     matches_df = _get_matches()   # cacheado — para la vista de detalle
     stats_df = _get_stats_df()    # cacheado
 
-    c1, c2, c3, c4 = st.columns([2, 2, 1.4, 1.4])
+    c1, c2, c3, c4, c5 = st.columns([2, 2, 1.4, 1.2, 1.6])
     leagues = ["Todas"] + sorted({u["league"] for u in upcoming})
     sel = c1.selectbox("Liga", leagues)
     sel_day = _day_selectbox(upcoming, "ana_dia", c2)
-    orden = c3.selectbox("Ordenar por", ["Discrepancia", "Hora"], key="ana_orden")
-    only_signals = c4.checkbox("Solo con discrepancia ≥ 5%", value=False)
+    # Hora primero → orden por defecto (no confiamos ciego en la discrepancia).
+    orden = c3.selectbox("Ordenar por", ["Hora", "Discrepancia"], key="ana_orden")
+    solo_prox = c4.checkbox("Solo próximos", value=True,
+                            help="Oculta los partidos cuya hora ya pasó (ya empezaron o terminaron).")
+    only_signals = c5.checkbox("Solo con discrepancia ≥ 5%", value=False)
 
+    now_local = pd.Timestamp(datetime.now())
     view = [u for u in upcoming
             if (sel == "Todas" or u["league"] == sel)
-            and (sel_day == "Todos" or u["date"] == sel_day)]
+            and (sel_day == "Todos" or u["date"] == sel_day)
+            and (not solo_prox or u["dt"] > now_local)]
     # (partido, lean) donde lean = (mercado, lado, prob_modelo, prob_casa, gap)
     known = [(u, _best_lean(u["_sig"]))
              for u in view if u["_d"]["known"] and u["_sig"]]
@@ -982,7 +987,7 @@ def _render_analysis() -> None:
         event = st.dataframe(
             pd.DataFrame(rows), hide_index=True, use_container_width=True,
             on_select="rerun", selection_mode="single-row",
-            key=f"ana_tbl_{sel}_{sel_day}_{orden}_{only_signals}",
+            key=f"ana_tbl_{sel}_{sel_day}_{orden}_{only_signals}_{solo_prox}",
             column_config={
                 "Modelo": st.column_config.NumberColumn(
                     format="percent", help="Prob. del modelo para ese lado"),
