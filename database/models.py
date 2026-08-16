@@ -247,6 +247,18 @@ class ModelPrediction(Base):
     corner_line: Mapped[float | None] = mapped_column(Float, nullable=True)
     corner_std:  Mapped[float | None] = mapped_column(Float, nullable=True)
 
+    # Cuotas decimales reales al momento del snapshot — permiten calcular ROI
+    # (no solo acierto direccional). Congeladas antes del partido.
+    o_home:         Mapped[float | None] = mapped_column(Float, nullable=True)
+    o_draw:         Mapped[float | None] = mapped_column(Float, nullable=True)
+    o_away:         Mapped[float | None] = mapped_column(Float, nullable=True)
+    o_over25:       Mapped[float | None] = mapped_column(Float, nullable=True)
+    o_under25:      Mapped[float | None] = mapped_column(Float, nullable=True)
+    o_btts_yes:     Mapped[float | None] = mapped_column(Float, nullable=True)
+    o_btts_no:      Mapped[float | None] = mapped_column(Float, nullable=True)
+    o_corner_over:  Mapped[float | None] = mapped_column(Float, nullable=True)
+    o_corner_under: Mapped[float | None] = mapped_column(Float, nullable=True)
+
     match: Mapped["Match"] = relationship(back_populates="model_prediction")
 
 

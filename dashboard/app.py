@@ -163,14 +163,16 @@ def _get_predictions():
     """Snapshots de ModelPrediction, partidos en dos grupos:
     - graded: partido finalizado → calificado contra el resultado real.
     - pending: aún sin jugar → solo lo que el modelo predijo.
-    Devuelve (graded, pending, summary). Todo se resuelve dentro de la sesión
-    (los objetos ORM no sobreviven fuera de ella)."""
+    Devuelve (graded, pending, summary, pnl_summary). Todo se resuelve dentro
+    de la sesión (los objetos ORM no sobreviven fuera de ella)."""
     from sqlalchemy import select
     from database.db import get_session
     from database.models import ModelPrediction, Match, TeamStatistic
-    from models.grading import grade_snapshot, summarize, model_calls, market_calls
+    from models.grading import (grade_snapshot, summarize, model_calls,
+                                 market_calls, pnl_snapshot, summarize_pnl,
+                                 model_odds)
 
-    graded, pending, grade_objs = [], [], []
+    graded, pending, grade_objs, pnl_objs = [], [], [], []
     with get_session() as s:
         preds = s.execute(select(ModelPrediction)).scalars().all()
         pids = [p.match_id for p in preds]
@@ -213,9 +215,11 @@ def _get_predictions():
             if m.id in finished_set:
                 g = grade_snapshot(p, m.home_goals, m.away_goals, corners.get(m.id))
                 grade_objs.append(g)
+                pnl_objs.append(pnl_snapshot(p, g))
                 graded.append({
                     **base, "score": f"{m.home_goals}-{m.away_goals}",
                     "corners_total": corners.get(m.id), "g": g,
+                    "odds": model_odds(p, g),
                 })
             else:
                 pending.append({
@@ -228,7 +232,7 @@ def _get_predictions():
 
     graded.sort(key=lambda x: x["dt"], reverse=True)
     pending.sort(key=lambda x: x["dt"])
-    return graded, pending, summarize(grade_objs)
+    return graded, pending, summarize(grade_objs), summarize_pnl(pnl_objs)
 
 
 # ---------------------------------------------------------------------------
@@ -815,37 +819,55 @@ def _mark(hit) -> str:
     return "✅" if hit is True else ("❌" if hit is False else "—")
 
 
-def _graded_cell(cell, lblmap=None) -> str:
-    """'Local ✅' / 'Over ❌' / '—' según la llamada del modelo y si acertó."""
+def _graded_cell(cell, odds=None, lblmap=None) -> str:
+    """'Local ✅ @2.00' / 'Over ❌ @1.85' / '—' según la llamada del modelo,
+    si acertó y la cuota sellada (si está disponible)."""
     call = cell["model"]
     if call is None:
         return "—"
     txt = lblmap.get(call, call) if lblmap else call
-    return f"{txt} {_mark(cell['model_hit'])}"
+    suffix = f" @{odds:.2f}" if odds is not None else ""
+    return f"{txt} {_mark(cell['model_hit'])}{suffix}"
 
 
-def _hitrate_metric(col, title: str, v: dict) -> None:
-    mn, kn = v["model_n"], v["market_n"]
-    if mn == 0:
-        col.metric(title, "—", help="Aún sin partidos calificados en este mercado.")
-        return
-    mod = f"{v['model_hits'] / mn:.0%} ({v['model_hits']}/{mn})"
-    delta = f"Mercado {v['market_hits'] / kn:.0%}" if kn else "Mercado n/a"
-    col.metric(title, mod, delta=delta, delta_color="off")
+_MK_LBL = {"1x2": "1X2", "ou25": "O/U 2.5", "btts": "BTTS", "corners": "Córners"}
+
+
+def _acc_str(hits: int, n: int) -> str:
+    return f"{hits}/{n} ({hits / n:.0%})" if n else "—"
+
+
+def _roi_str(pnl: float, bets: int) -> str:
+    """ROI con staking plano de 1u: % por apuesta + P&L total + nº de apuestas
+    (su propio denominador, que puede diferir del de acierto si faltan cuotas)."""
+    return f"{pnl / bets:+.0%} ({pnl:+.1f}u · {bets})" if bets else "—"
+
+
+def _summary_table(summary: dict, pnl: dict) -> "pd.DataFrame":
+    rows = []
+    for mk in ("1x2", "ou25", "btts", "corners"):
+        s, p = summary[mk], pnl[mk]
+        rows.append({
+            "Mercado": _MK_LBL[mk],
+            "Acierto modelo": _acc_str(s["model_hits"], s["model_n"]),
+            "ROI modelo": _roi_str(p["model_pnl"], p["model_bets"]),
+            "Acierto mercado": _acc_str(s["market_hits"], s["market_n"]),
+            "ROI mercado": _roi_str(p["market_pnl"], p["market_bets"]),
+        })
+    return pd.DataFrame(rows)
 
 
 def _render_predictions() -> None:
     st.header("📋 Predicciones del modelo")
     st.caption(
         "Bitácora de validación: lo que el modelo predijo **antes** de cada "
-        "partido, sellado en el refresco diario. Al finalizar el partido se "
-        "califica contra el resultado real (✅ acertó el lado más probable / "
-        "❌ falló). Es **diagnóstico de acierto direccional**, no un backtest de "
-        "rentabilidad — un modelo sin calibrar puede acertar dirección y aun así "
-        "no ganarle a la cuota."
+        "partido, con su cuota sellada. Al finalizar se califica contra el "
+        "resultado real — acierto direccional (✅/❌) **y** ROI (¿le habría "
+        "ganado a esa cuota?). Es **diagnóstico** con muestra aún chica, **no** "
+        "un backtest cerrado ni una recomendación de apuesta."
     )
 
-    graded, pending, summary = _get_predictions()
+    graded, pending, summary, pnl = _get_predictions()
 
     if not graded and not pending:
         st.info(
@@ -854,24 +876,23 @@ def _render_predictions() -> None:
         )
         return
 
-    # --- Resumen de acierto (modelo vs mercado) ---
-    st.subheader("Acierto acumulado")
+    # --- Resumen: acierto + ROI (modelo vs mercado) ---
+    st.subheader("Acierto y ROI acumulados")
     if not graded:
         st.info(
             f"Aún no hay partidos calificados — {len(pending)} predicciones "
-            "esperando que se jueguen. El acierto aparecerá aquí cuando el "
-            "refresco recoja los resultados."
+            "esperando que se jueguen. El acierto y el ROI aparecerán aquí "
+            "cuando el refresco recoja los resultados."
         )
     else:
-        c1, c2, c3, c4 = st.columns(4)
-        _hitrate_metric(c1, "1X2", summary["1x2"])
-        _hitrate_metric(c2, "O/U 2.5", summary["ou25"])
-        _hitrate_metric(c3, "BTTS", summary["btts"])
-        _hitrate_metric(c4, "Córners", summary["corners"])
+        st.dataframe(_summary_table(summary, pnl), hide_index=True,
+                     use_container_width=True)
         st.caption(
-            f"{len(graded)} partidos calificados · 'Mercado' = acierto del lado "
-            "favorito de la cuota (de-vigged), como referencia. Córners: solo "
-            "modelo vs línea (el mercado no tiene lado favorito)."
+            f"{len(graded)} partidos calificados. **ROI** = apostar 1u plana al "
+            "lado que llama cada uno, a la cuota sellada antes del partido "
+            "(gana → cuota−1, pierde → −1). 'Mercado' = apostar al favorito de la "
+            "cuota, como referencia. Córners: solo modelo vs línea. "
+            "⚠️ Muestra chica — es diagnóstico, **no** una recomendación de apuesta."
         )
 
     # --- Calificados ---
@@ -879,24 +900,25 @@ def _render_predictions() -> None:
         st.subheader(f"Calificados ({len(graded)})")
         rows = []
         for x in graded:
-            g = x["g"]
+            g, od = x["g"], x["odds"]
             ct = x["corners_total"]
             corner_real = f"{ct:g}" if ct is not None else "—"
             rows.append({
                 "Fecha": x["date"],
                 "Partido": f"{x['home']} vs {x['away']}",
                 "Marcador": x["score"],
-                "1X2": _graded_cell(g["1x2"], _1X2_LBL),
-                "O/U 2.5": _graded_cell(g["ou25"]),
-                "BTTS": _graded_cell(g["btts"]),
-                "Córners": _graded_cell(g["corners"]),
+                "1X2": _graded_cell(g["1x2"], od["1x2"], _1X2_LBL),
+                "O/U 2.5": _graded_cell(g["ou25"], od["ou25"]),
+                "BTTS": _graded_cell(g["btts"], od["btts"]),
+                "Córners": _graded_cell(g["corners"], od["corners"]),
                 "C. total": corner_real,
             })
         st.dataframe(pd.DataFrame(rows), hide_index=True,
                      use_container_width=True, height=420)
         st.caption(
-            "Cada celda = lado más probable del modelo + si salió. "
-            "'C. total' = córners reales del partido (donde la liga publica stats)."
+            "Cada celda = lado más probable del modelo + si salió + la cuota "
+            "sellada (@). 'C. total' = córners reales del partido (donde la liga "
+            "publica stats)."
         )
 
     # --- Pendientes ---

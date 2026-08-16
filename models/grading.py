@@ -128,3 +128,72 @@ def summarize(grades: list[dict]) -> dict:
                 kh += int(cell["market_hit"])
         out[mk] = {"model_hits": mh, "model_n": mn, "market_hits": kh, "market_n": kn}
     return out
+
+
+# ---------------------------------------------------------------------------
+# P&L / ROI — ¿le habría ganado a la cuota? (necesita las cuotas del snapshot)
+# ---------------------------------------------------------------------------
+
+# Atributo de ModelPrediction con la cuota decimal de cada selección.
+_SEL_ODDS = {
+    "1x2":     {"home": "o_home", "draw": "o_draw", "away": "o_away"},
+    "ou25":    {"Over": "o_over25", "Under": "o_under25"},
+    "btts":    {"Sí": "o_btts_yes", "No": "o_btts_no"},
+    "corners": {"Over": "o_corner_over", "Under": "o_corner_under"},
+}
+
+
+def model_odds(pred, grade: dict) -> dict:
+    """Cuota decimal del lado que llamó el MODELO por mercado (None si falta)."""
+    out = {}
+    for mk in MARKETS:
+        attr = _SEL_ODDS[mk].get(grade[mk]["model"]) if grade[mk]["model"] else None
+        out[mk] = getattr(pred, attr, None) if attr else None
+    return out
+
+
+def _bet_pnl(call, hit, odds) -> float | None:
+    """Ganancia de apostar 1 unidad a `call` a cuota `odds`. None si no aplica.
+    Gana → odds-1 ; pierde → -1. Excluye push/sin cuota/sin resultado."""
+    if call is None or hit is None or odds is None:
+        return None
+    return (odds - 1.0) if hit else -1.0
+
+
+def pnl_snapshot(pred, grade: dict) -> dict:
+    """
+    Devuelve {mercado: {"model_pnl": float|None, "market_pnl": float|None}} —
+    apostando 1 unidad plana al lado que llamó cada uno, a la cuota sellada.
+    """
+    out = {}
+    for mk in MARKETS:
+        cell = grade[mk]
+        m_attr = _SEL_ODDS[mk].get(cell["model"]) if cell["model"] else None
+        k_attr = _SEL_ODDS[mk].get(cell["market"]) if cell["market"] else None
+        m_odds = getattr(pred, m_attr, None) if m_attr else None
+        k_odds = getattr(pred, k_attr, None) if k_attr else None
+        out[mk] = {
+            "model_pnl":  _bet_pnl(cell["model"], cell["model_hit"], m_odds),
+            "market_pnl": _bet_pnl(cell["market"], cell["market_hit"], k_odds),
+        }
+    return out
+
+
+def summarize_pnl(pnls: list[dict]) -> dict:
+    """Agrega P&L por mercado: {mk: {model_pnl, model_bets, market_pnl, market_bets}}.
+    ROI = model_pnl / model_bets (unidades ganadas por apuesta, staking plano)."""
+    out = {}
+    for mk in MARKETS:
+        mp = kp = 0.0
+        mb = kb = 0
+        for p in pnls:
+            cell = p[mk]
+            if cell["model_pnl"] is not None:
+                mp += cell["model_pnl"]
+                mb += 1
+            if cell["market_pnl"] is not None:
+                kp += cell["market_pnl"]
+                kb += 1
+        out[mk] = {"model_pnl": mp, "model_bets": mb,
+                   "market_pnl": kp, "market_bets": kb}
+    return out

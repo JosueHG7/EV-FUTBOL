@@ -61,9 +61,13 @@ def snapshot_predictions(model, teams) -> None:
             o = s.execute(select(Odds).where(
                 Odds.match_id == mid, Odds.market == "1x2")).scalars().first()
             mos = s.execute(select(MarketOdds).where(MarketOdds.match_id == mid)).scalars().all()
+            # Nota: el colector guarda un solo bookmaker por mercado. Si eso
+            # cambiara, este dict colapsaría por selección y la cuota congelada
+            # (que ahora paga el ROI) dependería del orden de iteración.
             ou = {r.selection: r.odd for r in mos if r.market == "ou_goals"}
             bt = {r.selection: r.odd for r in mos if r.market == "btts"}
             co_o = next((r for r in mos if r.market == "corners_ou" and r.selection == "over"), None)
+            co_u = next((r for r in mos if r.market == "corners_ou" and r.selection == "under"), None)
 
             before = pd.Timestamp(m.match_date)
             before = before.tz_localize(None) if before.tzinfo else before
@@ -87,6 +91,12 @@ def snapshot_predictions(model, teams) -> None:
                 "corner_proj": ca["proj"] if ca else None,
                 "corner_line": co_o.line if co_o else None,
                 "corner_std": ca["std"] if ca else None,
+                # Cuotas decimales reales al momento del snapshot (para ROI)
+                "o_home": o.home_win, "o_draw": o.draw, "o_away": o.away_win,
+                "o_over25": ou.get("over"), "o_under25": ou.get("under"),
+                "o_btts_yes": bt.get("yes"), "o_btts_no": bt.get("no"),
+                "o_corner_over": co_o.odd if co_o else None,
+                "o_corner_under": co_u.odd if co_u else None,
             }
             existing = s.execute(select(ModelPrediction).where(
                 ModelPrediction.match_id == mid)).scalars().first()

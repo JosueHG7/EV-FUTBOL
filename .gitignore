@@ -22,4 +22,6 @@ data/*.json
 data/*.old_*
 # Documentación externa pesada (PDF ~20MB)
 api-football-documentation/
+# Permisos locales de Claude Code (personales, no compartir)
+.claude/settings.local.json
 .DS_Store
