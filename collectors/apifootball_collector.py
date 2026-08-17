@@ -377,11 +377,14 @@ def _stat_value(v) -> tuple[float | None, str | None]:
 
 
 def collect_stats_for_upcoming(days_ahead: int = 3, n_recent: int = 10,
-                               leagues: dict = LEAGUES) -> None:
+                               n_h2h: int = 6, leagues: dict = LEAGUES) -> None:
     """
     For every team playing in an upcoming (odds-collected) fixture in a
     stats-enabled league, fetch + store per-match statistics for its last
-    `n_recent` finished fixtures. Idempotent: skips fixtures already stored.
+    `n_recent` finished fixtures **and** the last `n_h2h` head-to-head meetings
+    between the two sides (those meetings the dossier shows are usually older
+    than the `n_recent` window, so without this pass the H2H stats columns are
+    empty). Idempotent: skips fixtures already stored.
     """
     from sqlalchemy import distinct, select
     from database.models import Odds, TeamStatistic
@@ -411,11 +414,31 @@ def collect_stats_for_upcoming(days_ahead: int = 3, n_recent: int = 10,
                 ).order_by(Match.match_date.desc()).limit(n_recent)
             ).scalars().all()
             fixture_ids.update(rows)
+        n_recent_fx = len(fixture_ids)
+
+        # H2H pass: los enfrentamientos directos que muestra el dossier suelen ser
+        # más viejos que la ventana de `n_recent`, así que se piden aparte para que
+        # las columnas Córners/Tiros/Tarj del H2H no salgan vacías.
+        for m in upcoming:
+            if m.league_id not in STAT_LEAGUES:
+                continue
+            h, a = m.home_team_id, m.away_team_id
+            rows = session.execute(
+                select(Match.id).where(
+                    ((Match.home_team_id == h) & (Match.away_team_id == a)) |
+                    ((Match.home_team_id == a) & (Match.away_team_id == h)),
+                    Match.status == "finished",
+                    Match.home_goals.is_not(None),
+                    Match.match_date < m.match_date,
+                ).order_by(Match.match_date.desc()).limit(n_h2h)
+            ).scalars().all()
+            fixture_ids.update(rows)
 
         have = set(session.execute(select(distinct(TeamStatistic.match_id))).scalars().all())
         todo = [f for f in fixture_ids if f not in have]
         print(f"  fixtures a consultar: {len(todo)} "
-              f"(de {len(fixture_ids)} recientes; {len(fixture_ids) - len(todo)} ya tenían stats)")
+              f"({n_recent_fx} recientes + {len(fixture_ids) - n_recent_fx} H2H nuevos; "
+              f"{len(fixture_ids) - len(todo)} ya tenían stats)")
 
         n_ok = 0
         for i, fid in enumerate(todo, 1):
