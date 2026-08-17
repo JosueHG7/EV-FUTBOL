@@ -8,7 +8,7 @@ Compartido por:
 Mantener libre de imports de streamlit para que refresh.py pueda usarlo.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pandas as pd
 from sqlalchemy import select
@@ -43,10 +43,21 @@ def load_stats_df() -> "pd.DataFrame":
 def load_upcoming() -> list[dict]:
     """Partidos próximos con odds (desde la BD): 1X2 + O/U 2.5 + BTTS + córners."""
     out: list[dict] = []
+    # Fechas en la BD son naive-UTC; comparamos contra "ahora" en el mismo marco.
+    now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
     with get_session() as s:
         for o in s.execute(select(Odds).where(Odds.market == "1x2")).scalars().all():
             m = s.get(Match, o.match_id)
             if m is None:
+                continue
+            # Solo partidos que AÚN no han empezado. Sin esto se sellaban snapshots
+            # de partidos ya jugados (fuga: el modelo se reentrena con el resultado
+            # de ese mismo partido y luego lo "predice"). El status en la BD viene
+            # normalizado por _map_status() del collector — "scheduled" es el
+            # equivalente de su _STATUS_SCHEDULED (que son códigos crudos NS/TBD/PST,
+            # no lo que se guarda). El guard por hora de kickoff cubre además el caso
+            # en que el partido ya arrancó pero su resultado aún no se ingirió.
+            if m.status != "scheduled" or m.match_date <= now_utc:
                 continue
             md = to_local(m.match_date)   # UTC → hora local del usuario
             mos = s.execute(select(MarketOdds).where(MarketOdds.match_id == m.id)).scalars().all()

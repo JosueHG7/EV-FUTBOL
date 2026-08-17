@@ -187,6 +187,7 @@ def _get_predictions_cached(db_mtime: float):
                                  model_odds)
 
     graded, pending, grade_objs, pnl_objs = [], [], [], []
+    n_leaked = 0   # calificados excluidos del agregado por snapshot contaminado
     with get_session() as s:
         preds = s.execute(select(ModelPrediction)).scalars().all()
         pids = [p.match_id for p in preds]
@@ -227,11 +228,17 @@ def _get_predictions_cached(db_mtime: float):
             }
             if m.id in finished_set:
                 g = grade_snapshot(p, m.home_goals, m.away_goals, corners.get(m.id))
-                grade_objs.append(g)
-                pnl_objs.append(pnl_snapshot(p, g))
+                # Los snapshots contaminados (tomados con el partido ya iniciado) se
+                # califican y muestran, pero NO cuentan para el ROI/acierto agregado.
+                if not p.leak_flagged:
+                    grade_objs.append(g)
+                    pnl_objs.append(pnl_snapshot(p, g))
+                else:
+                    n_leaked += 1
                 graded.append({
                     **base, "score": f"{m.home_goals}-{m.away_goals}",
                     "corners_total": corners.get(m.id), "g": g,
+                    "corner_line": p.corner_line, "leaked": p.leak_flagged,
                     "odds": model_odds(p, g),
                 })
             else:
@@ -249,7 +256,8 @@ def _get_predictions_cached(db_mtime: float):
 
     graded.sort(key=lambda x: x["dt"], reverse=True)
     pending.sort(key=lambda x: x["dt"])
-    return graded, pending, summarize(grade_objs), summarize_pnl(pnl_objs)
+    return (graded, pending, summarize(grade_objs), summarize_pnl(pnl_objs),
+            n_leaked)
 
 
 def _get_predictions():
@@ -661,15 +669,29 @@ def _render_result_rates(th: dict, ta: dict, home: str, away: str) -> None:
         return f"{round(100 * hn[0] / hn[1])}%" if hn else "—"
 
     st.markdown("**📌 Resultados recientes (últimos 10)**")
+    rows = ["| Equipo | BTTS | Over 2.5 | Portería a cero |", "|:--|:--|:--|:--|"]
     for emoji, name, tr in (("🏠", home, th), ("✈️", away, ta)):
-        st.markdown(
-            f"- {emoji} **{name}**: BTTS {pct(tr, 'btts')} · Over 2.5 "
-            f"{pct(tr, 'over25')} · Portería a cero {pct(tr, 'clean_sheet')}"
+        safe = str(name).replace("|", "\\|")   # un '|' partiría la fila markdown
+        rows.append(
+            f"| {emoji} **{safe}** | {pct(tr, 'btts')} | "
+            f"{pct(tr, 'over25')} | {pct(tr, 'clean_sheet')} |"
         )
+    st.markdown("\n".join(rows))
     st.caption(
         "% de los últimos 10 partidos del equipo · BTTS = ambos marcaron · "
         "Over 2.5 = +3 goles totales · Portería a cero = el equipo no recibió gol."
     )
+
+
+def _thr_table(trends: dict, key: str, thrs) -> str:
+    """Tabla markdown de un grupo de umbrales: Umbral | u10 | u5. Nativa (respeta
+    el tema, sin el recuadro ni el scroll de un widget por grupo)."""
+    rows = ["| Umbral | u10 | u5 |", "|:--|:--|:--|"]
+    for t in thrs:
+        u10 = _tr_cell(trends[key][10].get(t))
+        u5 = _tr_cell(trends[key][5].get(t))
+        rows.append(f"| **+{t}** | {u10} | {u5} |")
+    return "\n".join(rows)
 
 
 def _render_team_trends_full(trends: dict, label: str, thr_map: dict) -> None:
@@ -681,15 +703,15 @@ def _render_team_trends_full(trends: dict, label: str, thr_map: dict) -> None:
     st.caption("Goles / tiempos (u10)")
     for glabel, key in _GOAL_TREND_LABELS:
         st.markdown(f"`{_bar(trends[key][10])}`  {glabel}")
-    # Córners / tiros (donde hay stats) — por umbral, texto compacto
+    # Córners / tiros (donde hay stats) — una tabla compacta por grupo.
     if trends["n_corners"] or trends["n_sot"]:
         st.caption("Córners / tiros — por umbral (u10 · u5)")
         for glabel, key in _TREND_GROUPS:
             thrs = thr_map[key]
-            line = " · ".join(f"+{t} {_tr_cell(trends[key][10].get(t))}" for t in thrs)
-            u5 = " · ".join(f"+{t} {_tr_cell(trends[key][5].get(t))}" for t in thrs)
-            st.markdown(f"{glabel} — **u10:** {line}")
-            st.caption(f"u5: {u5}")
+            if not any(trends[key][10].get(t) for t in thrs):
+                continue   # grupo sin datos (p. ej. tiros donde la liga no publica)
+            st.markdown(f"**{glabel}**")
+            st.markdown(_thr_table(trends, key, thrs))
 
 
 def _team_strong_trends(tr: dict, cap: int = 4) -> list:
@@ -852,12 +874,19 @@ def _render_detail(u: dict, matches_df, stats_df) -> None:
     with tab_res:
         if d["known"] and u["_sig"]:
             st.markdown("**📊 Modelo vs mercado — dónde más difieren** (diagnóstico)")
-            rows = [{"Mercado": s["mkt"], "Modelo": _dist_str(s["model"]),
-                     "Mercado ": _dist_str(s["market"]), "Cuotas": _market_odds_str(u, s),
-                     "Δ máx": s["delta"]}
-                    for s in sorted(u["_sig"], key=lambda x: x["delta"], reverse=True)]
-            st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True,
-                column_config={"Δ máx": st.column_config.NumberColumn(format="percent")})
+            rows = ["| Mercado | Elección modelo | Prob. modelo | Prob. mercado | Δ máx |",
+                    "|:--|:--|:--|:--|--:|"]
+            for s in sorted(u["_sig"], key=lambda x: x["delta"], reverse=True):
+                pick = max(s["model"], key=s["model"].get)
+                odds = _lean_odds(u, s["mkt"], pick)
+                lean = f"{pick} {s['model'][pick]:.0%}"
+                if odds is not None:
+                    lean += f" · @{odds:.2f}"
+                rows.append(
+                    f"| {s['mkt']} | **{lean}** | {_dist_str(s['model'])} | "
+                    f"{_dist_str(s['market'])} | {s['delta']:.2%} |"
+                )
+            st.markdown("\n".join(rows))
             cs = " · ".join(f"{c['score']} ({c['prob']:.0%})" for c in d["correct_scores"])
             st.caption(f"Marcadores más probables del modelo: {cs}")
         _render_corner_signal(u)
@@ -972,16 +1001,6 @@ def _lean_odds(u: dict, mkt: str, side: str):
         "BTTS": {"Sí": bt.get("yes"), "No": bt.get("no")},
     }
     return table.get(mkt, {}).get(side)
-
-
-def _market_odds_str(u: dict, sig: dict) -> str:
-    """Cuotas decimales de cada lado del mercado, en el orden de la columna
-    'Modelo' (ej. '2.10 / 3.40 / 3.50')."""
-    parts = []
-    for side in sig["model"]:
-        o = _lean_odds(u, sig["mkt"], side)
-        parts.append(f"{o:.2f}" if o is not None else "—")
-    return " / ".join(parts)
 
 
 def _best_lean(sigs: list) -> tuple | None:
@@ -1163,13 +1182,16 @@ def _mark(hit) -> str:
     return "✅" if hit is True else ("❌" if hit is False else "—")
 
 
-def _graded_cell(cell, odds=None, lblmap=None) -> str:
-    """'Local ✅ @2.00' / 'Over ❌ @1.85' / '—' según la llamada del modelo,
-    si acertó y la cuota sellada (si está disponible)."""
+def _graded_cell(cell, odds=None, lblmap=None, line=None) -> str:
+    """'Local ✅ @2.00' / 'Over 10.5 ❌ @1.85' / '—' según la llamada del modelo,
+    si acertó y la cuota sellada (si está disponible). `line` añade la línea de
+    la casa junto al lado (para córners, donde el mercado ES la línea)."""
     call = cell["model"]
     if call is None:
         return "—"
     txt = lblmap.get(call, call) if lblmap else call
+    if line is not None:
+        txt = f"{txt} {line:g}"
     suffix = f" @{odds:.2f}" if odds is not None else ""
     return f"{txt} {_mark(cell['model_hit'])}{suffix}"
 
@@ -1211,7 +1233,8 @@ def _render_predictions() -> None:
         "un backtest cerrado ni una recomendación de apuesta."
     )
 
-    graded, pending, summary, pnl = _get_predictions()
+    graded, pending, summary, pnl, n_leaked = _get_predictions()
+    n_clean = len(graded) - n_leaked   # calificados limpios (cuentan para el ROI)
 
     if not graded and not pending:
         st.info(
@@ -1220,19 +1243,31 @@ def _render_predictions() -> None:
         )
         return
 
+    # Nota de transparencia: snapshots contaminados por el bug de fuga (corregido).
+    if n_leaked:
+        st.warning(
+            f"⚠️ **{n_leaked} predicciones excluidas del cálculo** — su snapshot se "
+            "tomó *después* de iniciado el partido, así que el modelo se “predijo” a "
+            "sí mismo con el resultado ya conocido (fuga). Inflaban el ROI/acierto de "
+            "forma irreal. Bug de `load_upcoming()` corregido el **2026-08-16**; se "
+            "marcan, no se borran — siguen abajo en Calificados, señaladas con 🚩."
+        )
+
     # --- Resumen: acierto + ROI (modelo vs mercado) ---
     st.subheader("Acierto y ROI acumulados")
-    if not graded:
+    if n_clean == 0:
+        extra = (f" ({n_leaked} calificadas quedaron excluidas por la fuga)"
+                 if n_leaked else "")
         st.info(
-            f"Aún no hay partidos calificados — {len(pending)} predicciones "
-            "esperando que se jueguen. El acierto y el ROI aparecerán aquí "
-            "cuando el refresco recoja los resultados."
+            f"Aún no hay partidos calificados *limpios* — {len(pending)} predicciones "
+            f"esperando que se jueguen{extra}. El acierto y el ROI honestos "
+            "aparecerán aquí cuando maduren los snapshots limpios."
         )
     else:
         st.dataframe(_summary_table(summary, pnl), hide_index=True,
                      use_container_width=True)
         st.caption(
-            f"{len(graded)} partidos calificados. **ROI** = apostar 1u plana al "
+            f"{n_clean} partidos calificados limpios. **ROI** = apostar 1u plana al "
             "lado que llama cada uno, a la cuota sellada antes del partido "
             "(gana → cuota−1, pierde → −1). 'Mercado' = apostar al favorito de la "
             "cuota, como referencia. Córners: solo modelo vs línea. "
@@ -1252,12 +1287,14 @@ def _render_predictions() -> None:
             rows.append({
                 "Fecha": x["date"],
                 "Hora": _hhmm(x["dt"]),
-                "Partido": f"{x['home']} vs {x['away']}",
+                "Partido": ("🚩 " if x.get("leaked") else "")
+                           + f"{x['home']} vs {x['away']}",
                 "Marcador": x["score"],
                 "1X2": _graded_cell(g["1x2"], od["1x2"], _1X2_LBL),
                 "O/U 2.5": _graded_cell(g["ou25"], od["ou25"]),
                 "BTTS": _graded_cell(g["btts"], od["btts"]),
-                "Córners": _graded_cell(g["corners"], od["corners"]),
+                "Córners": _graded_cell(g["corners"], od["corners"],
+                                        line=x.get("corner_line")),
                 "C. total": corner_real,
             })
         st.dataframe(pd.DataFrame(rows), hide_index=True,
@@ -1265,7 +1302,8 @@ def _render_predictions() -> None:
         st.caption(
             f"{len(gview)} de {len(graded)} calificados. Cada celda = lado más "
             "probable del modelo + si salió + la cuota sellada (@). 'C. total' = "
-            "córners reales del partido (donde la liga publica stats)."
+            "córners reales del partido (donde la liga publica stats). "
+            "🚩 = snapshot contaminado (excluido del ROI/acierto de arriba)."
         )
 
     # --- Pendientes ---

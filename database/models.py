@@ -259,6 +259,11 @@ class ModelPrediction(Base):
     o_corner_over:  Mapped[float | None] = mapped_column(Float, nullable=True)
     o_corner_under: Mapped[float | None] = mapped_column(Float, nullable=True)
 
+    # True si el snapshot se tomó con el partido ya iniciado (snapshot_at >=
+    # match_date) — datos contaminados por fuga, se excluyen del ROI/acierto pero
+    # NO se borran (transparencia). Bug de load_upcoming() corregido 2026-08-16.
+    leak_flagged: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+
     match: Mapped["Match"] = relationship(back_populates="model_prediction")
 
 

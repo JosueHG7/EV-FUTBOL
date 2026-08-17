@@ -30,6 +30,7 @@ _ADDED_COLUMNS = {
         "o_over25": "FLOAT", "o_under25": "FLOAT",
         "o_btts_yes": "FLOAT", "o_btts_no": "FLOAT",
         "o_corner_over": "FLOAT", "o_corner_under": "FLOAT",
+        "leak_flagged": "BOOLEAN NOT NULL DEFAULT 0",
     },
 }
 

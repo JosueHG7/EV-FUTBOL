@@ -65,9 +65,10 @@ def snapshot_predictions(analyzed: list) -> None:
     from sqlalchemy import select
     from database.db import get_session
     from database.models import ModelPrediction
-    from models.analysis_builder import devig2
+    from models.analysis_builder import devig2, to_local
 
     now = datetime.now(timezone.utc)
+    now_local = to_local(now)   # mismo marco naive-local que u["dt"], para comparar
     n = 0
     with get_session() as s:
         for u in analyzed:
@@ -97,6 +98,11 @@ def snapshot_predictions(analyzed: list) -> None:
                 "o_btts_no": bt["no"] if bt else None,
                 "o_corner_over": co["over"] if co else None,
                 "o_corner_under": co["under"] if co else None,
+                # Defensa en profundidad: si el snapshot se toma con el partido ya
+                # iniciado (no debería, load_upcoming ya filtra, pero cubre la
+                # ventana entre ambos y una eventual regresión del filtro), se
+                # auto-marca como contaminado y no contará para el ROI/acierto.
+                "leak_flagged": now_local >= u["dt"],
             }
             mid = u["match_id"]
             existing = s.execute(select(ModelPrediction).where(
