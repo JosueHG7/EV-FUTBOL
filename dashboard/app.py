@@ -241,6 +241,10 @@ def _get_predictions_cached(db_mtime: float):
                     "m_home": p.m_home, "m_draw": p.m_draw, "m_away": p.m_away,
                     "m_over25": p.m_over25, "m_btts_yes": p.m_btts_yes,
                     "corner_proj": p.corner_proj, "corner_line": p.corner_line,
+                    # Cuotas selladas (para mostrar al lado de cada llamada).
+                    "o_home": p.o_home, "o_draw": p.o_draw, "o_away": p.o_away,
+                    "o_over25": p.o_over25, "o_under25": p.o_under25,
+                    "o_btts_yes": p.o_btts_yes, "o_btts_no": p.o_btts_no,
                 })
 
     graded.sort(key=lambda x: x["dt"], reverse=True)
@@ -624,6 +628,15 @@ _GOAL_TREND_LABELS = [
 ]
 
 
+def _bar(hn, width: int = 10) -> str:
+    """Barra de texto ████░░ h/n para una racha (h, n). '—' si no hay muestra."""
+    if not hn or not hn[1]:
+        return "—"
+    h, n = hn
+    filled = round(width * h / n)
+    return "█" * filled + "░" * (width - filled) + f"  {h}/{n}"
+
+
 def _goal_highlights(trends: dict) -> list:
     """Rachas fuertes (u10) de goles/tiempos como strings cortos."""
     from models.match_analysis import is_strong
@@ -661,37 +674,44 @@ def _render_result_rates(th: dict, ta: dict, home: str, away: str) -> None:
 
 def _render_team_trends_full(trends: dict, label: str, thr_map: dict) -> None:
     st.markdown(
-        f"**{label}**  ·  goles: {trends['n_goals']} · córners a favor: "
-        f"{trends['n_corners']} · tiros a favor: {trends['n_sot']} partidos con datos"
+        f"**{label}**  ·  goles: {trends['n_goals']} · córners: "
+        f"{trends['n_corners']} · tiros: {trends['n_sot']} partidos con datos"
     )
-    # Goles / tiempos (todas las ligas)
+    # Goles / tiempos (todas las ligas) — con barra visual (u10)
+    st.caption("Goles / tiempos (u10)")
     for glabel, key in _GOAL_TREND_LABELS:
-        st.markdown(f"{glabel} — u10 {_tr_cell(trends[key][10])} · "
-                    f"u5 {_tr_cell(trends[key][5])}")
-    # Córners / tiros (donde hay stats) — por umbral
-    for glabel, key in _TREND_GROUPS:
-        thrs = thr_map[key]
-        line = " · ".join(f"+{t} {_tr_cell(trends[key][10].get(t))}" for t in thrs)
-        u5 = " · ".join(f"+{t} {_tr_cell(trends[key][5].get(t))}" for t in thrs)
-        st.markdown(f"{glabel} — **u10:** {line}")
-        st.caption(f"u5: {u5}")
+        st.markdown(f"`{_bar(trends[key][10])}`  {glabel}")
+    # Córners / tiros (donde hay stats) — por umbral, texto compacto
+    if trends["n_corners"] or trends["n_sot"]:
+        st.caption("Córners / tiros — por umbral (u10 · u5)")
+        for glabel, key in _TREND_GROUPS:
+            thrs = thr_map[key]
+            line = " · ".join(f"+{t} {_tr_cell(trends[key][10].get(t))}" for t in thrs)
+            u5 = " · ".join(f"+{t} {_tr_cell(trends[key][5].get(t))}" for t in thrs)
+            st.markdown(f"{glabel} — **u10:** {line}")
+            st.caption(f"u5: {u5}")
+
+
+def _team_strong_trends(tr: dict, cap: int = 4) -> list:
+    """Rachas notables (u10) de un equipo — goles/tiempos + córners/tiros."""
+    from models.match_analysis import TREND_THRESHOLDS
+    return (_goal_highlights(tr) + _trend_highlights(tr, TREND_THRESHOLDS))[:cap]
 
 
 def _render_trends(u: dict, th: dict, ta: dict) -> None:
-    """Rachas de ambos equipos (goles/tiempos + córners/tiros), con la línea del
-    bookie al lado. th/ta vienen precalculados (team_trends)."""
+    """Tablas completas de tendencias de ambos equipos, lado a lado. Las rachas
+    fuertes ya se resumen en el panel de arriba; acá está todo el detalle."""
     from models.match_analysis import TREND_THRESHOLDS
     home, away = u["_d"]["home"], u["_d"]["away"]
     if not (th["n_goals"] or ta["n_goals"]):
+        st.info("Sin datos de tendencias para este partido.")
         return
 
-    st.markdown("#### 📈 Tendencias / rachas (últimos 5 · 10)")
     st.caption(
-        "Descriptivo ('8/10'), **no** probabilidad ni valor. 🔥 = pasa seguido "
-        "(≥80%) · ❄️ = pasa rara vez (≤20%) — es **frecuencia**, no bueno/malo "
-        "(ej. 'recibe +1.5 goles 🔥' = concede seguido). Ventanas fijas, sin "
-        "cherry-picking. Goles/tiempos aplican a todas las ligas; córners/tiros "
-        "solo donde la liga publica stats."
+        "Descriptivo ('8/10'), **no** probabilidad. 🔥 = pasa seguido (≥80%) · "
+        "❄️ = pasa rara vez (≤20%) — es **frecuencia**, no bueno/malo (ej. 'recibe "
+        "+1.5 goles 🔥' = concede seguido). Ventanas fijas. Goles/tiempos en todas "
+        "las ligas; córners/tiros donde la liga publica stats."
     )
     cl = u.get("corners")
     if cl:
@@ -701,19 +721,9 @@ def _render_trends(u: dict, th: dict, ta: dict) -> None:
         )
 
     c1, c2 = st.columns(2)
-    for col, name, tr, emoji in ((c1, home, th, "🏠"), (c2, away, ta, "✈️")):
-        with col:
-            hi = _goal_highlights(tr) + _trend_highlights(tr, TREND_THRESHOLDS)
-            if hi:
-                st.markdown(f"{emoji} **{name}** — rachas notables:")
-                for x in hi:
-                    st.markdown(f"- {x}")
-            else:
-                st.markdown(f"{emoji} **{name}** — sin rachas notables (u10)")
-
-    with st.expander("Ver todas las tendencias (u5 / u10)"):
+    with c1:
         _render_team_trends_full(th, f"🏠 {home}", TREND_THRESHOLDS)
-        st.divider()
+    with c2:
         _render_team_trends_full(ta, f"✈️ {away}", TREND_THRESHOLDS)
 
 
@@ -731,8 +741,9 @@ def _low_season(u: dict) -> bool:
 
 
 def _render_goal_internals(u: dict) -> None:
-    """Base del Poisson de goles: λ y multiplicadores ataque/defensa, con aviso
-    si la muestra de la temporada actual es chica. Transparencia, no cambia nada."""
+    """Base del Poisson de goles: λ y multiplicadores ataque/defensa (como
+    tarjetas), con aviso si la muestra de la temporada actual es chica.
+    Transparencia, no cambia el cálculo."""
     from models.match_analysis import GOALS_MIN_SEASON_GAMES
     gi = u["_d"].get("goal_internals")
     if not gi:
@@ -750,94 +761,140 @@ def _render_goal_internals(u: dict) -> None:
                 "actual."
             )
 
-    rows = []
-    for emoji, name, atk, dfn, lam, g in (
-        ("🏠", home, gi["home_attack"], gi["home_defense"], gi["lambda_home"], hg),
-        ("✈️", away, gi["away_attack"], gi["away_defense"], gi["lambda_away"], ag),
+    c1, c2 = st.columns(2)
+    for col, emoji, name, atk, dfn, lam, g in (
+        (c1, "🏠", home, gi["home_attack"], gi["home_defense"], gi["lambda_home"], hg),
+        (c2, "✈️", away, gi["away_attack"], gi["away_defense"], gi["lambda_away"], ag),
     ):
-        gtxt = "—" if g is None else (f"{g} ⚠️" if g < GOALS_MIN_SEASON_GAMES else str(g))
-        rows.append({
-            "Equipo": f"{emoji} {name}",
-            "Ataque": f"{atk:.2f}×",
-            "Defensa": f"{dfn:.2f}×",
-            "λ (goles esp.)": f"{lam:.2f}",
-            "Part. temporada": gtxt,
-        })
-    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+        with col:
+            st.markdown(f"**{emoji} {name}**")
+            m1, m2, m3 = st.columns(3)
+            m1.metric("λ goles esp.", f"{lam:.2f}")
+            m2.metric("Ataque", f"{atk:.2f}×")
+            m3.metric("Defensa", f"{dfn:.2f}×")
+            gtxt = "—" if g is None else str(g)
+            warn = " ⚠️" if (g is not None and g < GOALS_MIN_SEASON_GAMES) else ""
+            st.caption(f"Partidos esta temporada: **{gtxt}**{warn}")
+
     total = gi["lambda_home"] + gi["lambda_away"]
-    ha = gi.get("home_advantage")
-    ag_ = gi.get("avg_goals")
+    ha, ag_ = gi.get("home_advantage"), gi.get("avg_goals")
     factores = (f" · ventaja local ×{ha} · media liga {ag_}"
                 if ha is not None and ag_ is not None else "")
     st.caption(
-        f"λ = goles esperados. Local = ataque × defensa rival × ventaja local × "
-        f"media liga; Visitante = ataque × defensa rival × media liga{factores}. "
-        f"Multiplicador **1.00× = promedio de la liga** (más bajo = mejor defensa / "
-        f"peor ataque). **Total esperado ≈ {total:.2f} goles** → el Over/Under y el "
-        "BTTS salen de esta base con un ajuste Dixon-Coles para marcadores bajos "
-        "(por eso no coinciden exacto con λ). Diagnóstico: expone la base, no la cambia."
+        f"λ = goles esperados = ataque × defensa rival × (ventaja local, solo "
+        f"local) × media liga{factores}. Multiplicador **1.00× = promedio de la "
+        f"liga** (más bajo = mejor defensa / peor ataque). **Total esperado ≈ "
+        f"{total:.2f} goles** → el Over/Under y el BTTS salen de esta base con un "
+        "ajuste Dixon-Coles (por eso no coinciden exacto con λ). Diagnóstico: "
+        "expone la base, no la cambia."
     )
+
+
+def _render_glance(u: dict, th: dict, ta: dict) -> None:
+    """Panel 'de un vistazo' — lo esencial arriba sin scroll: señal, λ, córners,
+    aviso de muestra y las rachas notables de cada equipo."""
+    d = u["_d"]
+    home, away = d["home"], d["away"]
+
+    m1, m2, m3 = st.columns(3)
+    bl = _best_lean(u["_sig"]) if (d["known"] and u["_sig"]) else None
+    if bl:
+        mkt, side, mp, kp, gap = bl
+        m1.metric(f"Señal · {mkt}", f"{side} {mp:.0%}",
+                  f"casa {kp:.0%} · +{gap:.0%}", delta_color="off")
+    else:
+        m1.metric("Señal del modelo", "— (sin modelo)")
+    gi = d.get("goal_internals")
+    m2.metric("Goles esperados (λ)",
+              f"{gi['lambda_home'] + gi['lambda_away']:.2f}" if gi else "—",
+              help="Total de goles que espera el modelo; de acá sale el Over/Under.")
+    ca, cl = d["stats"].get("corners"), u.get("corners")
+    if ca:
+        m3.metric("Córners proyectados", f"{ca['proj']}",
+                  f"línea {cl['line']}" if cl else "sin línea", delta_color="off")
+    else:
+        m3.metric("Córners proyectados", "—")
+
+    if _low_season(u):
+        st.caption("⚠️ Muestra de temporada chica — la base de goles arrastra "
+                   "forma vieja (detalle en pestaña Resumen ⚙️).")
+
+    g1, g2 = st.columns(2)
+    for col, name, tr, emoji in ((g1, home, th, "🏠"), (g2, away, ta, "✈️")):
+        with col:
+            hi = _team_strong_trends(tr)
+            if hi:
+                st.markdown(f"{emoji} **{name}** — rachas notables:")
+                for x in hi:
+                    st.markdown(f"- {x}")
+            else:
+                st.markdown(f"{emoji} **{name}** — sin rachas notables")
+    st.caption("Diagnóstico, **no** apuesta. El modelo no le gana al mercado en "
+               "backtest y no está calibrado — el juicio es tuyo.")
 
 
 def _render_detail(u: dict, matches_df, stats_df) -> None:
-    from models.match_analysis import team_recent_detail, h2h_detail
+    from models.match_analysis import team_recent_detail, h2h_detail, team_trends
     d = u["_d"]
     home, away = d["home"], d["away"]
     before = u["dt"]
-
-    st.markdown(f"### {home}  vs  {away}")
-    cty = f" ({u['country']})" if u.get("country") else ""
-    st.caption(f"{u['league']}{cty} · {d['date']} · cuotas: {u['book']}")
-    st.caption(
-        "Diagnóstico de análisis, **no** sugerencias de apuesta. El modelo no está "
-        "validado contra resultados (no le gana al mercado en backtest). El juicio es tuyo."
-    )
-
-    if d["known"] and u["_sig"]:
-        st.markdown(
-            "**📊 Dónde el modelo (sin calibrar) más se aleja del mercado** "
-            "— diagnóstico, no apuesta sugerida"
-        )
-        rows = [{"Mercado": s["mkt"], "Modelo": _dist_str(s["model"]),
-                 "Mercado ": _dist_str(s["market"]), "Δ máx": s["delta"]}
-                for s in sorted(u["_sig"], key=lambda x: x["delta"], reverse=True)]
-        st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True,
-            column_config={"Δ máx": st.column_config.NumberColumn(format="percent")})
-        cs = " · ".join(f"{c['score']} ({c['prob']:.0%})" for c in d["correct_scores"])
-        st.caption(f"Marcadores más probables del modelo: {cs}")
-
-    _render_goal_internals(u)
-
-    # Tendencias de ambos equipos (una sola vez) → Promedios + bloque Tendencias.
-    from models.match_analysis import team_trends
     th = team_trends(stats_df, matches_df, home, before)
     ta = team_trends(stats_df, matches_df, away, before)
 
-    # Resumen de promedios (arriba) + detalle partido-a-partido (abajo)
-    _render_stats_table(d)
-    _render_result_rates(th, ta, home, away)
-    _render_corner_signal(u)
-    _render_trends(u, th, ta)
+    st.markdown(f"### {home}  vs  {away}")
+    cty = f" ({u['country']})" if u.get("country") else ""
+    st.caption(f"{u['league']}{cty} · {d['date']} · {_hhmm(u['dt'])} · cuotas: {u['book']}")
 
-    st.markdown("#### 📋 Últimos partidos (partido a partido)")
-    dh = team_recent_detail(stats_df, matches_df, home, before, 6)
-    da = team_recent_detail(stats_df, matches_df, away, before, 6)
-    if dh:
-        _render_team_detail(dh, f"🏠 {home}")
-    if da:
-        _render_team_detail(da, f"✈️ {away}")
+    _render_glance(u, th, ta)
 
-    hh = h2h_detail(stats_df, matches_df, home, away, before, 6)
-    if hh:
-        st.markdown("#### 🤝 Enfrentamientos directos (detalle)")
-        st.dataframe(pd.DataFrame(hh), hide_index=True, use_container_width=True)
+    tab_res, tab_tend, tab_hist = st.tabs(["📊 Resumen", "📈 Tendencias", "📋 Historial"])
 
-    rh, ra = d["rest"]["home"], d["rest"]["away"]
-    if rh["days_rest"] is not None or ra["days_rest"] is not None:
-        st.caption(
-            f"😴 Descanso — {home}: {rh['days_rest']}d ({rh['games_14d']} en 14d)  ·  "
-            f"{away}: {ra['days_rest']}d ({ra['games_14d']} en 14d)"
-        )
+    with tab_res:
+        if d["known"] and u["_sig"]:
+            st.markdown("**📊 Modelo vs mercado — dónde más difieren** (diagnóstico)")
+            rows = [{"Mercado": s["mkt"], "Modelo": _dist_str(s["model"]),
+                     "Mercado ": _dist_str(s["market"]), "Cuotas": _market_odds_str(u, s),
+                     "Δ máx": s["delta"]}
+                    for s in sorted(u["_sig"], key=lambda x: x["delta"], reverse=True)]
+            st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True,
+                column_config={"Δ máx": st.column_config.NumberColumn(format="percent")})
+            cs = " · ".join(f"{c['score']} ({c['prob']:.0%})" for c in d["correct_scores"])
+            st.caption(f"Marcadores más probables del modelo: {cs}")
+        _render_corner_signal(u)
+        _render_goal_internals(u)
+
+    with tab_tend:
+        _render_trends(u, th, ta)
+        _render_result_rates(th, ta, home, away)
+
+    with tab_hist:
+        _render_stats_table(d)
+        st.markdown("#### 📋 Últimos partidos (partido a partido)")
+        dh = team_recent_detail(stats_df, matches_df, home, before, 6)
+        da = team_recent_detail(stats_df, matches_df, away, before, 6)
+        h1, h2 = st.columns(2)
+        with h1:
+            if dh:
+                _render_team_detail(dh, f"🏠 {home}")
+            else:
+                st.caption(f"🏠 {home}: sin detalle disponible")
+        with h2:
+            if da:
+                _render_team_detail(da, f"✈️ {away}")
+            else:
+                st.caption(f"✈️ {away}: sin detalle disponible")
+
+        hh = h2h_detail(stats_df, matches_df, home, away, before, 6)
+        if hh:
+            st.markdown("#### 🤝 Enfrentamientos directos (detalle)")
+            st.dataframe(pd.DataFrame(hh), hide_index=True, use_container_width=True)
+
+        rh, ra = d["rest"]["home"], d["rest"]["away"]
+        if rh["days_rest"] is not None or ra["days_rest"] is not None:
+            st.caption(
+                f"😴 Descanso — {home}: {rh['days_rest']}d ({rh['games_14d']} en 14d)  ·  "
+                f"{away}: {ra['days_rest']}d ({ra['games_14d']} en 14d)"
+            )
 
 
 @st.cache_resource(max_entries=2, show_spinner="Cargando análisis…")
@@ -901,6 +958,30 @@ def _day_selectbox(items: list, key: str, container=st, reverse: bool = False) -
     return container.selectbox(
         "Día", days, index=idx, key=key,
         format_func=lambda d: "Todos los días" if d == "Todos" else _day_label(d))
+
+
+def _lean_odds(u: dict, mkt: str, side: str):
+    """Cuota decimal de la casa para el lado señalado (o None si no está)."""
+    o1 = u.get("odds_1x2") or {}
+    ou = u.get("ou25") or {}
+    bt = u.get("btts") or {}
+    table = {
+        "1X2": {"Local": o1.get("home_win"), "Empate": o1.get("draw"),
+                "Visit.": o1.get("away_win")},
+        "Goles O/U 2.5": {"Over": ou.get("over"), "Under": ou.get("under")},
+        "BTTS": {"Sí": bt.get("yes"), "No": bt.get("no")},
+    }
+    return table.get(mkt, {}).get(side)
+
+
+def _market_odds_str(u: dict, sig: dict) -> str:
+    """Cuotas decimales de cada lado del mercado, en el orden de la columna
+    'Modelo' (ej. '2.10 / 3.40 / 3.50')."""
+    parts = []
+    for side in sig["model"]:
+        o = _lean_odds(u, sig["mkt"], side)
+        parts.append(f"{o:.2f}" if o is not None else "—")
+    return " / ".join(parts)
 
 
 def _best_lean(sigs: list) -> tuple | None:
@@ -980,6 +1061,7 @@ def _render_analysis() -> None:
                 "Hora": _hhmm(u["dt"]),
                 "Mercado": mkt,
                 "Señal": side,
+                "Cuota": _lean_odds(u, mkt, side),
                 "Modelo": mp,
                 "Casa": kp,
                 "Δ": gap,
@@ -989,6 +1071,8 @@ def _render_analysis() -> None:
             on_select="rerun", selection_mode="single-row",
             key=f"ana_tbl_{sel}_{sel_day}_{orden}_{only_signals}_{solo_prox}",
             column_config={
+                "Cuota": st.column_config.NumberColumn(
+                    format="%.2f", help="Cuota decimal de la casa para el lado señalado"),
                 "Modelo": st.column_config.NumberColumn(
                     format="percent", help="Prob. del modelo para ese lado"),
                 "Casa": st.column_config.NumberColumn(
@@ -1195,22 +1279,29 @@ def _render_predictions() -> None:
                 if (sel == "Todas" or x["league"] == sel)
                 and (sel_day == "Todos" or x["date"] == sel_day)]
 
+        def _at(o):
+            return f" @{o:.2f}" if o is not None else ""
+
         rows = []
         for x in view:
             mc = x["mc"]
-            # prob del lado llamado en 1X2
+            # prob del lado llamado en 1X2 + su cuota sellada
             p1x2 = {"home": x["m_home"], "draw": x["m_draw"],
                     "away": x["m_away"]}.get(mc["1x2"])
-            c1x2 = (f"{_1X2_LBL[mc['1x2']]} {p1x2:.0%}"
+            o1x2 = {"home": x.get("o_home"), "draw": x.get("o_draw"),
+                    "away": x.get("o_away")}.get(mc["1x2"])
+            c1x2 = (f"{_1X2_LBL[mc['1x2']]} {p1x2:.0%}{_at(o1x2)}"
                     if mc["1x2"] and p1x2 is not None else "—")
             if mc["ou25"] and x["m_over25"] is not None:
                 p_ou = x["m_over25"] if mc["ou25"] == "Over" else 1 - x["m_over25"]
-                cou = f"{mc['ou25']} {p_ou:.0%}"
+                o_ou = x.get("o_over25") if mc["ou25"] == "Over" else x.get("o_under25")
+                cou = f"{mc['ou25']} {p_ou:.0%}{_at(o_ou)}"
             else:
                 cou = "—"
             if mc["btts"] and x["m_btts_yes"] is not None:
                 p_bt = x["m_btts_yes"] if mc["btts"] == "Sí" else 1 - x["m_btts_yes"]
-                cbt = f"{mc['btts']} {p_bt:.0%}"
+                o_bt = x.get("o_btts_yes") if mc["btts"] == "Sí" else x.get("o_btts_no")
+                cbt = f"{mc['btts']} {p_bt:.0%}{_at(o_bt)}"
             else:
                 cbt = "—"
             if x["corner_proj"] is not None and x["corner_line"] is not None:
@@ -1233,8 +1324,8 @@ def _render_predictions() -> None:
                      use_container_width=True, height=480)
         st.caption(
             f"{len(view)} partidos · lado más probable del modelo con su "
-            "probabilidad · **Córners P/L** = proyección vs línea de la casa. "
-            "Se calificarán al finalizar."
+            "probabilidad y la **cuota sellada** (@) · **Córners P/L** = proyección "
+            "vs línea de la casa. Se calificarán al finalizar."
         )
 
 
