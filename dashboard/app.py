@@ -252,6 +252,7 @@ def _get_predictions_cached(db_mtime: float):
                     "o_home": p.o_home, "o_draw": p.o_draw, "o_away": p.o_away,
                     "o_over25": p.o_over25, "o_under25": p.o_under25,
                     "o_btts_yes": p.o_btts_yes, "o_btts_no": p.o_btts_no,
+                    "o_corner_over": p.o_corner_over, "o_corner_under": p.o_corner_under,
                 })
 
     graded.sort(key=lambda x: x["dt"], reverse=True)
@@ -1211,6 +1212,9 @@ def _roi_str(pnl: float, bets: int) -> str:
 
 def _summary_table(summary: dict, pnl: dict) -> "pd.DataFrame":
     rows = []
+    tot_mh = tot_mn = tot_kh = tot_kn = 0
+    tot_mp = tot_kp = 0.0
+    tot_mb = tot_kb = 0
     for mk in ("1x2", "ou25", "btts", "corners"):
         s, p = summary[mk], pnl[mk]
         rows.append({
@@ -1220,6 +1224,17 @@ def _summary_table(summary: dict, pnl: dict) -> "pd.DataFrame":
             "Acierto mercado": _acc_str(s["market_hits"], s["market_n"]),
             "ROI mercado": _roi_str(p["market_pnl"], p["market_bets"]),
         })
+        tot_mh += s["model_hits"]; tot_mn += s["model_n"]
+        tot_kh += s["market_hits"]; tot_kn += s["market_n"]
+        tot_mp += p["model_pnl"]; tot_mb += p["model_bets"]
+        tot_kp += p["market_pnl"]; tot_kb += p["market_bets"]
+    rows.append({
+        "Mercado": "**Total**",
+        "Acierto modelo": _acc_str(tot_mh, tot_mn),
+        "ROI modelo": _roi_str(tot_mp, tot_mb),
+        "Acierto mercado": _acc_str(tot_kh, tot_kn),
+        "ROI mercado": _roi_str(tot_kp, tot_kb),
+    })
     return pd.DataFrame(rows)
 
 
@@ -1270,7 +1285,9 @@ def _render_predictions() -> None:
             f"{n_clean} partidos calificados limpios. **ROI** = apostar 1u plana al "
             "lado que llama cada uno, a la cuota sellada antes del partido "
             "(gana → cuota−1, pierde → −1). 'Mercado' = apostar al favorito de la "
-            "cuota, como referencia. Córners: solo modelo vs línea. "
+            "cuota, como referencia. Córners: solo modelo vs línea. **Total** = los "
+            "4 mercados combinados (misma unidad, 1u por apuesta), para ver de un "
+            "vistazo cómo va el modelo en general. "
             "⚠️ Muestra chica — es diagnóstico, **no** una recomendación de apuesta."
         )
 
@@ -1343,7 +1360,13 @@ def _render_predictions() -> None:
             else:
                 cbt = "—"
             if x["corner_proj"] is not None and x["corner_line"] is not None:
-                cco = f"{x['corner_proj']:.1f} vs {x['corner_line']:g}"
+                # El modelo llama Over si la proyección supera la línea, Under si no;
+                # mostramos ese lado con su cuota sellada + la proj vs línea de fondo.
+                over = x["corner_proj"] > x["corner_line"]
+                side = "Over" if over else "Under"
+                o_co = x.get("o_corner_over") if over else x.get("o_corner_under")
+                cco = (f"{side}{_at(o_co)} · "
+                       f"{x['corner_proj']:.1f} vs {x['corner_line']:g}")
             elif x["corner_proj"] is not None:
                 cco = f"{x['corner_proj']:.1f} (sin línea)"
             else:
@@ -1356,14 +1379,15 @@ def _render_predictions() -> None:
                 "1X2 modelo": c1x2,
                 "O/U 2.5": cou,
                 "BTTS": cbt,
-                "Córners P/L": cco,
+                "Córners": cco,
             })
         st.dataframe(pd.DataFrame(rows), hide_index=True,
                      use_container_width=True, height=480)
         st.caption(
             f"{len(view)} partidos · lado más probable del modelo con su "
-            "probabilidad y la **cuota sellada** (@) · **Córners P/L** = proyección "
-            "vs línea de la casa. Se calificarán al finalizar."
+            "probabilidad y la **cuota sellada** (@) · **Córners** = lado que llama "
+            "el modelo (Over si la proyección supera la línea) con su cuota sellada, "
+            "y de fondo *proyección vs línea de la casa*. Se calificarán al finalizar."
         )
 
 

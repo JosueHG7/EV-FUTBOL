@@ -15,6 +15,7 @@ plotly>=5.22
 # Modeling (Fase 2)
 scikit-learn>=1.5
 scipy>=1.13
+xgboost>=2.0
 
 # Data storage
 pyarrow>=16.0
