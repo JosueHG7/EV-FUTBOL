@@ -74,7 +74,31 @@ def load_matches(league_id: int | None = None) -> pd.DataFrame:
             }
             for m in rows
         ]
-    return pd.DataFrame(records)
+    df = pd.DataFrame(records)
+    if df.empty:
+        return df
+    return _canonicalize_team_names(df)
+
+
+def _canonicalize_team_names(df: pd.DataFrame) -> pd.DataFrame:
+    """API-Football sometimes returns a different name string (accent/spelling
+    variant) for the same club across seasons or competitions — e.g. "Bayern
+    Munich" vs "Bayern München" (both team_id 157). Left as-is, the model
+    (which keys team strength off the name string) silently splits that
+    team's history in two, and one of the split identities can end up with
+    almost no weight. Canonicalize every team_id to its most recent name so
+    the model and the dossier's rolling trends both see the team's full
+    history under one key.
+    """
+    home = df[["home_team_id", "home_team", "match_date"]].rename(
+        columns={"home_team_id": "team_id", "home_team": "team_name"})
+    away = df[["away_team_id", "away_team", "match_date"]].rename(
+        columns={"away_team_id": "team_id", "away_team": "team_name"})
+    canonical = (pd.concat([home, away]).sort_values("match_date")
+                 .groupby("team_id")["team_name"].last())
+    df["home_team"] = df["home_team_id"].map(canonical)
+    df["away_team"] = df["away_team_id"].map(canonical)
+    return df
 
 
 # ---------------------------------------------------------------------------
