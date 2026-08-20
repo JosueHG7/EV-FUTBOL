@@ -5,7 +5,8 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent))
 import config
-from models.poisson_model import PoissonModel, load_matches
+from models.poisson_model import load_matches
+from models.poisson_joint import JointPoissonModel
 from models.ensemble_model import EnsembleModel
 from models.feature_engineering import build_features
 from collectors.understat_collector import load_all_xg
@@ -132,7 +133,7 @@ def build_live_model() -> tuple[object, set, str, "pd.DataFrame"]:
     EnsembleModel para predicción en vivo.
 
     Devuelve (model, teams, model_label, matches_df). Lanza RuntimeError si la
-    BD está vacía. Cae a PoissonModel si el Ensemble falla.
+    BD está vacía. Cae a JointPoissonModel si el Ensemble falla.
     """
     df = load_matches()
     if df.empty:
@@ -153,10 +154,10 @@ def build_live_model() -> tuple[object, set, str, "pd.DataFrame"]:
         model.fit(df, feat_df, weights={"poisson": 0.451, "xgboost": 0.549})
         teams = model.teams
     except Exception as exc:
-        model = PoissonModel()
+        model = JointPoissonModel()
         model.fit(df)
         teams = model.teams
-        model_label = f"PoissonModel (fallback: {exc})"
+        model_label = f"JointPoissonModel (fallback: {exc})"
 
     return model, teams, model_label, df
 

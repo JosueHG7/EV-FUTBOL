@@ -78,7 +78,8 @@ No es un tipster; el juicio final es del usuario.
 |---|---|
 | `refresh.py` | **El comando diario.** Pipeline de 6 pasos: resultados recientes → próximos + odds → stats por-partido → reentrena modelo → precalcula dossiers (`.pkl`) → sella snapshot de predicciones. Deja el dashboard con carga instantánea. |
 | `collectors/apifootball_collector.py` | Fuente única. `rebuild` (histórico), `--upcoming` (fixtures próximos + odds), `--stats` (stats por-partido de equipos con partido próximo), `--results` (resultados recientes). Throttle incluido. |
-| `models/poisson_model.py` | Poisson Dixon-Coles: 1X2, over/under, BTTS, matriz de marcadores. |
+| `models/poisson_model.py` | Poisson Dixon-Coles: 1X2, over/under, BTTS, matriz de marcadores. `load_matches()` canoniza nombres de equipo por `team_id`. |
+| `models/poisson_joint.py` | **`JointPoissonModel`** (en producción desde 2026-08-20, vía `ensemble_model.py`): subclase de `PoissonModel` — mismo predict, ataque/defensa por verosimilitud conjunta en vez de promedio independiente. |
 | `models/match_analysis.py` | **Motor del dossier**: forma, H2H, descanso, xG, **promedios rodantes** (últimos 5/10) de córners/tiros/tarjetas/atajadas/goles a favor y en contra, y **proyección córners/tarjetas vs línea de la casa** (`corner_analysis`/`card_analysis`, mismo cálculo ataque+defensa). |
 | `models/grading.py` | Califica cada predicción sellada contra el resultado real: acierto direccional **y** ROI (staking plano 1u a la cuota sellada) por mercado (1X2/O-U/BTTS/córners/tarjetas). |
 | `dashboard/app.py` | Streamlit. Pestañas **🔍 Análisis** (triaje + fichas con promedios), **Resultados**, **📋 Predicciones** (bitácora de validación: acierto/ROI del modelo vs. mercado, con fila Total combinada). Lee todo de artefactos/BD, sin cómputo pesado en vivo. |
@@ -104,14 +105,24 @@ Probado también contra Bet365 (soft book) con filtros: suelo ~-4.7%, tampoco cr
 - BD única con las 34 ligas/competiciones del usuario, esquema rico.
 - **Champions/Europa/Conference League + Libertadores/Sudamericana** (agregadas
   2026-08-20): pipeline de datos funciona igual que cualquier liga doméstica
-  (fixtures, stats por-partido, odds incl. córners/tarjetas) — cero cambios de
-  código necesarios. Confirmado con datos reales del día: el modelo 1X2/Goles
-  **sí tiene un problema real de comparación cross-liga** ahí (ej. Motherwell
-  vs SC Freiburg: modelo da 67% a Motherwell de local, mercado le da ~82% a
-  Freiburg) — evidencia concreta de por qué el rating actual (promedio de
-  goles propio vs promedio global, sin fuerza relativa entre rivales) no sirve
-  para comparar equipos de ligas distintas. Los promedios rodantes de esas
-  competiciones sí son reales y confiables desde ya.
+  (fixtures, stats por-partido, odds incl. córners/tarjetas).
+- **`JointPoissonModel` en producción** (2026-08-20, reemplaza el componente
+  Poisson del Ensemble en `main.py`/`models/ensemble_model.py`): el ataque/
+  defensa de cada equipo ahora se ajusta por verosimilitud conjunta (Dixon-
+  Coles real — ve a qué rivales enfrentó cada equipo), no por promedio propio
+  aislado. Resuelve el problema de comparar equipos de ligas distintas (ej.
+  Motherwell vs SC Freiburg pasó de 84,5%/12%/3% a un ~49%/29%/22% mucho más
+  creíble). Validado con walk-forward real (32 meses, 2023-07→2026-08, sin
+  fuga): en las 5 competiciones nuevas el acierto direccional subió de 43,9%
+  a 46,1% y el log-loss mejoró ~31% (1,753→1,209); en ligas domésticas
+  también mejoró (no empeoró): 46,1%→46,4% acierto. Ver
+  `models/poisson_joint.py` y `models/validate_cross_league.py`.
+  De paso se corrigió un bug real preexistente: 20 equipos tenían su nombre
+  partido en dos strings distintas en la BD (ej. "Bayern Munich" vs "Bayern
+  München", mismo `team_id`), diluyendo su historial — fix en
+  `load_matches()` (`models/poisson_model.py`), canoniza por `team_id`.
+  `models/real_backtester.py` (el auditor de referencia) sigue usando el
+  Poisson independiente a propósito, sin tocar, como punto de control aparte.
 - `refresh.py` corre el pipeline diario completo y deja el dashboard con carga
   instantánea (artefactos `.pkl` precalculados, cacheados por mtime).
 - Dashboard con triaje de partidos próximos (todas las ligas), fichas por
@@ -132,22 +143,18 @@ Probado también contra Bet365 (soft book) con filtros: suelo ~-4.7%, tampoco cr
 1. **Calibrar** las probabilidades del modelo (el "Over 2.5 94%") — a la
    espera de acumular más muestra en `model_predictions` (~1 semana) antes de
    ajustar.
-2. **Rating cross-liga para competiciones europeas/CONMEBOL** — mover el fit
-   del Poisson de su aproximación actual (promedio cerrado, sin mirar rivales)
-   a verosimilitud conjunta tipo Dixon-Coles real (o evaluar Elo aparte), para
-   que la fuerza de un equipo se infiera también de a quién enfrentó. Antes de
-   conectarlo al dashboard, validar contra el backtester walk-forward con
-   partidos cross-liga reales — no asumir que mejora, medirlo (misma lección
-   del bug del "edge"). Meta del usuario: no busca ganarle al mercado, busca
-   que el % reportado sea una predicción en la que pueda confiar — por eso
-   esto importa más que la calibración pura para las competiciones grandes.
-3. Historial de picks del usuario (registro + rendimiento) — distinto de la
+2. Historial de picks del usuario (registro + rendimiento) — distinto de la
    bitácora de Predicciones, que califica las llamadas del *modelo*, no las
    apuestas reales del usuario.
-4. Migración a PostgreSQL + acceso remoto/móvil.
-5. No hay suite de tests real (`tests/` vacío) pese al historial de bugs de
+3. Migración a PostgreSQL + acceso remoto/móvil.
+4. No hay suite de tests real (`tests/` vacío) pese al historial de bugs de
    alineación de datos — un test de regresión para el join odds/features
    (ver bug de abajo) evitaría que se repita en silencio.
+5. Posible follow-up del `JointPoissonModel`: no se retunearon los pesos del
+   Ensemble (Poisson 0.451/XGBoost 0.549, calculados para el Poisson viejo)
+   ni `rho`/decay específicamente para el nuevo fit — la validación ya mostró
+   mejora sin tunear nada, así que no es urgente, pero queda como posible
+   ganancia extra.
 
 **Aviso:** las señales de goles/1X2 (del modelo) aún NO están calibradas →
 no fiables para apostar. Los **promedios rodantes SÍ** son datos reales y

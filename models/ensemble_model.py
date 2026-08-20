@@ -20,6 +20,7 @@ from scipy.optimize import minimize_scalar
 sys.path.append(str(Path(__file__).parent.parent))
 from models.feature_engineering import build_features
 from models.poisson_model import PoissonModel, load_matches
+from models.poisson_joint import JointPoissonModel
 from models.xgboost_model import (
     XGBoostModel,
     _TARGET_MAP,
@@ -134,7 +135,7 @@ class EnsembleModel:
     DEFAULT_WEIGHTS: dict[str, float] = {"poisson": 0.6, "xgboost": 0.4}
 
     def __init__(self) -> None:
-        self.poisson = PoissonModel()
+        self.poisson = JointPoissonModel()
         self.xgboost = XGBoostModel()
         self.weights: dict[str, float] = dict(self.DEFAULT_WEIGHTS)
         self._fitted = False
