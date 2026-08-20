@@ -62,6 +62,11 @@ LEAGUES: dict[int, tuple[str, str]] = {
     40:  ("England",      "Championship"),
     207: ("Switzerland",  "Super League"),
     144: ("Belgium",      "Jupiler Pro League"),
+    2:   ("World",        "UEFA Champions League"),
+    3:   ("World",        "UEFA Europa League"),
+    848: ("World",        "UEFA Europa Conference League"),
+    13:  ("World",        "CONMEBOL Libertadores"),
+    11:  ("World",        "CONMEBOL Sudamericana"),
 }
 
 DEFAULT_SEASONS = [2023, 2024, 2025, 2026]
@@ -69,7 +74,7 @@ DEFAULT_SEASONS = [2023, 2024, 2025, 2026]
 # Leagues that provide per-match statistics (corners/shots/cards/xG). The rest
 # (Iceland, Costa Rica, Finland/Norway 2nd) return empty stats — skip them.
 STAT_LEAGUES = {113, 114, 244, 103, 94, 95, 39, 140, 135, 78, 61, 262, 253, 71, 72, 128,
-                307, 88, 89, 79, 80, 40, 207, 144}
+                307, 88, 89, 79, 80, 40, 207, 144, 2, 3, 848, 13, 11}
 
 _STATUS_FINISHED = {"FT", "AET", "PEN"}
 _STATUS_SCHEDULED = {"NS", "TBD", "PST"}

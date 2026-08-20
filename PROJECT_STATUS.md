@@ -28,7 +28,7 @@ No es un tipster; el juicio final es del usuario.
   quiere acceso remoto/móvil a futuro; cuando llegue ese momento se migra.
 - El colector respeta un **throttle (~3 req/s)** para no gatillar el firewall.
 
-### Ligas cubiertas (29) — IDs API-Football
+### Ligas y competiciones cubiertas (34) — IDs API-Football
 
 | ID | Liga | | ID | Liga |
 |---|---|---|---|---|
@@ -46,12 +46,19 @@ No es un tipster; el juicio final es del usuario.
 | 140 | La Liga | | 40 | Inglaterra Championship |
 | 135 | Serie A | | 207 | Suiza Super League |
 | 78 | Bundesliga | | 144 | Bélgica Jupiler Pro League |
-| 61 | Ligue 1 | | | |
+| 61 | Ligue 1 | | 2 | UEFA Champions League |
+| 3 | UEFA Europa League | | 848 | UEFA Europa Conference League |
+| 13 | CONMEBOL Libertadores | | 11 | CONMEBOL Sudamericana |
 
-- **~35.800 partidos** ingestados (temporadas 2023-2026), ~29.550 finalizados.
-- **Cobertura de stats por-partido** (córners/tiros/tarjetas/xG) en 24 de las 29
-  ligas — `STAT_LEAGUES` en el colector. **NO en Islandia, Costa Rica,
+- **~40.200 partidos** ingestados (temporadas 2023-2026), ~33.850 finalizados.
+- **Cobertura de stats por-partido** (córners/tiros/tarjetas/xG) en 29 de las 34
+  — `STAT_LEAGUES` en el colector. **NO en Islandia, Costa Rica,
   Finlandia/Noruega 2ª** — ahí el dato no existe. Esas ligas muestran solo goles.
+- **Competiciones europeas/CONMEBOL (2026-08-20):** agregadas solo para
+  desbloquear promedios rodantes (córners/tarjetas/tiros) reales en esos
+  partidos — el modelo Poisson las predice igual que cualquier otra liga
+  (pooling global), pero **sin ningún ajuste de fuerza cross-liga** (ver
+  advertencia en Estado actual). No hacer eso explícito sería engañoso.
 
 ### Esquema (`database/models.py`)
 
@@ -94,7 +101,17 @@ Probado también contra Bet365 (soft book) con filtros: suelo ~-4.7%, tampoco cr
 ## Estado actual
 
 **Funciona:**
-- BD única con las 29 ligas del usuario, esquema rico.
+- BD única con las 34 ligas/competiciones del usuario, esquema rico.
+- **Champions/Europa/Conference League + Libertadores/Sudamericana** (agregadas
+  2026-08-20): pipeline de datos funciona igual que cualquier liga doméstica
+  (fixtures, stats por-partido, odds incl. córners/tarjetas) — cero cambios de
+  código necesarios. Confirmado con datos reales del día: el modelo 1X2/Goles
+  **sí tiene un problema real de comparación cross-liga** ahí (ej. Motherwell
+  vs SC Freiburg: modelo da 67% a Motherwell de local, mercado le da ~82% a
+  Freiburg) — evidencia concreta de por qué el rating actual (promedio de
+  goles propio vs promedio global, sin fuerza relativa entre rivales) no sirve
+  para comparar equipos de ligas distintas. Los promedios rodantes de esas
+  competiciones sí son reales y confiables desde ya.
 - `refresh.py` corre el pipeline diario completo y deja el dashboard con carga
   instantánea (artefactos `.pkl` precalculados, cacheados por mtime).
 - Dashboard con triaje de partidos próximos (todas las ligas), fichas por
@@ -115,11 +132,20 @@ Probado también contra Bet365 (soft book) con filtros: suelo ~-4.7%, tampoco cr
 1. **Calibrar** las probabilidades del modelo (el "Over 2.5 94%") — a la
    espera de acumular más muestra en `model_predictions` (~1 semana) antes de
    ajustar.
-2. Historial de picks del usuario (registro + rendimiento) — distinto de la
+2. **Rating cross-liga para competiciones europeas/CONMEBOL** — mover el fit
+   del Poisson de su aproximación actual (promedio cerrado, sin mirar rivales)
+   a verosimilitud conjunta tipo Dixon-Coles real (o evaluar Elo aparte), para
+   que la fuerza de un equipo se infiera también de a quién enfrentó. Antes de
+   conectarlo al dashboard, validar contra el backtester walk-forward con
+   partidos cross-liga reales — no asumir que mejora, medirlo (misma lección
+   del bug del "edge"). Meta del usuario: no busca ganarle al mercado, busca
+   que el % reportado sea una predicción en la que pueda confiar — por eso
+   esto importa más que la calibración pura para las competiciones grandes.
+3. Historial de picks del usuario (registro + rendimiento) — distinto de la
    bitácora de Predicciones, que califica las llamadas del *modelo*, no las
    apuestas reales del usuario.
-3. Migración a PostgreSQL + acceso remoto/móvil.
-4. No hay suite de tests real (`tests/` vacío) pese al historial de bugs de
+4. Migración a PostgreSQL + acceso remoto/móvil.
+5. No hay suite de tests real (`tests/` vacío) pese al historial de bugs de
    alineación de datos — un test de regresión para el join odds/features
    (ver bug de abajo) evitaría que se repita en silencio.
 
