@@ -41,7 +41,7 @@ def load_stats_df() -> "pd.DataFrame":
 
 
 def load_upcoming() -> list[dict]:
-    """Partidos próximos con odds (desde la BD): 1X2 + O/U 2.5 + BTTS + córners."""
+    """Partidos próximos con odds (desde la BD): 1X2 + O/U 2.5 + BTTS + córners + tarjetas."""
     out: list[dict] = []
     # Fechas en la BD son naive-UTC; comparamos contra "ahora" en el mismo marco.
     now_utc = datetime.now(timezone.utc).replace(tzinfo=None)
@@ -67,6 +67,10 @@ def load_upcoming() -> list[dict]:
             co_u = next((r for r in mos if r.market == "corners_ou" and r.selection == "under"), None)
             corners = ({"line": co_o.line, "over": co_o.odd, "under": co_u.odd}
                        if co_o and co_u else None)
+            ka_o = next((r for r in mos if r.market == "cards_ou" and r.selection == "over"), None)
+            ka_u = next((r for r in mos if r.market == "cards_ou" and r.selection == "under"), None)
+            cards = ({"line": ka_o.line, "over": ka_o.odd, "under": ka_u.odd}
+                     if ka_o and ka_u else None)
             out.append({
                 "match_id": m.id, "league_id": m.league_id, "league": m.league_name,
                 "season": m.season,
@@ -76,6 +80,7 @@ def load_upcoming() -> list[dict]:
                 "ou25": ou if ("over" in ou and "under" in ou) else None,
                 "btts": bt if ("yes" in bt and "no" in bt) else None,
                 "corners": corners,
+                "cards": cards,
             })
     out.sort(key=lambda x: x["dt"])
     return out

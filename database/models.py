@@ -247,6 +247,11 @@ class ModelPrediction(Base):
     corner_line: Mapped[float | None] = mapped_column(Float, nullable=True)
     corner_std:  Mapped[float | None] = mapped_column(Float, nullable=True)
 
+    # Total cards (yellow + red)
+    card_proj: Mapped[float | None] = mapped_column(Float, nullable=True)
+    card_line: Mapped[float | None] = mapped_column(Float, nullable=True)
+    card_std:  Mapped[float | None] = mapped_column(Float, nullable=True)
+
     # Cuotas decimales reales al momento del snapshot — permiten calcular ROI
     # (no solo acierto direccional). Congeladas antes del partido.
     o_home:         Mapped[float | None] = mapped_column(Float, nullable=True)
@@ -258,6 +263,8 @@ class ModelPrediction(Base):
     o_btts_no:      Mapped[float | None] = mapped_column(Float, nullable=True)
     o_corner_over:  Mapped[float | None] = mapped_column(Float, nullable=True)
     o_corner_under: Mapped[float | None] = mapped_column(Float, nullable=True)
+    o_card_over:    Mapped[float | None] = mapped_column(Float, nullable=True)
+    o_card_under:   Mapped[float | None] = mapped_column(Float, nullable=True)
 
     # True si el snapshot se tomó con el partido ya iniciado (snapshot_at >=
     # match_date) — datos contaminados por fuga, se excluyen del ROI/acierto pero

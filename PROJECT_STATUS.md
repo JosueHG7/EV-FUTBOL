@@ -1,5 +1,5 @@
 # PROJECT STATUS — Football Analysis Assistant
-Última actualización: 2026-08-19
+Última actualización: 2026-08-20
 
 ---
 
@@ -57,8 +57,8 @@ No es un tipster; el juicio final es del usuario.
 
 - `matches` — fixtures + resultados (enriquecido: HT goals, venue, referee, round, country).
 - `odds` — 1X2 por bookmaker.
-- `market_odds` — flexible (over/under, BTTS, **córners** ya poblado; tarjetas a futuro): market/selection/line/odd.
-- `model_predictions` — snapshot sellado del modelo + mercado + cuotas reales antes de cada partido próximo (incluye córners); base de la pestaña Predicciones.
+- `market_odds` — flexible (over/under, BTTS, **córners y tarjetas** ya poblados): market/selection/line/odd.
+- `model_predictions` — snapshot sellado del modelo + mercado + cuotas reales antes de cada partido próximo (incluye córners y tarjetas); base de la pestaña Predicciones.
 - `team_statistics` — stats por-partido en formato largo (incluye `expected_goals`). Ampliable sin tocar esquema.
 - `injuries`, `lineups` / `lineup_players`, `predictions` — tablas listas (se pueblan on-demand).
 - `picks` — historial de apuestas del usuario (fase posterior).
@@ -71,9 +71,9 @@ No es un tipster; el juicio final es del usuario.
 |---|---|
 | `refresh.py` | **El comando diario.** Pipeline de 6 pasos: resultados recientes → próximos + odds → stats por-partido → reentrena modelo → precalcula dossiers (`.pkl`) → sella snapshot de predicciones. Deja el dashboard con carga instantánea. |
 | `collectors/apifootball_collector.py` | Fuente única. `rebuild` (histórico), `--upcoming` (fixtures próximos + odds), `--stats` (stats por-partido de equipos con partido próximo), `--results` (resultados recientes). Throttle incluido. |
-| `models/poisson_model.py` | Poisson Dixon-Coles: 1X2, over/under, BTTS, matriz de marcadores, **proyección de córners vs línea**. |
-| `models/match_analysis.py` | **Motor del dossier**: forma, H2H, descanso, xG, y **promedios rodantes** (últimos 5/10) de córners/tiros/tarjetas/atajadas/goles a favor y en contra. |
-| `models/grading.py` | Califica cada predicción sellada contra el resultado real: acierto direccional **y** ROI (staking plano 1u a la cuota sellada) por mercado (1X2/O-U/BTTS/córners). |
+| `models/poisson_model.py` | Poisson Dixon-Coles: 1X2, over/under, BTTS, matriz de marcadores. |
+| `models/match_analysis.py` | **Motor del dossier**: forma, H2H, descanso, xG, **promedios rodantes** (últimos 5/10) de córners/tiros/tarjetas/atajadas/goles a favor y en contra, y **proyección córners/tarjetas vs línea de la casa** (`corner_analysis`/`card_analysis`, mismo cálculo ataque+defensa). |
+| `models/grading.py` | Califica cada predicción sellada contra el resultado real: acierto direccional **y** ROI (staking plano 1u a la cuota sellada) por mercado (1X2/O-U/BTTS/córners/tarjetas). |
 | `dashboard/app.py` | Streamlit. Pestañas **🔍 Análisis** (triaje + fichas con promedios), **Resultados**, **📋 Predicciones** (bitácora de validación: acierto/ROI del modelo vs. mercado, con fila Total combinada). Lee todo de artefactos/BD, sin cómputo pesado en vivo. |
 | `models/ensemble_model.py`, `models/xgboost_model.py` | Modelo Poisson+XGBoost (histórico; sus probabilidades de goal-markets salen sobreconfiadas → pendiente calibrar). |
 | `models/real_backtester.py` | Backtester walk-forward (parametrizable por bookmaker). |
@@ -102,20 +102,26 @@ Probado también contra Bet365 (soft book) con filtros: suelo ~-4.7%, tampoco cr
   **📋 Predicciones**: bitácora de validación que sella modelo + mercado +
   cuotas reales antes del partido y las califica al finalizar (acierto y ROI,
   por mercado y en un **Total combinado**).
-- **Córners vs línea de la casa** ya integrado: proyección del modelo, línea
-  del mercado, cuota sellada del lado que llama el modelo, y se califica
-  igual que los demás mercados.
+- **Córners y tarjetas vs línea de la casa** ya integrados (2026-08-20 para
+  tarjetas): proyección del modelo, línea del mercado (`Cards Over/Under` de
+  API-Football, tarjetas = amarillas+rojas), cuota sellada del lado que llama
+  el modelo, y se califican igual que los demás mercados. Mismas tendencias
+  por umbral (individuales/totales, u5/u10) que córners/tiros.
 - **Promedios rodantes** (córners/tiros/tarjetas/goles) en cada ficha — el método del usuario, con datos reales fiables.
 - Bug de fuga de datos en los snapshots pre-partido (corregido 2026-08-16):
   predicciones contaminadas quedan marcadas, no borradas, y excluidas del cálculo de ROI/acierto.
 
 **Pendiente:**
-1. Comparar promedios vs **líneas de tarjetas** (córners ya está — falta tarjetas).
-2. **Calibrar** las probabilidades del modelo (el "Over 2.5 94%").
-3. Historial de picks del usuario (registro + rendimiento) — distinto de la
+1. **Calibrar** las probabilidades del modelo (el "Over 2.5 94%") — a la
+   espera de acumular más muestra en `model_predictions` (~1 semana) antes de
+   ajustar.
+2. Historial de picks del usuario (registro + rendimiento) — distinto de la
    bitácora de Predicciones, que califica las llamadas del *modelo*, no las
    apuestas reales del usuario.
-4. Migración a PostgreSQL + acceso remoto/móvil.
+3. Migración a PostgreSQL + acceso remoto/móvil.
+4. No hay suite de tests real (`tests/` vacío) pese al historial de bugs de
+   alineación de datos — un test de regresión para el join odds/features
+   (ver bug de abajo) evitaría que se repita en silencio.
 
 **Aviso:** las señales de goles/1X2 (del modelo) aún NO están calibradas →
 no fiables para apostar. Los **promedios rodantes SÍ** son datos reales y

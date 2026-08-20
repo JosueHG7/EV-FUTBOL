@@ -12,7 +12,7 @@ dirección y aun así no ser rentable frente a las cuotas.
 
 from __future__ import annotations
 
-MARKETS = ("1x2", "ou25", "btts", "corners")
+MARKETS = ("1x2", "ou25", "btts", "corners", "cards")
 
 
 # ---------------------------------------------------------------------------
@@ -54,11 +54,15 @@ def model_calls(pred) -> dict:
     corner = None
     if pred.corner_proj is not None and pred.corner_line is not None:
         corner = _ou_lbl(pred.corner_proj > pred.corner_line)
+    card = None
+    if pred.card_proj is not None and pred.card_line is not None:
+        card = _ou_lbl(pred.card_proj > pred.card_line)
     return {
         "1x2": _argmax3(pred.m_home, pred.m_draw, pred.m_away),
         "ou25": _ou_lbl(over),
         "btts": _yn_lbl(yes),
         "corners": corner,
+        "cards": card,
     }
 
 
@@ -71,6 +75,7 @@ def market_calls(pred) -> dict:
         "ou25": _ou_lbl(over),
         "btts": _yn_lbl(yes),
         "corners": None,   # la línea ES el mercado; no hay lado favorito
+        "cards": None,      # ídem
     }
 
 
@@ -79,11 +84,12 @@ def market_calls(pred) -> dict:
 # ---------------------------------------------------------------------------
 
 def grade_snapshot(pred, home_goals: int, away_goals: int,
-                   corners_total: float | None = None) -> dict:
+                   corners_total: float | None = None,
+                   cards_total: float | None = None) -> dict:
     """
     Devuelve {mercado: {"model", "market", "actual", "model_hit", "market_hit"}}.
     *_hit es None cuando faltan datos para calificar ese mercado (p. ej. una liga
-    sin línea de córners, o un mercado sin cuota registrada).
+    sin línea de córners/tarjetas, o un mercado sin cuota registrada).
     """
     mc, kc = model_calls(pred), market_calls(pred)
 
@@ -93,13 +99,18 @@ def grade_snapshot(pred, home_goals: int, away_goals: int,
     act_over = _ou_lbl((home_goals + away_goals) > 2.5)
     # BTTS
     act_btts = _yn_lbl(home_goals > 0 and away_goals > 0)
-    # Córners totales — un empate exacto con la línea es push (no calificable).
+    # Córners / tarjetas totales — un empate exacto con la línea es push (no calificable).
     act_corners = None
     if (pred.corner_line is not None and corners_total is not None
             and corners_total != pred.corner_line):
         act_corners = _ou_lbl(corners_total > pred.corner_line)
+    act_cards = None
+    if (pred.card_line is not None and cards_total is not None
+            and cards_total != pred.card_line):
+        act_cards = _ou_lbl(cards_total > pred.card_line)
 
-    actual = {"1x2": act_1x2, "ou25": act_over, "btts": act_btts, "corners": act_corners}
+    actual = {"1x2": act_1x2, "ou25": act_over, "btts": act_btts,
+              "corners": act_corners, "cards": act_cards}
 
     g = {}
     for mk in MARKETS:
@@ -140,6 +151,7 @@ _SEL_ODDS = {
     "ou25":    {"Over": "o_over25", "Under": "o_under25"},
     "btts":    {"Sí": "o_btts_yes", "No": "o_btts_no"},
     "corners": {"Over": "o_corner_over", "Under": "o_corner_under"},
+    "cards": {"Over": "o_card_over", "Under": "o_card_under"},
 }
 
 

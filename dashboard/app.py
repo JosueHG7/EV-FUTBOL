@@ -162,7 +162,9 @@ def _get_recent_finished_cached(db_mtime: float, days_back: int = 3):
                 "date": str(md.date()), "dt": md,
                 "score": f"{m.home_goals}-{m.away_goals}",
                 "over25": tg > 2.5, "btts": m.home_goals > 0 and m.away_goals > 0,
-                "corners": st_.get("Corner Kicks"), "cards": st_.get("Yellow Cards"),
+                "corners": st_.get("Corner Kicks"),
+                "cards": ((st_.get("Yellow Cards") or 0) + (st_.get("Red Cards") or 0))
+                         if st_.get("Yellow Cards") is not None else None,
             })
     out.sort(key=lambda x: x["dt"], reverse=True)
     return out
@@ -203,8 +205,9 @@ def _get_predictions_cached(db_mtime: float):
             if m.status == "finished"
             and m.home_goals is not None and m.away_goals is not None
         ]
-        # Córners totales solo de los finalizados (los pendientes no los usan).
+        # Córners y tarjetas totales solo de los finalizados (los pendientes no los usan).
         corners: dict = {}
+        cards: dict = {}
         if finished_ids:
             for mid, val in s.execute(select(
                 TeamStatistic.match_id, TeamStatistic.value_num
@@ -213,6 +216,13 @@ def _get_predictions_cached(db_mtime: float):
                 if val is None or pd.isna(val):
                     continue
                 corners[mid] = corners.get(mid, 0.0) + val
+            for mid, val in s.execute(select(
+                TeamStatistic.match_id, TeamStatistic.value_num
+            ).where(TeamStatistic.match_id.in_(finished_ids),
+                    TeamStatistic.type.in_(("Yellow Cards", "Red Cards")))).all():
+                if val is None or pd.isna(val):
+                    continue
+                cards[mid] = cards.get(mid, 0.0) + val
         finished_set = set(finished_ids)
 
         from models.analysis_builder import to_local
@@ -227,7 +237,8 @@ def _get_predictions_cached(db_mtime: float):
                 "league": m.league_name,
             }
             if m.id in finished_set:
-                g = grade_snapshot(p, m.home_goals, m.away_goals, corners.get(m.id))
+                g = grade_snapshot(p, m.home_goals, m.away_goals,
+                                   corners.get(m.id), cards.get(m.id))
                 # Los snapshots contaminados (tomados con el partido ya iniciado) se
                 # califican y muestran, pero NO cuentan para el ROI/acierto agregado.
                 if not p.leak_flagged:
@@ -239,6 +250,7 @@ def _get_predictions_cached(db_mtime: float):
                     **base, "score": f"{m.home_goals}-{m.away_goals}",
                     "corners_total": corners.get(m.id), "g": g,
                     "corner_line": p.corner_line, "leaked": p.leak_flagged,
+                    "cards_total": cards.get(m.id), "card_line": p.card_line,
                     "odds": model_odds(p, g),
                 })
             else:
@@ -248,11 +260,13 @@ def _get_predictions_cached(db_mtime: float):
                     "m_home": p.m_home, "m_draw": p.m_draw, "m_away": p.m_away,
                     "m_over25": p.m_over25, "m_btts_yes": p.m_btts_yes,
                     "corner_proj": p.corner_proj, "corner_line": p.corner_line,
+                    "card_proj": p.card_proj, "card_line": p.card_line,
                     # Cuotas selladas (para mostrar al lado de cada llamada).
                     "o_home": p.o_home, "o_draw": p.o_draw, "o_away": p.o_away,
                     "o_over25": p.o_over25, "o_under25": p.o_under25,
                     "o_btts_yes": p.o_btts_yes, "o_btts_no": p.o_btts_no,
                     "o_corner_over": p.o_corner_over, "o_corner_under": p.o_corner_under,
+                    "o_card_over": p.o_card_over, "o_card_under": p.o_card_under,
                 })
 
     graded.sort(key=lambda x: x["dt"], reverse=True)
@@ -583,11 +597,54 @@ def _render_corner_signal(u: dict) -> None:
         st.caption(f"σ ≈ {sigma_txt} · {n_txt} · confianza {conf} · informativo")
 
 
+def _render_card_signal(u: dict) -> None:
+    """Tarjetas: esperado combinado (amarillas+rojas, ataque+defensa) vs línea
+    real, con σ y etiqueta de confianza. Informativo — mismo tratamiento que córners."""
+    ka = u["_d"]["stats"].get("cards")
+    kl = u.get("cards")
+    if not ka and not kl:
+        return
+    if ka is None:
+        if kl:
+            st.caption(f"🟨 Tarjetas — línea de la casa {kl['line']} (faltan stats para proyectar)")
+        return
+
+    proj, std, conf = ka["proj"], ka["std"], ka["confidence"]
+    n_txt = f"n={ka['n_home']}/{ka['n_away']}"
+    sigma_txt = f"{std}" if std is not None else "n/a"
+
+    if kl is not None:
+        line = kl["line"]
+        gap = round(proj - line, 1)
+        notable = std is not None and std > 0 and abs(gap) >= 0.5 * std
+        if notable:
+            lean = "Over" if gap > 0 else "Under"
+            st.markdown(
+                f"**🚩 Tarjetas** — esperado combinado **{proj}** vs línea **{line}** "
+                f"→ **{lean}** (gap {gap:+.1f}, supera 0.5σ)  ·  cuotas O {kl['over']} / U {kl['under']}"
+            )
+        else:
+            st.markdown(
+                f"Tarjetas — esperado combinado {proj} vs línea {line} "
+                f"(gap {gap:+.1f}: dentro de rango normal, sin inclinación clara)  ·  "
+                f"cuotas O {kl['over']} / U {kl['under']}"
+            )
+        st.caption(
+            f"σ muestra ≈ {sigma_txt} · {n_txt} · confianza {conf} · "
+            "informativo (sin backtest de líneas históricas todavía)"
+        )
+    else:
+        st.markdown(f"Tarjetas — esperado combinado {proj} (la casa no publica línea aquí)")
+        st.caption(f"σ ≈ {sigma_txt} · {n_txt} · confianza {conf} · informativo")
+
+
 _TREND_GROUPS = [
     ("Córners individuales",   "corners_ind"),
     ("Córners totales",        "corners_tot"),
     ("Tiros a puerta indiv.",  "sot_ind"),
     ("Tiros a puerta totales", "sot_tot"),
+    ("Tarjetas individuales",  "cards_ind"),
+    ("Tarjetas totales",       "cards_tot"),
 ]
 
 
@@ -698,15 +755,16 @@ def _thr_table(trends: dict, key: str, thrs) -> str:
 def _render_team_trends_full(trends: dict, label: str, thr_map: dict) -> None:
     st.markdown(
         f"**{label}**  ·  goles: {trends['n_goals']} · córners: "
-        f"{trends['n_corners']} · tiros: {trends['n_sot']} partidos con datos"
+        f"{trends['n_corners']} · tiros: {trends['n_sot']} · tarjetas: "
+        f"{trends['n_cards']} partidos con datos"
     )
     # Goles / tiempos (todas las ligas) — con barra visual (u10)
     st.caption("Goles / tiempos (u10)")
     for glabel, key in _GOAL_TREND_LABELS:
         st.markdown(f"`{_bar(trends[key][10])}`  {glabel}")
-    # Córners / tiros (donde hay stats) — una tabla compacta por grupo.
-    if trends["n_corners"] or trends["n_sot"]:
-        st.caption("Córners / tiros — por umbral (u10 · u5)")
+    # Córners / tiros / tarjetas (donde hay stats) — una tabla compacta por grupo.
+    if trends["n_corners"] or trends["n_sot"] or trends["n_cards"]:
+        st.caption("Córners / tiros / tarjetas — por umbral (u10 · u5)")
         for glabel, key in _TREND_GROUPS:
             thrs = thr_map[key]
             if not any(trends[key][10].get(t) for t in thrs):
@@ -741,6 +799,12 @@ def _render_trends(u: dict, th: dict, ta: dict) -> None:
         st.caption(
             f"📏 Línea de córners de la casa: **{cl['line']}** "
             f"(O {cl['over']} / U {cl['under']}) — compará con 'Córners totales'."
+        )
+    kl = u.get("cards")
+    if kl:
+        st.caption(
+            f"📏 Línea de tarjetas de la casa: **{kl['line']}** "
+            f"(O {kl['over']} / U {kl['under']}) — compará con 'Tarjetas totales'."
         )
 
     c1, c2 = st.columns(2)
@@ -819,7 +883,7 @@ def _render_glance(u: dict, th: dict, ta: dict) -> None:
     d = u["_d"]
     home, away = d["home"], d["away"]
 
-    m1, m2, m3 = st.columns(3)
+    m1, m2, m3, m4 = st.columns(4)
     bl = _best_lean(u["_sig"]) if (d["known"] and u["_sig"]) else None
     if bl:
         mkt, side, mp, kp, gap = bl
@@ -837,6 +901,12 @@ def _render_glance(u: dict, th: dict, ta: dict) -> None:
                   f"línea {cl['line']}" if cl else "sin línea", delta_color="off")
     else:
         m3.metric("Córners proyectados", "—")
+    ka, kl = d["stats"].get("cards"), u.get("cards")
+    if ka:
+        m4.metric("Tarjetas proyectadas", f"{ka['proj']}",
+                  f"línea {kl['line']}" if kl else "sin línea", delta_color="off")
+    else:
+        m4.metric("Tarjetas proyectadas", "—")
 
     if _low_season(u):
         st.caption("⚠️ Muestra de temporada chica — la base de goles arrastra "
@@ -891,6 +961,7 @@ def _render_detail(u: dict, matches_df, stats_df) -> None:
             cs = " · ".join(f"{c['score']} ({c['prob']:.0%})" for c in d["correct_scores"])
             st.caption(f"Marcadores más probables del modelo: {cs}")
         _render_corner_signal(u)
+        _render_card_signal(u)
         _render_goal_internals(u)
 
     with tab_tend:
@@ -1197,7 +1268,8 @@ def _graded_cell(cell, odds=None, lblmap=None, line=None) -> str:
     return f"{txt} {_mark(cell['model_hit'])}{suffix}"
 
 
-_MK_LBL = {"1x2": "1X2", "ou25": "O/U 2.5", "btts": "BTTS", "corners": "Córners"}
+_MK_LBL = {"1x2": "1X2", "ou25": "O/U 2.5", "btts": "BTTS", "corners": "Córners",
+           "cards": "Tarjetas"}
 
 
 def _acc_str(hits: int, n: int) -> str:
@@ -1215,7 +1287,7 @@ def _summary_table(summary: dict, pnl: dict) -> "pd.DataFrame":
     tot_mh = tot_mn = tot_kh = tot_kn = 0
     tot_mp = tot_kp = 0.0
     tot_mb = tot_kb = 0
-    for mk in ("1x2", "ou25", "btts", "corners"):
+    for mk in ("1x2", "ou25", "btts", "corners", "cards"):
         s, p = summary[mk], pnl[mk]
         rows.append({
             "Mercado": _MK_LBL[mk],
@@ -1285,9 +1357,9 @@ def _render_predictions() -> None:
             f"{n_clean} partidos calificados limpios. **ROI** = apostar 1u plana al "
             "lado que llama cada uno, a la cuota sellada antes del partido "
             "(gana → cuota−1, pierde → −1). 'Mercado' = apostar al favorito de la "
-            "cuota, como referencia. Córners: solo modelo vs línea. **Total** = los "
-            "4 mercados combinados (misma unidad, 1u por apuesta), para ver de un "
-            "vistazo cómo va el modelo en general. "
+            "cuota, como referencia. Córners/Tarjetas: solo modelo vs línea. "
+            "**Total** = los 5 mercados combinados (misma unidad, 1u por apuesta), "
+            "para ver de un vistazo cómo va el modelo en general. "
             "⚠️ Muestra chica — es diagnóstico, **no** una recomendación de apuesta."
         )
 
@@ -1301,6 +1373,8 @@ def _render_predictions() -> None:
             g, od = x["g"], x["odds"]
             ct = x["corners_total"]
             corner_real = f"{ct:g}" if ct is not None else "—"
+            kt = x["cards_total"]
+            card_real = f"{kt:g}" if kt is not None else "—"
             rows.append({
                 "Fecha": x["date"],
                 "Hora": _hhmm(x["dt"]),
@@ -1313,14 +1387,17 @@ def _render_predictions() -> None:
                 "Córners": _graded_cell(g["corners"], od["corners"],
                                         line=x.get("corner_line")),
                 "C. total": corner_real,
+                "Tarjetas": _graded_cell(g["cards"], od["cards"],
+                                         line=x.get("card_line")),
+                "T. total": card_real,
             })
         st.dataframe(pd.DataFrame(rows), hide_index=True,
                      use_container_width=True, height=420)
         st.caption(
             f"{len(gview)} de {len(graded)} calificados. Cada celda = lado más "
-            "probable del modelo + si salió + la cuota sellada (@). 'C. total' = "
-            "córners reales del partido (donde la liga publica stats). "
-            "🚩 = snapshot contaminado (excluido del ROI/acierto de arriba)."
+            "probable del modelo + si salió + la cuota sellada (@). 'C. total' / "
+            "'T. total' = córners/tarjetas reales del partido (donde la liga "
+            "publica stats). 🚩 = snapshot contaminado (excluido del ROI/acierto de arriba)."
         )
 
     # --- Pendientes ---
@@ -1371,6 +1448,16 @@ def _render_predictions() -> None:
                 cco = f"{x['corner_proj']:.1f} (sin línea)"
             else:
                 cco = "—"
+            if x["card_proj"] is not None and x["card_line"] is not None:
+                kover = x["card_proj"] > x["card_line"]
+                kside = "Over" if kover else "Under"
+                k_co = x.get("o_card_over") if kover else x.get("o_card_under")
+                kco_txt = (f"{kside}{_at(k_co)} · "
+                           f"{x['card_proj']:.1f} vs {x['card_line']:g}")
+            elif x["card_proj"] is not None:
+                kco_txt = f"{x['card_proj']:.1f} (sin línea)"
+            else:
+                kco_txt = "—"
             rows.append({
                 "Fecha": x["date"],
                 "Hora": _hhmm(x["dt"]),
@@ -1380,14 +1467,16 @@ def _render_predictions() -> None:
                 "O/U 2.5": cou,
                 "BTTS": cbt,
                 "Córners": cco,
+                "Tarjetas": kco_txt,
             })
         st.dataframe(pd.DataFrame(rows), hide_index=True,
                      use_container_width=True, height=480)
         st.caption(
             f"{len(view)} partidos · lado más probable del modelo con su "
-            "probabilidad y la **cuota sellada** (@) · **Córners** = lado que llama "
-            "el modelo (Over si la proyección supera la línea) con su cuota sellada, "
-            "y de fondo *proyección vs línea de la casa*. Se calificarán al finalizar."
+            "probabilidad y la **cuota sellada** (@) · **Córners/Tarjetas** = lado "
+            "que llama el modelo (Over si la proyección supera la línea) con su "
+            "cuota sellada, y de fondo *proyección vs línea de la casa*. Se "
+            "calificarán al finalizar."
         )
 
 

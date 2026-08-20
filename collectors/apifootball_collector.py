@@ -171,16 +171,18 @@ def _parse_markets(book: dict) -> dict:
     return out
 
 
-def _parse_corners(bookmakers: list) -> tuple | None:
-    """Main total-corners Over/Under line across all books → (line, over, under).
+def _parse_ou_market(bookmakers: list, bet_name: str) -> tuple | None:
+    """Main total Over/Under line for `bet_name` across all books → (line, over, under).
 
     Picks the line where over/under odds are most balanced (the bookmakers'
-    main line). Scans every book because not all offer the corners market.
+    main line). Scans every book because not all offer the market. Shared by
+    corners ("Corners Over Under") and cards ("Cards Over/Under") — same
+    "Over X.X" / "Under X.X" value format.
     """
     lines: dict = {}
     for b in bookmakers:
         for bet in b.get("bets", []):
-            if bet.get("name") != "Corners Over Under":
+            if bet.get("name") != bet_name:
                 continue
             for v in bet.get("values", []):
                 parts = str(v.get("value", "")).split()
@@ -248,7 +250,8 @@ def collect_upcoming(days_ahead: int = 3, leagues: dict = LEAGUES) -> None:
                 continue
             bname = book["name"]
             mk = _parse_markets(book)
-            corners = _parse_corners(books)   # main total-corners line (any book)
+            corners = _parse_ou_market(books, "Corners Over Under")   # main line (any book)
+            cards = _parse_ou_market(books, "Cards Over/Under")       # main line (any book)
 
             # idempotent: clear this fixture's odds first
             session.query(Odds).filter(Odds.match_id == fid).delete()
@@ -279,6 +282,13 @@ def collect_upcoming(days_ahead: int = 3, leagues: dict = LEAGUES) -> None:
                                        selection="over", line=cln, odd=cov, collected_at=now))
                 session.add(MarketOdds(match_id=fid, bookmaker="consensus", market="corners_ou",
                                        selection="under", line=cln, odd=cun, collected_at=now))
+                n_mkt += 1
+            if cards:
+                kln, kov, kun = cards
+                session.add(MarketOdds(match_id=fid, bookmaker="consensus", market="cards_ou",
+                                       selection="over", line=kln, odd=kov, collected_at=now))
+                session.add(MarketOdds(match_id=fid, bookmaker="consensus", market="cards_ou",
+                                       selection="under", line=kln, odd=kun, collected_at=now))
                 n_mkt += 1
 
             if i % 25 == 0:

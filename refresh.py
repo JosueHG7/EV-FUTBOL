@@ -77,7 +77,9 @@ def snapshot_predictions(analyzed: list) -> None:
                 continue
             mp, kp, gm = d["model_probs"], d.get("market_probs"), d["goal_markets"]
             ca = d["stats"].get("corners")
+            ka = d["stats"].get("cards")
             o1, ou, bt, co = u["odds_1x2"], u.get("ou25"), u.get("btts"), u.get("corners")
+            kco = u.get("cards")
             fields = {
                 "m_home": mp["home_win"], "m_draw": mp["draw"], "m_away": mp["away_win"],
                 "mk_home": kp["home_win"] if kp else None,
@@ -90,6 +92,9 @@ def snapshot_predictions(analyzed: list) -> None:
                 "corner_proj": ca["proj"] if ca else None,
                 "corner_line": co["line"] if co else None,
                 "corner_std": ca["std"] if ca else None,
+                "card_proj": ka["proj"] if ka else None,
+                "card_line": kco["line"] if kco else None,
+                "card_std": ka["std"] if ka else None,
                 # Cuotas decimales reales al momento del snapshot (para ROI)
                 "o_home": o1["home_win"], "o_draw": o1["draw"], "o_away": o1["away_win"],
                 "o_over25": ou["over"] if ou else None,
@@ -98,6 +103,8 @@ def snapshot_predictions(analyzed: list) -> None:
                 "o_btts_no": bt["no"] if bt else None,
                 "o_corner_over": co["over"] if co else None,
                 "o_corner_under": co["under"] if co else None,
+                "o_card_over": kco["over"] if kco else None,
+                "o_card_under": kco["under"] if kco else None,
                 # Defensa en profundidad: si el snapshot se toma con el partido ya
                 # iniciado (no debería, load_upcoming ya filtra, pero cubre la
                 # ventana entre ambos y una eventual regresión del filtro), se

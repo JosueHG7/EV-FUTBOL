@@ -310,6 +310,75 @@ def corner_analysis(stats_df, matches_df: pd.DataFrame, home: str, away: str,
     }
 
 
+def _team_card_total(lut: dict, mid, tid) -> float | None:
+    """Tarjetas totales (amarillas+rojas) de un equipo en un partido, o None si
+    falta el dato de amarillas (rojas ausentes en el feed = 0, no dato faltante)."""
+    y = lut.get((mid, tid, "Yellow Cards"))
+    if y is None or pd.isna(y):
+        return None
+    r = lut.get((mid, tid, "Red Cards"))
+    r = float(r) if (r is not None and pd.notna(r)) else 0.0
+    return float(y) + r
+
+
+def _team_card_samples(stats_df, matches_df: pd.DataFrame, team: str,
+                       before: pd.Timestamp, n: int) -> tuple[list, list, list]:
+    """Per-match cards (for, against, total) over the team's last n matches."""
+    sub = matches_df[
+        ((matches_df["home_team"] == team) | (matches_df["away_team"] == team)) &
+        (matches_df["match_date"] < before)
+    ].sort_values("match_date", ascending=False).head(n)
+    if sub.empty or stats_df is None or getattr(stats_df, "empty", True):
+        return [], [], []
+    recs = [
+        (m["match_id"], m["home_team_id"], m["away_team_id"]) if m["home_team"] == team
+        else (m["match_id"], m["away_team_id"], m["home_team_id"])
+        for _, m in sub.iterrows()
+    ]
+    lut = _stats_lut(stats_df, [r[0] for r in recs])
+    fors, againsts, totals = [], [], []
+    for mid, tid, oid in recs:
+        cf = _team_card_total(lut, mid, tid)
+        ca = _team_card_total(lut, mid, oid)
+        if cf is not None:
+            fors.append(cf)
+        if ca is not None:
+            againsts.append(ca)
+        if cf is not None and ca is not None:
+            totals.append(cf + ca)
+    return fors, againsts, totals
+
+
+def card_analysis(stats_df, matches_df: pd.DataFrame, home: str, away: str,
+                  before: pd.Timestamp, n: int = 10) -> dict | None:
+    """
+    Expected total cards (yellow+red combined, same attack/defense-style blend
+    as corners) plus the sample's dispersion and size — GAP vs the line, not a
+    fabricated probability. Informative only, not a validated/backtested edge.
+
+    Returns {proj, std, n_home, n_away, confidence} or None if no card data.
+    """
+    hf, ha, ht = _team_card_samples(stats_df, matches_df, home, before, n)
+    af, aa, at = _team_card_samples(stats_df, matches_df, away, before, n)
+    if not (hf and ha and af and aa):
+        return None
+
+    proj = (np.mean(hf) + np.mean(aa)) / 2 + (np.mean(af) + np.mean(ha)) / 2
+    samples = ht + at
+    std = float(np.std(samples)) if len(samples) >= 2 else None
+    n_home = min(len(hf), len(ha))
+    n_away = min(len(af), len(aa))
+    mn = min(n_home, n_away)
+    confidence = "sólida" if mn >= 10 else ("chica" if mn < 5 else "media")
+
+    return {
+        "proj": round(float(proj), 1),
+        "std": round(std, 1) if std is not None else None,
+        "n_home": n_home, "n_away": n_away,
+        "confidence": confidence,
+    }
+
+
 # ---------------------------------------------------------------------------
 # Tendencias / rachas — hit-rate sobre umbrales FIJOS en ventanas fijas (5, 10).
 # Descriptivo ("8/10"), NO probabilidad ni "valor". El usuario ya usa este método
@@ -322,6 +391,8 @@ TREND_THRESHOLDS = {
     "corners_tot": [7.5, 8.5, 9.5, 10.5],
     "sot_ind":     [1.5, 2.5, 3.5, 4.5, 5.5],
     "sot_tot":     [6.5, 7.5, 8.5, 9.5],
+    "cards_ind":   [1.5, 2.5, 3.5, 4.5],
+    "cards_tot":   [2.5, 3.5, 4.5, 5.5],
 }
 TREND_WINDOWS = (5, 10)
 
@@ -373,7 +444,7 @@ def team_trends(stats_df, matches_df: pd.DataFrame, team: str,
 
     empty = {k: _hit_rates([], v) for k, v in TREND_THRESHOLDS.items()}
     empty_rate = _rate([])
-    empty_all = {**empty, "n_corners": 0, "n_sot": 0, "n_goals": 0,
+    empty_all = {**empty, "n_corners": 0, "n_sot": 0, "n_cards": 0, "n_goals": 0,
                  **{k: empty_rate for k in _GOAL_TREND_KEYS}}
     if sub.empty:
         return empty_all
@@ -412,6 +483,17 @@ def team_trends(stats_df, matches_df: pd.DataFrame, team: str,
             if vf is not None and va is not None:
                 totals.append(vf + va)
 
+    # Tarjetas (amarillas+rojas combinadas) — misma fuente, cálculo aparte porque
+    # combina dos tipos de stat.
+    kf, kt = [], []
+    for mid, tid, oid in recs:
+        cf_ = _team_card_total(lut, mid, tid)
+        ca_ = _team_card_total(lut, mid, oid)
+        if cf_ is not None:
+            kf.append(cf_)
+        if cf_ is not None and ca_ is not None:
+            kt.append(cf_ + ca_)
+
     cf, ct = samples["Corner Kicks"]
     sf, st_ = samples["Shots on Goal"]
     return {
@@ -419,6 +501,8 @@ def team_trends(stats_df, matches_df: pd.DataFrame, team: str,
         "corners_tot": _hit_rates(ct, TREND_THRESHOLDS["corners_tot"]),
         "sot_ind":     _hit_rates(sf, TREND_THRESHOLDS["sot_ind"]),
         "sot_tot":     _hit_rates(st_, TREND_THRESHOLDS["sot_tot"]),
+        "cards_ind":   _hit_rates(kf, TREND_THRESHOLDS["cards_ind"]),
+        "cards_tot":   _hit_rates(kt, TREND_THRESHOLDS["cards_tot"]),
         "goals_for15":        _rate(g_for15),
         "goals_ag15":         _rate(g_ag15),
         "scored_both_halves": _rate(both_scored),
@@ -426,7 +510,7 @@ def team_trends(stats_df, matches_df: pd.DataFrame, team: str,
         "btts":               _rate(btts_f),
         "over25":             _rate(ov25_f),
         "clean_sheet":        _rate(cs_f),
-        "n_corners": len(cf), "n_sot": len(sf), "n_goals": len(g_for15),
+        "n_corners": len(cf), "n_sot": len(sf), "n_cards": len(kf), "n_goals": len(g_for15),
     }
 
 
@@ -645,6 +729,9 @@ def build_dossier(
         "reading": None,
     }
     dossier["stats"]["corners"] = corner_analysis(
+        stats_df, matches_df, home, away, before, n=10
+    )
+    dossier["stats"]["cards"] = card_analysis(
         stats_df, matches_df, home, away, before, n=10
     )
 
